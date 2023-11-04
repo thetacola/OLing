@@ -14,6 +14,7 @@ import net.oijon.olog.Log;
 
 import net.oijon.oling.Parser;
 import net.oijon.oling.datatypes.Language;
+import net.oijon.oling.datatypes.Multitag;
 import net.oijon.oling.datatypes.Orthography;
 
 public class UnitTests {
@@ -150,7 +151,7 @@ public class UnitTests {
 			testLang.setOrtho(testOrtho);
 			log.info("Printing language...");
 			log.info(testLang.toString());
-			String expectedOrtho = "===Orthography Start===\n"
+			String expectedOrthoString = "===Orthography Start===\n"
 					+ "ɔː:ough\n"
 					+ "ɔː:augh\n"
 					+ "tʃ:tch\n"
@@ -244,10 +245,11 @@ public class UnitTests {
 					+ "u:u\n"
 					+ "oʊ:o\n"
 					+ "===Orthography End===";
-			assertEquals(testOrtho.toString(), expectedOrtho);
+			Orthography expectedOrtho = Orthography.parse(new Multitag(expectedOrthoString));
+			assertEquals(testOrtho, expectedOrtho);
 			log.info("Parsing new language...");
-			testLang.toFile(new File(System.getProperty("user.home") + "/OijonUtils/testish2.language"));
-			Parser newparser = new Parser(new File(System.getProperty("user.home") + "/OijonUtils/testish2.language"));
+			testLang.toFile(new File(System.getProperty("user.home") + "/.oling/testish2.language"));
+			Parser newparser = new Parser(new File(System.getProperty("user.home") + "/.oling/testish2.language"));
 			Language newLang = newparser.parseLanguage();
 			log.info(newLang.toString());
 			assertEquals(testOrtho, newLang.getOrtho());
@@ -276,9 +278,9 @@ public class UnitTests {
 			log.debug("Null ID: " + testLang.getID());
 			assertTrue(testLang.getID().equals("null"));
 			
-			testLang.toFile(new File(System.getProperty("user.home") + "/OijonUtils/testish2.language"));
+			testLang.toFile(new File(System.getProperty("user.home") + "/.oling/testish2.language"));
 			
-			Parser newparser = new Parser(new File(System.getProperty("user.home") + "/OijonUtils/testish2.language"));
+			Parser newparser = new Parser(new File(System.getProperty("user.home") + "/.oling/testish2.language"));
 			Language testLang2 = newparser.parseLanguage();
 			
 			log.debug("New ID: " + testLang2.getID());

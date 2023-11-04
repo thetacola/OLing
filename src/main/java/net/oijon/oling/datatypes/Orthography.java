@@ -6,7 +6,7 @@ import net.oijon.olog.Log;
 
 import net.oijon.oling.Parser;
 
-//last edit: 10/22/23 -N3
+//last edit: 11/4/23 -N3
 
 /**
  * The writing system of a language. Connects phonemes to graphemes, allowing
@@ -17,7 +17,7 @@ import net.oijon.oling.Parser;
 public class Orthography {
 
 	private Phonology ph = new Phonology();
-	private ArrayList<String[]> orthoList = new ArrayList<String[]>();
+	private ArrayList<OrthoPair> orthoList = new ArrayList<OrthoPair>();
 	
 	static Log log = Parser.getLog();
 	
@@ -44,13 +44,12 @@ public class Orthography {
 	 */
 	public Orthography(Orthography o) {
 		this.ph = new Phonology(o.ph);
-		this.orthoList = new ArrayList<String[]>(o.orthoList);
+		this.orthoList = new ArrayList<OrthoPair>(o.orthoList);
 	}
 	
-	public void add(String phonemes, String ortho) {
+	public void add(String phonemes, String graphemes) {
 		// TODO: check if phonemes are actually in phonology
-		String[] valueArray = {phonemes, ortho};
-		orthoList.add(valueArray);
+		orthoList.add(new OrthoPair(phonemes, graphemes));
 		sortOrthoList();
 	}
 	
@@ -74,12 +73,11 @@ public class Orthography {
 	 * Sorts the list
 	 */
 	private void sortOrthoList() {
-		for (int i = 1; i < orthoList.size(); i++) {
-			if (orthoList.get(i)[1].length() > orthoList.get(i - 1)[1].length()) {
-				String[] tempval1 = orthoList.get(i);
-				String[] tempval2 = orthoList.get(i - 1);
-				orthoList.set(i, tempval2);
-				orthoList.set(i - 1, tempval1);
+		for (int i = 1; i < orthoList.size() - 1; i++) {
+			if (orthoList.get(i).compareTo(orthoList.get(i + 1)) == 1) {
+				OrthoPair temp = orthoList.get(i + 1);
+				orthoList.set(i + 1, orthoList.get(i));
+				orthoList.set(i, temp);
 				sortOrthoList();
 			}
 		}
@@ -93,9 +91,9 @@ public class Orthography {
 	public String orthoGuess(String input) {
 		String returnString = input;
 		for (int i = 0; i < orthoList.size(); i++) {
-			String phonemes = orthoList.get(i)[0];
-			String ortho = orthoList.get(i)[1];
-			returnString = returnString.replaceAll(phonemes, ortho);
+			String phonemes = orthoList.get(i).getPhonemes();
+			String graphemes = orthoList.get(i).getGraphemes();
+			returnString = returnString.replaceAll(phonemes, graphemes);
 		}
 		return returnString;
 	}
@@ -108,19 +106,19 @@ public class Orthography {
 	public String phonoGuess(String input) {
 		String returnString = new String(input);
 		for (int i = 0; i < orthoList.size(); i++) {
-			String phonemes = orthoList.get(i)[0];
-			String ortho = orthoList.get(i)[1];
-			returnString = returnString.replaceAll(ortho, phonemes);
+			String phonemes = orthoList.get(i).getPhonemes();
+			String graphemes = orthoList.get(i).getGraphemes();
+			returnString = returnString.replaceAll(graphemes, phonemes);
 		}
 		return returnString;
 	}
 	
 	/**
-	 * Gets a pair, with 0 being the phonemes, and 1 being the graphemes
+	 * Gets a pair at the given index
 	 * @param i The index of the pair in the orthography
 	 * @return The pair specified
 	 */
-	public String[] getPair(int i) {
+	public OrthoPair getPair(int i) {
 		return orthoList.get(i);
 	}
 	
@@ -151,7 +149,7 @@ public class Orthography {
 		sortOrthoList();
 		String returnString = "===Orthography Start===\n";
 		for (int i = 0; i < orthoList.size(); i++) {
-			returnString += orthoList.get(i)[0] + ":" + orthoList.get(i)[1] + "\n";
+			returnString += orthoList.get(i).toString() + "\n";
 		}
 		returnString += "===Orthography End===";
 		
@@ -172,12 +170,8 @@ public class Orthography {
 		if (obj instanceof Orthography) {
 			Orthography o = (Orthography) obj;
 			for (int i = 0; i < orthoList.size(); i++) {
-				for (int j = 0; j < orthoList.get(i).length; j++) {
-					if (!orthoList.get(i)[j].equals(o.orthoList.get(i)[j])) {
-						System.out.println("Expected " + orthoList.get(i)[j] + ", got " +
-								o.orthoList.get(i)[j]);
-						return false;
-					}
+				if (!orthoList.get(i).equals(o.getPair(i))) {
+					return false;
 				}
 			}
 			return true;

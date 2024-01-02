@@ -7,7 +7,7 @@ import java.util.List;
 import net.oijon.olog.Log;
 import net.oijon.oling.Parser;
 
-//last edit: 10/22/23 -N3
+//last edit: 1/2/2024 -N3
 
 /**
  * The sounds of a language. Makes a list of sounds based off a PhonoSystem.

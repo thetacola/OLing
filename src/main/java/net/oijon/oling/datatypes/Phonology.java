@@ -110,13 +110,26 @@ public class Phonology {
 	}
 	
 	/**
-	 * Removes a phoneme from the phonology
+	 * Removes all instances of a phoneme from the phonology
+	 * @param value The phoneme to be removed
+	 */
+	public void removeAll(String value) {
+		for (int i = 0; i < phonoList.size(); i++) {
+			if (value.equals(phonoList.get(i))) {
+				phonoList.remove(i);
+			}
+		}
+	}
+	
+	/**
+	 * Removes the first instance of a phoneme from the phonology
 	 * @param value The phoneme to be removed
 	 */
 	public void remove(String value) {
 		for (int i = 0; i < phonoList.size(); i++) {
 			if (value.equals(phonoList.get(i))) {
 				phonoList.remove(i);
+				break;
 			}
 		}
 	}

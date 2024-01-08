@@ -134,20 +134,26 @@ public class Lexicon {
 					Tag valueTag = wordTag.getDirectChild("wordname");
 					Tag meaningTag = wordTag.getDirectChild("meaning");
 					Word word = new Word(valueTag.value(), meaningTag.value());
+					// current tag string very useful for debugging this try/catch here :)
+					String currentTag = "";
 					try {
-						Tag pronunciationTag = wordTag.getDirectChild("pronunciation");
+						currentTag = "pronounciation";
+						Tag pronunciationTag = wordTag.getDirectChild("pronounciation");
 						word.setPronounciation(pronunciationTag.value());
+						currentTag = "etymology";
 						Tag etymologyTag = wordTag.getDirectChild("etymology");
 						word.setEtymology(etymologyTag.value());
 						//TODO: Attempt to find ID of source language in Susquehanna folder. If not found, revert to null.
 						//Tag sourceLanguageTag = wordTag.getDirectChild("sourceLanguage");
 						//word.setSourceLanguage(null);
+						currentTag = "creationDate";
 						Tag creationDateTag = wordTag.getDirectChild("creationDate");
 						word.setCreationDate(new Date(Long.parseLong(creationDateTag.value())));
+						currentTag = "editDate";
 						Tag editDateTag = wordTag.getDirectChild("editDate");
 						word.setEditDate(new Date(Long.parseLong(editDateTag.value())));
 					} catch (Exception e) {
-						log.warn("Could not find optional property for " + valueTag.value() + 
+						log.warn("Could not find optional property " + currentTag + " for " + valueTag.value() + 
 								" (" + valueTag.getName() + "). Was this word added manually?");
 					}
 					lexicon.addWord(word);

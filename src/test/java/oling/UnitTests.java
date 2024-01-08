@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
+import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +16,10 @@ import net.oijon.olog.Log;
 
 import net.oijon.oling.Parser;
 import net.oijon.oling.datatypes.Language;
+import net.oijon.oling.datatypes.Lexicon;
 import net.oijon.oling.datatypes.Multitag;
 import net.oijon.oling.datatypes.Orthography;
+import net.oijon.oling.datatypes.Word;
 
 public class UnitTests {
 
@@ -285,6 +289,59 @@ public class UnitTests {
 			
 			log.debug("New ID: " + testLang2.getID());
 			assertFalse(testLang2.getID().equals("null"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	void testLexicon() {
+		try {
+			Parser parser = new Parser(Paths.get(UnitTests.class.getClassLoader().getResource("testish.language").toURI()).toFile());
+			Language testLang = parser.parseLanguage();
+			
+			Word w1 = new Word("hello", "hi");
+			w1.setCreationDate(new Date(1234567890987654L));
+			w1.setEditDate(new Date(2000000000000L));
+			
+			Word w2 = new Word("foo", "bar");
+			w2.setPronounciation("foobar");
+			w2.setEtymology("foo + bar");
+			w2.setCreationDate(new Date(1L));
+			w2.setEditDate(new Date(99999999999999L));
+			
+			Lexicon l = new Lexicon();
+			l.addWord(w1);
+			l.addWord(w2);
+			
+			testLang.setLexicon(l);
+			
+			testLang.toFile(new File(System.getProperty("user.home") + "/.oling/testish2.language"));
+			
+			Parser newparser = new Parser(new File(System.getProperty("user.home") + "/.oling/testish2.language"));
+			Language testLang2 = newparser.parseLanguage();
+			
+			boolean testedHi = false;
+			boolean testedFoo = false;
+			for (int i = 0; i < testLang2.getLexicon().size(); i++) {
+				Word w = testLang2.getLexicon().getWord(i);
+				if (w.getName().equals("hello")) {
+					testedHi = true;
+					assertEquals("hi", w.getMeaning());
+					assertEquals(new Date(1234567890987654L), w.getCreationDate());
+					assertEquals(new Date(2000000000000L), w.getEditDate());
+				} else if (w.getName().equals("foo")) {
+					testedFoo = true;
+					assertEquals(new Date(1L), w.getCreationDate());
+					assertEquals(new Date(99999999999999L), w.getEditDate());
+					assertEquals("foo + bar", w.getEtymology());
+					assertEquals("foobar", w.getPronounciation());
+				}
+			}
+			assertTrue(testedHi);
+			assertTrue(testedFoo);
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();

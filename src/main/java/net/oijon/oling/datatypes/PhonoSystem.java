@@ -13,7 +13,7 @@ import java.util.Arrays;
 import net.oijon.olog.Log;
 import net.oijon.oling.Parser;
 
-//last edit: 10/22/23 -N3
+//last edit: 12/17/23 -N3
 
 /**
  * A way to transcribe all sounds allowed in a vocal tract. IPA is specified here as that
@@ -298,7 +298,6 @@ public class PhonoSystem {
 				}
 			}
 		}
-		System.out.println(value + " not in sys");
 		return false;
 	}
 	

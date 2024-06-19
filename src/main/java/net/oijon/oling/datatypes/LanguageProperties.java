@@ -44,8 +44,8 @@ public class LanguageProperties {
 		LanguageProperties lp = new LanguageProperties();
 		
 		Multitag meta = docTag.getMultitag("Meta");
-		lp.checkID(meta);
 		lp.setName(meta.getDirectChild("name").value());
+		lp.checkID(meta);
 		lp.setAutonym(meta.getDirectChild("autonym").value());
 		lp.setReadOnly(Boolean.parseBoolean(meta.getDirectChild("readonly").value()));
 		lp.setCreated(new Date(Long.parseLong(meta.getDirectChild("timeCreated").value())));

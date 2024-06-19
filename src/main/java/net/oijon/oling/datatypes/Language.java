@@ -13,7 +13,7 @@ import net.oijon.olog.Log;
 import net.oijon.oling.info.Info;
 import net.oijon.oling.Parser;
 
-//last edit: 10/22/23 -N3
+//last edit: 6/19/24 -N3
 
 /**
  * Bundles all parts of a language together into one object
@@ -24,17 +24,19 @@ public class Language {
 
 	public static Log log = Parser.getLog();
 	public static final Language NULL = new Language("null");
-	private String autonym = "null";
-	private String id = "null";
-	private String name = "null";
+	
+	//private String autonym = "null";
+	//private String id = "null";
+	//private String name = "null";
+	private LanguageProperties properties = new LanguageProperties();
 	private Phonology phono = new Phonology();
 	private Lexicon lexicon = new Lexicon();
 	private Orthography ortho = new Orthography();
 	private Language parent = Language.NULL;
-	private boolean isReadOnly = false;
-	private Date created = Date.from(Instant.now());
-	private Date edited = Date.from(Instant.now());
-	private String versionEdited = Info.getVersion();
+	//private boolean isReadOnly = false;
+	//private Date created = Date.from(Instant.now());
+	//private Date edited = Date.from(Instant.now());
+	//private String versionEdited = Info.getVersion();
 	
 	private static File[] generateFiles(File startDir) {
 		FilenameFilter filter = new FilenameFilter() {
@@ -92,7 +94,7 @@ public class Language {
 	 * @param name The name of the language
 	 */
 	public Language(String name) {
-		this.name = name;
+		this.properties.setName(name);
 	}
 	
 	/**
@@ -100,19 +102,11 @@ public class Language {
 	 * @param l The language to copy
 	 */
 	public Language(Language l) {
-		// FIXME: some of these are not resource leak proof...
-		autonym = l.autonym;
-		id = l.id;
-		name = l.name;
+		properties = new LanguageProperties(l.getProperties());
 		phono = new Phonology(l.phono); 
 		lexicon = new Lexicon(l.lexicon);
 		ortho = new Orthography(l.ortho);
 		parent = new Language(l.parent);
-		isReadOnly = l.isReadOnly;
-		created = new Date(l.created.toInstant().toEpochMilli());
-		// current time
-		edited = new Date(System.currentTimeMillis());
-		versionEdited = Info.getVersion();
 	}
 	
 	
@@ -170,28 +164,39 @@ public class Language {
 		return lang;
 	}
 	
+	public LanguageProperties getProperties() {
+		return properties;
+	}
+	
+	public void setProperties(LanguageProperties properties) {
+		this.properties = properties;
+	}
+	
 	/**
 	 * Gets the name of a Language object
 	 * @return The name of the language
+	 * @deprecated as of 1.0.4, please use getProperties().getName() instead
 	 */
 	public String getName() {
-		return name;
+		return properties.getName();
 	}
 	
 	/**
 	 * Gets the autonym of a language
 	 * @return The autonym of the language
+	 * @deprecated as of 1.0.4, please use getProperties().getAutonym() instead
 	 */
 	public String getAutonym() {
-		return autonym;
+		return properties.getAutonym();
 	}
 	
 	/**
 	 * Sets an autonym for a language
 	 * @param autonym The autonym to be set
+	 * @deprecated as of 1.0.4, please use getProperties().setAutonym() instead
 	 */
 	public void setAutonym(String autonym) {
-		this.autonym = autonym;
+		properties.setAutonym(autonym);
 	}
 	
 	/**
@@ -289,67 +294,87 @@ public class Language {
 	/**
 	 * Gets the datetime when the language was created.
 	 * @return The datetime when the language was created.
+	 * @deprecated as of 1.0.4, please use getProperties().getCreated() instead
 	 */
 	public Date getCreated() {
-		return this.created;
+		return properties.getCreated();
 	}
 	/**
 	 * Sets the creation date for a Language. Should only be used for reading in files, should not be used for writing to files.
 	 * @param date The datetime when the language was created.
+	 * @deprecated as of 1.0.4, please use getProperties().setCreated() instead
 	 */
 	public void setCreated(Date date) {
-		this.created = date;
+		properties.setCreated(date);
 	}
 	/**
 	 * Gets the last edit date of a language.
 	 * @return The datetime when the language was last edited.
+	 * @deprecated as of 1.0.4, please use getProperties().getEdited() instead
 	 */
 	public Date getEdited() {
-		return this.edited;
+		return properties.getEdited();
 	}
 	/**
 	 * Sets the last edit date of a language. Should be used when changing anything about a language.
 	 * @param date The datetime (preferably the exact time the method was called) that the language was last edited.
+	 * @deprecated as of 1.0.4, please use getProperties().setEdited() instead
 	 */
 	public void setEdited(Date date) {
-		this.edited = date;
+		properties.setEdited(date);
 	}
 	/**
 	 * Checks if the language is flagged as read-only
 	 * @return true if read-only, false otherwise.
+	 * @deprecated as of 1.0.4, please use getProperties().isReadOnly() instead
 	 */
 	public boolean isReadOnly() {
-		return isReadOnly;
+		return properties.isReadOnly();
 	}
 	/**
 	 * Sets the read-only status of a language
 	 * Please note! This only makes it so that Utils will not edit it, however that cannot be said for the file itself.
 	 * @param bool The read-only status desired
+	 * @deprecated as of 1.0.4, please use getProperties().setReadOnly() instead
 	 */
 	public void setReadOnly(boolean bool) {
-		this.isReadOnly = bool;
+		properties.setReadOnly(bool);
 	}
 	/**
 	 * Gets the version that the language was last edited in.
 	 * @return The version the language was last edited in.
+	 * @deprecated as of 1.0.4, please use getProperties().getVersionEdited() instead
 	 */
 	public String getVersion() {
-		return versionEdited;
+		return properties.getVersionEdited();
 	}
 	/**
 	 * Sets the version that the language was last edited in. Should be called after every edit.
 	 * @param version The version the language was last edited in.
+	 * @deprecated as of 1.0.4, please use getProperties().setVersionEdited() instead
 	 */
 	public void setVersion(String version) {
-		this.versionEdited = version;
+		properties.setVersionEdited(version);
 	}
 	
+	/**
+	 * Gets the ID of a language.
+	 * @return The ID of the language
+	 * @deprecated as of 1.0.4, please use getProperties().getID() instead
+	 */
 	public String getID() {
-		return id;
+		return properties.getID();
 	}
 	
+	/**
+	 * Sets the ID of a language. Should only really be used when creating object
+	 * from file or copying object, changing the ID of a pre-established language
+	 * can cause some schenanigans
+	 * @param id The new ID of the language
+	 * @deprecated as of 1.0.4, please use getProperties().setID() instead
+	 */
 	public void setID(String id) {
-		this.id = id;
+		properties.setID(id);
 	}
 	
 	/**
@@ -358,8 +383,8 @@ public class Language {
 	 * @throws IOException Should never be thrown, however would not compile without it. If thrown, something has gone horribly wrong...
 	 */
 	public void toFile(File file) throws IOException {
-		edited = Date.from(Instant.now());
-		versionEdited = Info.getVersion();
+		properties.setEdited(Date.from(Instant.now()));
+		properties.setVersionEdited(Info.getVersion());
 		
 		lexicon.checkHomonyms();
 		lexicon.checkSynonyms();
@@ -382,12 +407,18 @@ public class Language {
 	 */
 	public void generateID() {
 		// theoretically this prevents an id from being overwritten
-		if (id.equals("null")) {
+		if (properties.getID().equals("null")) {
 			int rand = (int) (Math.random() * 100000);
 			// "its deprecated" i dont care
 			// why does DateTimeFormatter not accept date objects :(
-			id = name.toUpperCase() + created.getYear() + created.getMonth() + created.getDay() +
-					created.getHours() + created.getMinutes() + created.getSeconds() + rand;
+			properties.setID(properties.getName().toUpperCase() +
+					properties.getCreated().getYear() +
+					properties.getCreated().getMonth() +
+					properties.getCreated().getDay() +
+					properties.getCreated().getHours() +
+					properties.getCreated().getMinutes() +
+					properties.getCreated().getSeconds()
+					+ rand);
 		}
 	}
 	
@@ -396,13 +427,13 @@ public class Language {
 	 */
 	public String toString() {
 		String returnString = "===Meta Start===\n";
-		returnString += "utilsVersion:" + versionEdited + "\n";
-		returnString += "name:" + name + "\n";
-		returnString += "id:" + id + "\n";
-		returnString += "autonym:" + autonym + "\n";
-		returnString += "timeCreated:" + created.getTime() + "\n";
-		returnString += "lastEdited:" + edited.getTime() + "\n";
-		returnString += "readonly:" + isReadOnly + "\n";
+		returnString += "utilsVersion:" + properties.getVersionEdited() + "\n";
+		returnString += "name:" + properties.getName() + "\n";
+		returnString += "id:" + properties.getID() + "\n";
+		returnString += "autonym:" + properties.getAutonym() + "\n";
+		returnString += "timeCreated:" + properties.getCreated().getTime() + "\n";
+		returnString += "lastEdited:" + properties.getEdited().getTime() + "\n";
+		returnString += "readonly:" + properties.isReadOnly() + "\n";
 		returnString += "parent:" + parent.getName() + "\n";
 		returnString += "===Meta End===\n";
 		returnString += phono.toString() + "\n";
@@ -416,9 +447,8 @@ public class Language {
 		if (obj instanceof Language) {
 			Language l = (Language) obj;
 			
-			if (l.autonym.equals(autonym) & l.id.equals(id) & l.name.equals(name) & l.phono.equals(phono) &
-					l.lexicon.equals(lexicon) & l.created.equals(created) &
-					l.isReadOnly == isReadOnly) {
+			if (l.properties.equals(properties) & l.phono.equals(phono) &
+					l.lexicon.equals(lexicon)) {
 				/*
 				 * Does not check for:
 				 * - parent (may be removed in future)

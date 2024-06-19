@@ -109,58 +109,23 @@ public class Language {
 		parent = new Language(l.parent);
 	}
 	
-	
 	public static Language parse(Multitag docTag) throws Exception {
 		Multitag meta = docTag.getMultitag("Meta");
-		Tag ver = new Tag("utilsVersion");
-		try {
-			ver = meta.getDirectChild("utilsVersion");
-			if (!ver.value().isBlank()) {
-				log.info("Language created with " + ver.value());
-			}
-		} catch (Exception e) {
-			ver = meta.getDirectChild("susquehannaVersion");
-			if (!ver.value().isBlank()) {
-				log.info("Language created with " + ver.value());
-			}
-			log.warn("This language appears to have been created with a very early version of Oijon Utils!");
-			log.warn("The susquehannaVersion tag was deprecated as of 1.2.0.");
-		}
+		// parse language properties, as a name is required
+		LanguageProperties lp = LanguageProperties.parse(docTag);
 		
 		// properties that must be parsed before anything else can be parsed get put up here
 		Tag parent = meta.getDirectChild("parent");
-		Language lang = new Language(meta.getDirectChild("name").value());
+		Language lang = new Language(lp.getName());
 		
-		Tag id = new Tag("id");
-		try {
-			id = meta.getDirectChild("id");
-			if (!id.value().isBlank() & !id.value().equals("null")) {
-				log.info("ID of language is " + id.value());
-				lang.setID(id.value());
-			} else {
-				log.err("This language appears to have a blank or null ID!");
-				log.warn("Generating new ID, this may break relations with other languages!");
-				lang.generateID();
-				log.warn("New ID: " + lang.getID() + ". If other languages are related to this language, "
-						+ "a manual switch to the new ID will be neccessary.");
-			}
-		} catch (Exception e) {
-			log.warn("This language appears to have been created with a very early version of Oijon Utils!");
-			log.warn("The id tag was required as of 1.2.0.");
-			lang.generateID();
-		}
 		
 		// parse each property
 		lang.setPhono(Phonology.parse(docTag));
 		lang.setOrtho(Orthography.parse(docTag));
 		lang.setLexicon(Lexicon.parse(docTag));
-		lang.setCreated(new Date(Long.parseLong(meta.getDirectChild("timeCreated").value())));
-		lang.setEdited(new Date(Long.parseLong(meta.getDirectChild("lastEdited").value())));
-		lang.setAutonym(meta.getDirectChild("autonym").value());
-		lang.setReadOnly(Boolean.parseBoolean(meta.getDirectChild("readonly").value()));
-		// TODO: remove this/change to planned ID system
+		lang.setProperties(lp);
+		// TODO: remove this/change to ID system
 		lang.setParent(new Language(parent.value()));
-		lang.setVersion(ver.value());
 		return lang;
 	}
 	
@@ -399,27 +364,6 @@ public class Language {
 		BufferedWriter bw = new BufferedWriter(fw);
 		bw.write(data);
 		bw.close();
-	}
-	
-	@SuppressWarnings("deprecation")
-	/**
-	 * Generates an ID for the language
-	 */
-	public void generateID() {
-		// theoretically this prevents an id from being overwritten
-		if (properties.getID().equals("null")) {
-			int rand = (int) (Math.random() * 100000);
-			// "its deprecated" i dont care
-			// why does DateTimeFormatter not accept date objects :(
-			properties.setID(properties.getName().toUpperCase() +
-					properties.getCreated().getYear() +
-					properties.getCreated().getMonth() +
-					properties.getCreated().getDay() +
-					properties.getCreated().getHours() +
-					properties.getCreated().getMinutes() +
-					properties.getCreated().getSeconds()
-					+ rand);
-		}
 	}
 	
 	/**

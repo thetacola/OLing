@@ -202,36 +202,7 @@ public class PhonoSystem {
 			for (int i = 0; i < tablelist.getSubMultitags().size(); i++) {
 				if (tablelist.getSubMultitags().get(i).getName().equals("PhonoTable")) {
 					Multitag phonoTableTag = tablelist.getSubMultitags().get(i);
-					ArrayList<Tag> tableData = phonoTableTag.getUnattachedData();
-					
-					String name = phonoTableTag.getDirectChild("tableName").value();
-					ArrayList<String> columns = new ArrayList<String>(Arrays.asList(phonoTableTag.getDirectChild("columnNames").value().split(",")));
-					ArrayList<String> rowNamesList = new ArrayList<String>(Arrays.asList(phonoTableTag.getDirectChild("rowNames").value().split(",")));
-					int perCell = 0;
-					try {
-						perCell = Integer.parseInt(phonoTableTag.getDirectChild("soundsPerCell").value());
-					} catch (NumberFormatException nfe) {
-						log.err("soundsPerCell must be integer in " + phonoTableTag.getDirectChild("tableName").value());
-						log.err(nfe.toString());
-						throw nfe;
-					}
-					
-					ArrayList<PhonoCategory> cats = new ArrayList<PhonoCategory>();
-					for (int j = 0; j < rowNamesList.size(); j++) {
-						PhonoCategory cat = new PhonoCategory(rowNamesList.get(j));
-						// TODO: allow multiple character sounds?
-						try {
-							String catData = tableData.get(j).value();
-							for (int k = 0; k < catData.length(); k++) {
-								cat.addSound(Character.toString(catData.charAt(k)));
-							}
-							cats.add(cat);
-						} catch (IndexOutOfBoundsException e) {
-							log.warn("No data found in table " + name);
-						}
-					}
-					
-					PhonoTable phonoTable = new PhonoTable(name, columns, cats, perCell);
+					PhonoTable phonoTable = PhonoTable.parse(phonoTableTag);
 					phonoSystem.addTable(phonoTable);
 				}
 			}
@@ -241,6 +212,8 @@ public class PhonoSystem {
 			throw e;
 		}
 	}
+	
+	
 	
 	/**
 	 * Used once in here to read to an InputStream and write to an OutputStream.

@@ -13,7 +13,7 @@ import net.oijon.oling.datatypes.PhonoSystem;
 import net.oijon.oling.datatypes.Phonology;
 import net.oijon.oling.datatypes.Tag;
 
-//last edit: 10/22/2023 -N3
+//last edit: 6/20/2023 -N3
 
 /**
  * Parses a .language file, and allows various parts to be accessed
@@ -22,7 +22,7 @@ import net.oijon.oling.datatypes.Tag;
  */
 public class Parser {
 	
-	static Log log = new Log(System.getProperty("user.home") + "/.oijonUtils", true);
+	static Log log = new Log(System.getProperty("user.home") + "/.oling", true);
 	private Multitag tag;
 	
 	/**
@@ -215,34 +215,7 @@ public class Parser {
 		for (int i = 1; i < splitLines.length; i++) {
 			// Checks if the line matches the pattern of a multitag start marker
 			if (isMultitagStart(splitLines[i])) {
-				// Gets the name of the start marker
-				String name = getMarkerTagName(splitLines[i]);
-				// Gets the line number the tag was found on
-				int lineNum = i + 1;
-				// Creates a variable for the loop below
-				String tagInput = "";
-				// Loops over the lines in the file, starting at the start marker
-				for (int j = i; j < splitLines.length; j++) {
-					// Checks if a line is an end marker
-					if (isCloseForName(splitLines[j], name)){
-						// Starts parsing tagInput
-						Multitag childTag = parseMulti(tagInput);
-						// Adds the parsed multitag to the current tag
-						tag.addMultitag(childTag);
-						// skips to the end of the multitag
-						i = j;
-						// breaks the loop that reads into the multitag
-						break;
-					// Checks if at the end of the file
-					} else if (j == splitLines.length - 1) {
-						// Logs if at end of file and close has not been found
-						log.err("Tag " + name + " on line " + lineNum + " is not closed!");
-					// Line is not an end marker nor the 
-					} else {
-						// Adds line to tagInput if it is not an end marker
-						tagInput += splitLines[j] + "\n";
-					}
-				}
+				tag.addMultitag(readChildMultitag(splitLines, i));
 			// Checks if line is named tag
 			} else if (isDataTag(splitLines[i])) {
 				// Adds tag object to parent
@@ -259,6 +232,34 @@ public class Parser {
 		this.tag = tag;
 		// Returns the parsed multitag
 		return tag;
+	}
+	
+	private Multitag readChildMultitag(String[] splitLines, int startLine) {
+		// Gets the name of the start marker
+		String name = getMarkerTagName(splitLines[startLine]);
+		// Gets the line number the tag was found on
+		int lineNum = startLine + 1;
+		// Creates a variable for the loop below
+		String tagInput = "";
+		// Loops over the lines in the file, starting at the start marker
+		for (int j = startLine; j < splitLines.length; j++) {
+			// Checks if a line is an end marker
+			if (isCloseForName(splitLines[j], name)){
+				// Starts parsing tagInput
+				Multitag childTag = parseMulti(tagInput);
+				// Adds the parsed multitag to the current tag
+				return childTag;
+			// Checks if at the end of the file
+			} else if (j == splitLines.length - 1) {
+				// Logs if at end of file and close has not been found
+				log.err("Tag " + name + " on line " + lineNum + " is not closed!");
+			// Line is not an end marker nor the 
+			} else {
+				// Adds line to tagInput if it is not an end marker
+				tagInput += splitLines[j] + "\n";
+			}
+		}
+		return null;
 	}
 	
 	/**

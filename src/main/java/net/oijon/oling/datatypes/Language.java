@@ -138,33 +138,6 @@ public class Language {
 	}
 	
 	/**
-	 * Gets the name of a Language object
-	 * @return The name of the language
-	 * @deprecated as of 1.0.4, please use getProperties().getName() instead
-	 */
-	public String getName() {
-		return properties.getName();
-	}
-	
-	/**
-	 * Gets the autonym of a language
-	 * @return The autonym of the language
-	 * @deprecated as of 1.0.4, please use getProperties().getAutonym() instead
-	 */
-	public String getAutonym() {
-		return properties.getAutonym();
-	}
-	
-	/**
-	 * Sets an autonym for a language
-	 * @param autonym The autonym to be set
-	 * @deprecated as of 1.0.4, please use getProperties().setAutonym() instead
-	 */
-	public void setAutonym(String autonym) {
-		properties.setAutonym(autonym);
-	}
-	
-	/**
 	 * Gets a phonology of a language
 	 * @return a Phonology object of the language
 	 */
@@ -222,7 +195,7 @@ public class Language {
 	 * @return The name of the parent language
 	 */
 	public String getParentName() {
-		return parent.getName();
+		return parent.getProperties().getName();
 	}
 	
 	/**
@@ -247,7 +220,7 @@ public class Language {
 			Parser parser = new Parser(potentialFiles[i]);
 			try {
 				Language parent = parser.parseLanguage();
-				if (parent.getName().equals(parentName)) {
+				if (parent.getProperties().getName().equals(parentName)) {
 					this.parent = parent;
 					return;
 				}
@@ -256,92 +229,6 @@ public class Language {
 			}
 		}
 	}
-	/**
-	 * Gets the datetime when the language was created.
-	 * @return The datetime when the language was created.
-	 * @deprecated as of 1.0.4, please use getProperties().getCreated() instead
-	 */
-	public Date getCreated() {
-		return properties.getCreated();
-	}
-	/**
-	 * Sets the creation date for a Language. Should only be used for reading in files, should not be used for writing to files.
-	 * @param date The datetime when the language was created.
-	 * @deprecated as of 1.0.4, please use getProperties().setCreated() instead
-	 */
-	public void setCreated(Date date) {
-		properties.setCreated(date);
-	}
-	/**
-	 * Gets the last edit date of a language.
-	 * @return The datetime when the language was last edited.
-	 * @deprecated as of 1.0.4, please use getProperties().getEdited() instead
-	 */
-	public Date getEdited() {
-		return properties.getEdited();
-	}
-	/**
-	 * Sets the last edit date of a language. Should be used when changing anything about a language.
-	 * @param date The datetime (preferably the exact time the method was called) that the language was last edited.
-	 * @deprecated as of 1.0.4, please use getProperties().setEdited() instead
-	 */
-	public void setEdited(Date date) {
-		properties.setEdited(date);
-	}
-	/**
-	 * Checks if the language is flagged as read-only
-	 * @return true if read-only, false otherwise.
-	 * @deprecated as of 1.0.4, please use getProperties().isReadOnly() instead
-	 */
-	public boolean isReadOnly() {
-		return properties.isReadOnly();
-	}
-	/**
-	 * Sets the read-only status of a language
-	 * Please note! This only makes it so that Utils will not edit it, however that cannot be said for the file itself.
-	 * @param bool The read-only status desired
-	 * @deprecated as of 1.0.4, please use getProperties().setReadOnly() instead
-	 */
-	public void setReadOnly(boolean bool) {
-		properties.setReadOnly(bool);
-	}
-	/**
-	 * Gets the version that the language was last edited in.
-	 * @return The version the language was last edited in.
-	 * @deprecated as of 1.0.4, please use getProperties().getVersionEdited() instead
-	 */
-	public String getVersion() {
-		return properties.getVersionEdited();
-	}
-	/**
-	 * Sets the version that the language was last edited in. Should be called after every edit.
-	 * @param version The version the language was last edited in.
-	 * @deprecated as of 1.0.4, please use getProperties().setVersionEdited() instead
-	 */
-	public void setVersion(String version) {
-		properties.setVersionEdited(version);
-	}
-	
-	/**
-	 * Gets the ID of a language.
-	 * @return The ID of the language
-	 * @deprecated as of 1.0.4, please use getProperties().getID() instead
-	 */
-	public String getID() {
-		return properties.getID();
-	}
-	
-	/**
-	 * Sets the ID of a language. Should only really be used when creating object
-	 * from file or copying object, changing the ID of a pre-established language
-	 * can cause some schenanigans
-	 * @param id The new ID of the language
-	 * @deprecated as of 1.0.4, please use getProperties().setID() instead
-	 */
-	public void setID(String id) {
-		properties.setID(id);
-	}
-	
 	/**
 	 * Writes a language to a file
 	 * @param file The file to write to
@@ -378,7 +265,7 @@ public class Language {
 		returnString += "timeCreated:" + properties.getCreated().getTime() + "\n";
 		returnString += "lastEdited:" + properties.getEdited().getTime() + "\n";
 		returnString += "readonly:" + properties.isReadOnly() + "\n";
-		returnString += "parent:" + parent.getName() + "\n";
+		returnString += "parent:" + parent.getProperties().getName() + "\n";
 		returnString += "===Meta End===\n";
 		returnString += phono.toString() + "\n";
 		returnString += ortho.toString() + "\n";

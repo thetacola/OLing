@@ -274,20 +274,20 @@ public class UnitTests {
 			Parser parser = new Parser(Paths.get(UnitTests.class.getClassLoader().getResource("testish.language").toURI()).toFile());
 			Language testLang = parser.parseLanguage();
 			
-			log.debug("Old ID: " + testLang.getID());
-			assertFalse(testLang.getID().equals("null"));
+			log.debug("Old ID: " + testLang.getProperties().getID());
+			assertFalse(testLang.getProperties().getID().equals("null"));
 			
-			testLang.setID("null");
-			log.debug("Null ID: " + testLang.getID());
-			assertTrue(testLang.getID().equals("null"));
+			testLang.getProperties().setID("null");
+			log.debug("Null ID: " + testLang.getProperties().getID());
+			assertTrue(testLang.getProperties().getID().equals("null"));
 			
 			testLang.toFile(new File(System.getProperty("user.home") + "/.oling/testish2.language"));
 			
 			Parser newparser = new Parser(new File(System.getProperty("user.home") + "/.oling/testish2.language"));
 			Language testLang2 = newparser.parseLanguage();
 			
-			log.debug("New ID: " + testLang2.getID());
-			assertFalse(testLang2.getID().equals("null"));
+			log.debug("New ID: " + testLang2.getProperties().getID());
+			assertFalse(testLang2.getProperties().getID().equals("null"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();

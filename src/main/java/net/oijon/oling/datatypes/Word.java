@@ -267,7 +267,7 @@ public class Word {
 		returnString += "meaning:" + meaning + "\n";
 		returnString += "pronounciation:" + pronounciation + "\n";
 		returnString += "etymology:" + etymology + "\n";
-		returnString += "sourceLanguage:" + sourceLanguage.getName() + "\n";
+		returnString += "sourceLanguage:" + sourceLanguage.getProperties().getName() + "\n";
 		returnString += "creationDate:" + creationDate.getTime() + "\n";
 		returnString += "editDate:" + editDate.getTime() + "\n";
 		returnString += "===Synonym Start===\n";

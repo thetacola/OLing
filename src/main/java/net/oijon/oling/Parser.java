@@ -30,17 +30,7 @@ public class Parser {
 	 * @param input The string to be parsed.
 	 */
 	public Parser(String input) {
-		input.replace("	", "");
-		String[] splitLines = input.split("\n");
-		/**
-		 * New plan:
-		 * Because the entire file has to be in a PHOSYS tag, just use that with parseMulti :)
-		 */
-		if (splitLines[0].equals("===PHOSYS Start===")) {
-			parseMulti(input);
-		} else {
-			log.err("Input is not a valid PHOSYS file!");
-		}
+		initString(input);
 	}
 	
 	/**
@@ -55,18 +45,27 @@ public class Parser {
 			while (scanner.hasNextLine()) {
 				wholeFile += scanner.nextLine() + "\n";
 			}
-			String[] splitLines = wholeFile.split("\n");
-			if (splitLines[0].equals("===PHOSYS Start===")) {
-				parseMulti(wholeFile);
-			} else {
-				log.err("Input is not a valid PHOSYS file!");
-			}
 			scanner.close();
+			initString(wholeFile);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			log.critical("File " + file.toString() + " not found! Cannot parse.");
 		}
 		
+	}
+	
+	private void initString(String input) {
+		input.replace("	", "");
+		String[] splitLines = input.split("\n");
+		/**
+		 * New plan:
+		 * Because the entire file has to be in a PHOSYS tag, just use that with parseMulti :)
+		 */
+		if (splitLines[0].equals("===PHOSYS Start===")) {
+			parseMulti(input);
+		} else {
+			log.err("Input is not a valid PHOSYS file!");
+		}
 	}
 	
 	/**

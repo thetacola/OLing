@@ -160,13 +160,14 @@ public class PhonoTable {
 		return soundsPerCell;
 	}
 	
-	/**
-	 * Returns true
-	 * @deprecated as of v1.1.2, as this returns true always and verifying a PhonoTable does not make all that much sense. However, some code somewhere might still rely on it.
-	 */
-	@Deprecated
-	public boolean verify() {
-		return true;
+	public ArrayList<String> getSoundList() {
+		ArrayList<String> list = new ArrayList<String>();
+		
+		for (int i = 0; i < rows.size(); i++) {
+			list.addAll(rows.get(i).getSounds());
+		}
+		
+		return list;
 	}
 	
 	@Override

@@ -15,7 +15,7 @@ import net.oijon.oling.Parser;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
 
-//last edit: 12/17/23 -N3
+//last edit: 6/20/24 -N3
 
 /**
  * A way to transcribe all sounds allowed in a vocal tract. IPA is specified here as that
@@ -257,7 +257,7 @@ public class PhonoSystem {
 	 * @param value The value to be checked
 	 * @return Returns true if value is found in phono system, false if not
 	 */
-	public boolean isIn(String value) {
+	public boolean contains(String value) {
 		for (int i = 0; i < diacriticList.size(); i++) {
 			value = value.replace(Character.toString(diacriticList.get(i).charAt(0)), "");
 		}
@@ -265,12 +265,8 @@ public class PhonoSystem {
 			value = Character.toString(value.charAt(0));
 		}
 		for (int i = 0; i < tables.size(); i++) {
-			for (int j = 0; j < tables.get(i).size(); j++) {
-				for (int k = 0; k < tables.get(i).getRow(j).size(); k++) {
-					if (tables.get(i).getRow(j).getSound(k).equals(value)) {
-						return true;
-					}
-				}
+			if (tables.get(i).getSoundList().contains(value)) {
+				return true;
 			}
 		}
 		return false;

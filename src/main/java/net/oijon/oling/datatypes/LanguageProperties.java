@@ -57,21 +57,18 @@ public class LanguageProperties {
 	 * Generates an ID for the language
 	 */
 	private void generateID() {
-		// theoretically this prevents an id from being overwritten
-		if (strings[1].equals("null")) {
-			int rand = (int) (Math.random() * 100000);
-			// "its deprecated" i dont care
-			// why does DateTimeFormatter not accept date objects :(
-			Date created = dates[0];
-			this.setID(strings[2].toUpperCase() +
-					created.getYear() +
-					created.getMonth() +
-					created.getDay() +
-					created.getHours() +
-					created.getMinutes() +
-					created.getSeconds()
-					+ rand);
-		}
+		int rand = (int) (Math.random() * 100000);
+		// "its deprecated" i dont care
+		// why does DateTimeFormatter not accept date objects :(
+		Date created = dates[0];
+		this.setID(strings[2].toUpperCase() +
+				created.getYear() +
+				created.getMonth() +
+				created.getDay() +
+				created.getHours() +
+				created.getMinutes() +
+				created.getSeconds()
+				+ rand);
 	}
 	
 	private void checkID(Multitag meta) {

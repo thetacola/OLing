@@ -20,57 +20,17 @@ import net.oijon.oling.Parser;
  * @author alex
  *
  */
+
+// TODO: re-add parent
 public class Language {
 
 	public static Log log = Parser.getLog();
 	public static final Language NULL = new Language("null");
 	
-	//private String autonym = "null";
-	//private String id = "null";
-	//private String name = "null";
 	private LanguageProperties properties = new LanguageProperties();
 	private Phonology phono = new Phonology();
 	private Lexicon lexicon = new Lexicon();
 	private Orthography ortho = new Orthography();
-	private Language parent = Language.NULL;
-	//private boolean isReadOnly = false;
-	//private Date created = Date.from(Instant.now());
-	//private Date edited = Date.from(Instant.now());
-	//private String versionEdited = Info.getVersion();
-	
-	private static File[] generateFiles(File startDir) {
-		FilenameFilter filter = new FilenameFilter() {
-            @Override
-            public boolean accept(File f, String name) {
-            	if (name.startsWith(".")) {
-            		return false;
-            	} else if (name.endsWith(".language")) {
-            		return true;
-            	}
-            	return false;
-            }
-        };
-        File[] files = startDir.listFiles(filter);
-        return files;
-	}
-	
-	/**
-	 * Gets all the .language files in the Susquehanna directory
-	 * @return A list of .language files
-	 * @deprecated as of v1.1.2, as this was Oijon Susquehanna-specific. Please use {@link #getLanguageFiles(File) getLanguageFiles(File)} instead. 
-	 */
-	@Deprecated
-	public static File[] getLanguageFiles() {
-		File[] files;
-		try {
-            File f = new File(System.getProperty("user.home") + "/Susquehanna/");
-            files = generateFiles(f);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-            files = null;
-        }
-		return files;
-	}
 	
 	/**
 	 * Gets a list of all .language files in a specified directory. Does not currently support looking into subdirectories.
@@ -81,7 +41,18 @@ public class Language {
 		//TODO: Search in subdirectories as well
 		File[] files;
 		try {
-            files = generateFiles(f);
+			FilenameFilter filter = new FilenameFilter() {
+	            @Override
+	            public boolean accept(File f, String name) {
+	            	if (name.startsWith(".")) {
+	            		return false;
+	            	} else if (name.endsWith(".language")) {
+	            		return true;
+	            	}
+	            	return false;
+	            }
+	        };
+	        files = f.listFiles(filter);
         } catch (Exception e) {
             System.err.println(e.getMessage());
             files = null;
@@ -106,26 +77,18 @@ public class Language {
 		phono = new Phonology(l.phono); 
 		lexicon = new Lexicon(l.lexicon);
 		ortho = new Orthography(l.ortho);
-		parent = new Language(l.parent);
 	}
 	
 	public static Language parse(Multitag docTag) throws Exception {
-		Multitag meta = docTag.getMultitag("Meta");
 		// parse language properties, as a name is required
 		LanguageProperties lp = LanguageProperties.parse(docTag);
-		
-		// properties that must be parsed before anything else can be parsed get put up here
-		Tag parent = meta.getDirectChild("parent");
-		Language lang = new Language(lp.getName());
-		
+		Language lang = new Language(lp.getName());		
 		
 		// parse each property
 		lang.setPhono(Phonology.parse(docTag));
 		lang.setOrtho(Orthography.parse(docTag));
 		lang.setLexicon(Lexicon.parse(docTag));
 		lang.setProperties(lp);
-		// TODO: remove this/change to ID system
-		lang.setParent(new Language(parent.value()));
 		return lang;
 	}
 	
@@ -182,54 +145,6 @@ public class Language {
 	}
 	
 	/**
-	 * Gets the parent language of a language (for example, the parent language of a dialect)
-	 * This method used to be deprecated, however no longer is.
-	 * @return a Language object representing the parent language
-	 */
-	public Language getParent() {
-		return parent;
-	}
-	
-	/**
-	 * Gets the name of the parent language. Please note that this will most likely return null.
-	 * @return The name of the parent language
-	 */
-	public String getParentName() {
-		return parent.getProperties().getName();
-	}
-	
-	/**
-	 * Sets a parent language of a language
-	 * @param parent The language to be the parent
-	 * @deprecated as of v1.1.2, as this just straight up does not work currently. The way this is currently set, an *entire language* would be stored for each parent. 
-	 * 		If we, say, stored English like this, we would have language files going all the way back to Proto-Indo-European, which would be a disaster file-size  and memory wise.
-	 * 		Please use {@link setParent(String, File) setParent(String, File)} instead.
-	 */
-	public void setParent(Language parent) {
-		this.parent = parent;
-	}
-	
-	/**
-	 * Sets a parent language of a language
-	 * @param parentName The name of the parent language.
-	 * @param dir The directory that the language is in.
-	 */
-	public void setParent(String parentName, File dir) {
-		File[] potentialFiles = getLanguageFiles(dir);
-		for (int i = 0; i < potentialFiles.length; i++) {
-			Parser parser = new Parser(potentialFiles[i]);
-			try {
-				Language parent = parser.parseLanguage();
-				if (parent.getProperties().getName().equals(parentName)) {
-					this.parent = parent;
-					return;
-				}
-			} catch (Exception e) {
-				
-			}
-		}
-	}
-	/**
 	 * Writes a language to a file
 	 * @param file The file to write to
 	 * @throws IOException Should never be thrown, however would not compile without it. If thrown, something has gone horribly wrong...
@@ -265,7 +180,7 @@ public class Language {
 		returnString += "timeCreated:" + properties.getCreated().getTime() + "\n";
 		returnString += "lastEdited:" + properties.getEdited().getTime() + "\n";
 		returnString += "readonly:" + properties.isReadOnly() + "\n";
-		returnString += "parent:" + parent.getProperties().getName() + "\n";
+		returnString += "parent:" + "null" + "\n";
 		returnString += "===Meta End===\n";
 		returnString += phono.toString() + "\n";
 		returnString += ortho.toString() + "\n";

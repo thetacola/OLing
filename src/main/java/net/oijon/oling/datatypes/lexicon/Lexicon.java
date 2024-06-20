@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.lexicon;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -6,8 +6,10 @@ import java.util.Date;
 import net.oijon.olog.Log;
 
 import net.oijon.oling.Parser;
+import net.oijon.oling.datatypes.tags.Multitag;
+import net.oijon.oling.datatypes.tags.Tag;
 
-//last edit: 10/22/23 -N3
+//last edit: 6/20/24 -N3
 
 /**
  * The words and meaning of a language
@@ -64,7 +66,10 @@ public class Lexicon {
 	public void removeWord(Word word) {
 		for (int i = 0; i < wordList.size(); i++) {
 			Word checkWord = wordList.get(i);
-			if (checkWord.getName().equals(word.getName()) & checkWord.getMeaning().equals(word.getMeaning())) {
+			if (checkWord.getProperties().getProperty(WordProperty.NAME).equals(
+					word.getProperties().getProperty(WordProperty.NAME))
+					& checkWord.getProperties().getProperty(WordProperty.MEANING).equals(
+							word.getProperties().getProperty(WordProperty.MEANING))) {
 				wordList.remove(i);
 			}
 		}
@@ -94,7 +99,8 @@ public class Lexicon {
 		for (int i = 0; i < wordList.size(); i++) {
 			for (int j = 0; j < wordList.size(); j++) {
 				if (i != j) {
-					if (wordList.get(i).getMeaning().equals(wordList.get(j).getMeaning())) {
+					if (wordList.get(i).getProperties().getProperty(WordProperty.MEANING).equals(
+							wordList.get(j).getProperties().getProperty(WordProperty.MEANING))) {
 						wordList.get(i).addSynonym(wordList.get(j));
 					}
 				}
@@ -109,7 +115,8 @@ public class Lexicon {
 		for (int i = 0; i < wordList.size(); i++) {
 			for (int j = 0; j < wordList.size(); j++) {
 				if (i != j) {
-					if (wordList.get(i).getName().equals(wordList.get(j).getName())) {
+					if (wordList.get(i).getProperties().getProperty(WordProperty.NAME).equals(
+							wordList.get(j).getProperties().getProperty(WordProperty.NAME))) {
 						wordList.get(i).addHomonym(wordList.get(j));
 					}
 				}
@@ -131,32 +138,7 @@ public class Lexicon {
 			for (int i = 0; i < wordList.size(); i++) {
 				if (wordList.get(i).getName().equals("Word")) {
 					Multitag wordTag = wordList.get(i);
-					Tag valueTag = wordTag.getDirectChild("wordname");
-					Tag meaningTag = wordTag.getDirectChild("meaning");
-					Word word = new Word(valueTag.value(), meaningTag.value());
-					// current tag string very useful for debugging this try/catch here :)
-					String currentTag = "";
-					try {
-						currentTag = "pronounciation";
-						Tag pronunciationTag = wordTag.getDirectChild("pronounciation");
-						word.setPronounciation(pronunciationTag.value());
-						currentTag = "etymology";
-						Tag etymologyTag = wordTag.getDirectChild("etymology");
-						word.setEtymology(etymologyTag.value());
-						//TODO: Attempt to find ID of source language in Susquehanna folder. If not found, revert to null.
-						//Tag sourceLanguageTag = wordTag.getDirectChild("sourceLanguage");
-						//word.setSourceLanguage(null);
-						currentTag = "creationDate";
-						Tag creationDateTag = wordTag.getDirectChild("creationDate");
-						word.setCreationDate(new Date(Long.parseLong(creationDateTag.value())));
-						currentTag = "editDate";
-						Tag editDateTag = wordTag.getDirectChild("editDate");
-						word.setEditDate(new Date(Long.parseLong(editDateTag.value())));
-					} catch (Exception e) {
-						log.warn("Could not find optional property " + currentTag + " for " + valueTag.value() + 
-								" (" + valueTag.getName() + "). Was this word added manually?");
-					}
-					lexicon.addWord(word);
+					lexicon.addWord(Word.parse(wordTag));
 				}
 			}
 			return lexicon;

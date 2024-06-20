@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.grammar;
 
 import java.util.ArrayList;
 

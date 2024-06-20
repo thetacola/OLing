@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.phonology;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,8 +12,10 @@ import java.util.Arrays;
 
 import net.oijon.olog.Log;
 import net.oijon.oling.Parser;
+import net.oijon.oling.datatypes.tags.Multitag;
+import net.oijon.oling.datatypes.tags.Tag;
 
-//last edit: 12/17/23 -N3
+//last edit: 6/20/24 -N3
 
 /**
  * A way to transcribe all sounds allowed in a vocal tract. IPA is specified here as that
@@ -132,22 +134,6 @@ public class PhonoSystem {
 	}
 	
 	/**
-	 * Adds a table to a phono system
-	 * @param table The table to be added
-	 */
-	public void addTable(PhonoTable table) {
-		tables.add(table);
-	}
-	
-	/**
-	 * Removes table based off index.
-	 * @param i index
-	 */
-	public void removeTable(int i) {
-		tables.remove(i);
-	}
-	
-	/**
 	 * Removes table based off name. As this is slower than removing via index, removing via index is preferred.
 	 * @param name Name of category to be removed
 	 */
@@ -171,9 +157,6 @@ public class PhonoSystem {
 		return tables.get(i).getRow(x).getSound(y);
 	}
 	
-	public void addDiacritic(String value) {
-		diacriticList.add(value);
-	}
 	public void setDiacritics(ArrayList<String> newList) {
 		diacriticList = newList;
 	}
@@ -202,37 +185,8 @@ public class PhonoSystem {
 			for (int i = 0; i < tablelist.getSubMultitags().size(); i++) {
 				if (tablelist.getSubMultitags().get(i).getName().equals("PhonoTable")) {
 					Multitag phonoTableTag = tablelist.getSubMultitags().get(i);
-					ArrayList<Tag> tableData = phonoTableTag.getUnattachedData();
-					
-					String name = phonoTableTag.getDirectChild("tableName").value();
-					ArrayList<String> columns = new ArrayList<String>(Arrays.asList(phonoTableTag.getDirectChild("columnNames").value().split(",")));
-					ArrayList<String> rowNamesList = new ArrayList<String>(Arrays.asList(phonoTableTag.getDirectChild("rowNames").value().split(",")));
-					int perCell = 0;
-					try {
-						perCell = Integer.parseInt(phonoTableTag.getDirectChild("soundsPerCell").value());
-					} catch (NumberFormatException nfe) {
-						log.err("soundsPerCell must be integer in " + phonoTableTag.getDirectChild("tableName").value());
-						log.err(nfe.toString());
-						throw nfe;
-					}
-					
-					ArrayList<PhonoCategory> cats = new ArrayList<PhonoCategory>();
-					for (int j = 0; j < rowNamesList.size(); j++) {
-						PhonoCategory cat = new PhonoCategory(rowNamesList.get(j));
-						// TODO: allow multiple character sounds?
-						try {
-							String catData = tableData.get(j).value();
-							for (int k = 0; k < catData.length(); k++) {
-								cat.addSound(Character.toString(catData.charAt(k)));
-							}
-							cats.add(cat);
-						} catch (IndexOutOfBoundsException e) {
-							log.warn("No data found in table " + name);
-						}
-					}
-					
-					PhonoTable phonoTable = new PhonoTable(name, columns, cats, perCell);
-					phonoSystem.addTable(phonoTable);
+					PhonoTable phonoTable = PhonoTable.parse(phonoTableTag);
+					phonoSystem.getTables().add(phonoTable);
 				}
 			}
 			return phonoSystem;
@@ -241,6 +195,8 @@ public class PhonoSystem {
 			throw e;
 		}
 	}
+	
+	
 	
 	/**
 	 * Used once in here to read to an InputStream and write to an OutputStream.
@@ -282,7 +238,7 @@ public class PhonoSystem {
 	 * @param value The value to be checked
 	 * @return Returns true if value is found in phono system, false if not
 	 */
-	public boolean isIn(String value) {
+	public boolean contains(String value) {
 		for (int i = 0; i < diacriticList.size(); i++) {
 			value = value.replace(Character.toString(diacriticList.get(i).charAt(0)), "");
 		}
@@ -290,12 +246,8 @@ public class PhonoSystem {
 			value = Character.toString(value.charAt(0));
 		}
 		for (int i = 0; i < tables.size(); i++) {
-			for (int j = 0; j < tables.get(i).size(); j++) {
-				for (int k = 0; k < tables.get(i).getRow(j).size(); k++) {
-					if (tables.get(i).getRow(j).getSound(k).equals(value)) {
-						return true;
-					}
-				}
+			if (tables.get(i).getSoundList().contains(value)) {
+				return true;
 			}
 		}
 		return false;

@@ -5,15 +5,16 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import net.oijon.olog.Log;
-import net.oijon.oling.datatypes.Language;
-import net.oijon.oling.datatypes.Lexicon;
-import net.oijon.oling.datatypes.Multitag;
-import net.oijon.oling.datatypes.Orthography;
-import net.oijon.oling.datatypes.PhonoSystem;
-import net.oijon.oling.datatypes.Phonology;
-import net.oijon.oling.datatypes.Tag;
+import net.oijon.oling.datatypes.language.Language;
+import net.oijon.oling.datatypes.lexicon.Lexicon;
+import net.oijon.oling.datatypes.orthography.Orthography;
+import net.oijon.oling.datatypes.phonology.PhonoSystem;
+import net.oijon.oling.datatypes.phonology.Phonology;
+import net.oijon.oling.datatypes.tags.Multitag;
+import net.oijon.oling.datatypes.tags.MultitagUtils;
+import net.oijon.oling.datatypes.tags.Tag;
 
-//last edit: 10/22/2023 -N3
+//last edit: 6/20/2023 -N3
 
 /**
  * Parses a .language file, and allows various parts to be accessed
@@ -22,7 +23,7 @@ import net.oijon.oling.datatypes.Tag;
  */
 public class Parser {
 	
-	static Log log = new Log(System.getProperty("user.home") + "/.oijonUtils", true);
+	static Log log = new Log(System.getProperty("user.home") + "/.oling", true);
 	private Multitag tag;
 	
 	/**
@@ -30,17 +31,7 @@ public class Parser {
 	 * @param input The string to be parsed.
 	 */
 	public Parser(String input) {
-		input.replace("	", "");
-		String[] splitLines = input.split("\n");
-		/**
-		 * New plan:
-		 * Because the entire file has to be in a PHOSYS tag, just use that with parseMulti :)
-		 */
-		if (splitLines[0].equals("===PHOSYS Start===")) {
-			parseMulti(input);
-		} else {
-			log.err("Input is not a valid PHOSYS file!");
-		}
+		initString(input);
 	}
 	
 	/**
@@ -55,18 +46,27 @@ public class Parser {
 			while (scanner.hasNextLine()) {
 				wholeFile += scanner.nextLine() + "\n";
 			}
-			String[] splitLines = wholeFile.split("\n");
-			if (splitLines[0].equals("===PHOSYS Start===")) {
-				parseMulti(wholeFile);
-			} else {
-				log.err("Input is not a valid PHOSYS file!");
-			}
 			scanner.close();
+			initString(wholeFile);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			log.critical("File " + file.toString() + " not found! Cannot parse.");
 		}
 		
+	}
+	
+	private void initString(String input) {
+		input.replace("	", "");
+		String[] splitLines = input.split("\n");
+		/**
+		 * New plan:
+		 * Because the entire file has to be in a PHOSYS tag, just use that with parseMulti :)
+		 */
+		if (splitLines[0].equals("===PHOSYS Start===")) {
+			parseMulti(input);
+		} else {
+			log.err("Input is not a valid PHOSYS file!");
+		}
 	}
 	
 	/**
@@ -75,73 +75,7 @@ public class Parser {
 	 */
 	public Multitag getPHOSYSTag() {
 		return this.tag;
-	}
-	
-	/**
-	 * Checks if a line contains a multitag marker
-	 * @param line The line to be checked
-	 * @return true if the line is a multitag marker, false otherwise
-	 */
-	private boolean isMultitagMarker(String line) {
-		String[] splitSpace = line.split(" ");
-		String[] splitColon = line.split(":");
-		if (splitSpace.length == 2 & splitColon.length != 2) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Gets the second part of a multitag marker. Should either be "Start===" or "End==="
-	 * @param line The line to use for grabbing the second part of the marker
-	 * @return The second part of the multitag marker. If not a multitag marker, returns a blank string.
-	 */
-	private String getSecondPartOfMarker(String line) {
-		String[] splitSpace = line.split(" ");
-		if (isMultitagMarker(line)) {
-			return splitSpace[1];
-		}
-		return "";
-	}
-	
-	/**
-	 * Checks if a line contains a starting multitag marker
-	 * @param line The line to be checked
-	 * @return true if the line is a starting multitag marker, false otherwise
-	 */
-	private boolean isMultitagStart(String line) {
-		if (getSecondPartOfMarker(line).equals("Start===")) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Checks if a line contains an ending multitag marker
-	 * @param line The line to be checked
-	 * @return true if the line is an ending multitag marker, false otherwise
-	 */
-	private boolean isMultitagEnd(String line) {
-		if (getSecondPartOfMarker(line).equals("End===")) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Gets the name of a multitag from its marker
-	 * @param line The line with the marker in it
-	 * @return The name of the given multitag
-	 */
-	private String getMarkerTagName(String line) {
-		if (isMultitagMarker(line)) {
-			String[] splitSpace = line.split(" ");
-			String name = splitSpace[0].substring(3);
-			return name;
-		} else {
-			return "";
-		}
-	}
+	}	
 	
 	/**
 	 * Checks if a closing tag is the correct tag for a given tag name
@@ -150,8 +84,8 @@ public class Parser {
 	 * @return true if line is the expected closing tag, false if either not a closing tag or a closing tag for a different multitag
 	 */
 	private boolean isCloseForName(String line, String name) {
-		if (isMultitagEnd(line)) {
-			if (getMarkerTagName(line).equals(name)) {
+		if (MultitagUtils.isMultitagEnd(line)) {
+			if (MultitagUtils.getMarkerTagName(line).equals(name)) {
 				return true;
 			}
 		}
@@ -207,42 +141,15 @@ public class Parser {
 		// Splits each line based off line breaks
 		String[] splitLines = input.split("\n");
 		// Gets the tag name from the start tag. This removes the beginning '==='
-		String tagName = getMarkerTagName(splitLines[0]);
+		String tagName = MultitagUtils.getMarkerTagName(splitLines[0]);
 		
 		// This creates a new Multitag in memory named after the tag just named
 		Multitag tag = new Multitag(tagName);
 		// Loop over each line in file
 		for (int i = 1; i < splitLines.length; i++) {
 			// Checks if the line matches the pattern of a multitag start marker
-			if (isMultitagStart(splitLines[i])) {
-				// Gets the name of the start marker
-				String name = getMarkerTagName(splitLines[i]);
-				// Gets the line number the tag was found on
-				int lineNum = i + 1;
-				// Creates a variable for the loop below
-				String tagInput = "";
-				// Loops over the lines in the file, starting at the start marker
-				for (int j = i; j < splitLines.length; j++) {
-					// Checks if a line is an end marker
-					if (isCloseForName(splitLines[j], name)){
-						// Starts parsing tagInput
-						Multitag childTag = parseMulti(tagInput);
-						// Adds the parsed multitag to the current tag
-						tag.addMultitag(childTag);
-						// skips to the end of the multitag
-						i = j;
-						// breaks the loop that reads into the multitag
-						break;
-					// Checks if at the end of the file
-					} else if (j == splitLines.length - 1) {
-						// Logs if at end of file and close has not been found
-						log.err("Tag " + name + " on line " + lineNum + " is not closed!");
-					// Line is not an end marker nor the 
-					} else {
-						// Adds line to tagInput if it is not an end marker
-						tagInput += splitLines[j] + "\n";
-					}
-				}
+			if (MultitagUtils.isMultitagStart(splitLines[i])) {
+				tag.addMultitag(readChildMultitag(splitLines, i));
 			// Checks if line is named tag
 			} else if (isDataTag(splitLines[i])) {
 				// Adds tag object to parent
@@ -259,6 +166,34 @@ public class Parser {
 		this.tag = tag;
 		// Returns the parsed multitag
 		return tag;
+	}
+	
+	private Multitag readChildMultitag(String[] splitLines, int startLine) {
+		// Gets the name of the start marker
+		String name = MultitagUtils.getMarkerTagName(splitLines[startLine]);
+		// Gets the line number the tag was found on
+		int lineNum = startLine + 1;
+		// Creates a variable for the loop below
+		String tagInput = "";
+		// Loops over the lines in the file, starting at the start marker
+		for (int j = startLine; j < splitLines.length; j++) {
+			// Checks if a line is an end marker
+			if (isCloseForName(splitLines[j], name)){
+				// Starts parsing tagInput
+				Multitag childTag = parseMulti(tagInput);
+				// Adds the parsed multitag to the current tag
+				return childTag;
+			// Checks if at the end of the file
+			} else if (j == splitLines.length - 1) {
+				// Logs if at end of file and close has not been found
+				log.err("Tag " + name + " on line " + lineNum + " is not closed!");
+			// Line is not an end marker nor the 
+			} else {
+				// Adds line to tagInput if it is not an end marker
+				tagInput += splitLines[j] + "\n";
+			}
+		}
+		return null;
 	}
 	
 	/**

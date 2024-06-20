@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Date;
 
@@ -15,11 +14,14 @@ import org.junit.jupiter.api.Test;
 import net.oijon.olog.Log;
 
 import net.oijon.oling.Parser;
-import net.oijon.oling.datatypes.Language;
-import net.oijon.oling.datatypes.Lexicon;
-import net.oijon.oling.datatypes.Multitag;
-import net.oijon.oling.datatypes.Orthography;
-import net.oijon.oling.datatypes.Word;
+import net.oijon.oling.datatypes.language.Language;
+import net.oijon.oling.datatypes.language.LanguageProperty;
+import net.oijon.oling.datatypes.lexicon.Lexicon;
+import net.oijon.oling.datatypes.lexicon.Word;
+import net.oijon.oling.datatypes.lexicon.WordProperty;
+import net.oijon.oling.datatypes.orthography.Guesser;
+import net.oijon.oling.datatypes.orthography.Orthography;
+import net.oijon.oling.datatypes.tags.Multitag;
 
 public class UnitTests {
 
@@ -258,8 +260,8 @@ public class UnitTests {
 			log.info(newLang.toString());
 			assertEquals(testOrtho, newLang.getOrtho());
 			
-			assertEquals(testOrtho.phonoGuess("ough"), "ɔː");
-			assertEquals(testOrtho.orthoGuess("jutɪlz"), "yutylz");
+			assertEquals(Guesser.phonoGuess("ough", testOrtho), "ɔː");
+			assertEquals(Guesser.orthoGuess("jutɪlz", testOrtho), "yutylz");
 			
 			
 		} catch (Exception e) {
@@ -275,20 +277,20 @@ public class UnitTests {
 			Parser parser = new Parser(Paths.get(UnitTests.class.getClassLoader().getResource("testish.language").toURI()).toFile());
 			Language testLang = parser.parseLanguage();
 			
-			log.debug("Old ID: " + testLang.getID());
-			assertFalse(testLang.getID().equals("null"));
+			log.debug("Old ID: " + testLang.getProperties().getProperty(LanguageProperty.ID));
+			assertFalse(testLang.getProperties().getProperty(LanguageProperty.ID).equals("null"));
 			
-			testLang.setID("null");
-			log.debug("Null ID: " + testLang.getID());
-			assertTrue(testLang.getID().equals("null"));
+			testLang.getProperties().setProperty(LanguageProperty.ID, "null");
+			log.debug("Null ID: " + testLang.getProperties().getProperty(LanguageProperty.ID));
+			assertTrue(testLang.getProperties().getProperty(LanguageProperty.ID).equals("null"));
 			
 			testLang.toFile(new File(System.getProperty("user.home") + "/.oling/testish2.language"));
 			
 			Parser newparser = new Parser(new File(System.getProperty("user.home") + "/.oling/testish2.language"));
 			Language testLang2 = newparser.parseLanguage();
 			
-			log.debug("New ID: " + testLang2.getID());
-			assertFalse(testLang2.getID().equals("null"));
+			log.debug("New ID: " + testLang2.getProperties().getProperty(LanguageProperty.ID));
+			assertFalse(testLang2.getProperties().getProperty(LanguageProperty.ID).equals("null"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
@@ -302,14 +304,14 @@ public class UnitTests {
 			Language testLang = parser.parseLanguage();
 			
 			Word w1 = new Word("hello", "hi");
-			w1.setCreationDate(new Date(1234567890987654L));
-			w1.setEditDate(new Date(2000000000000L));
+			w1.getProperties().setCreationDate(new Date(1234567890987654L));
+			w1.getProperties().setEditDate(new Date(2000000000000L));
 			
 			Word w2 = new Word("foo", "bar");
-			w2.setPronounciation("foobar");
-			w2.setEtymology("foo + bar");
-			w2.setCreationDate(new Date(1L));
-			w2.setEditDate(new Date(99999999999999L));
+			w2.getProperties().setProperty(WordProperty.PRONOUNCIATION, "foobar");
+			w2.getProperties().setProperty(WordProperty.ETYMOLOGY, "foo + bar");
+			w2.getProperties().setCreationDate(new Date(1L));
+			w2.getProperties().setEditDate(new Date(99999999999999L));
 			
 			Lexicon l = new Lexicon();
 			l.addWord(w1);
@@ -326,17 +328,17 @@ public class UnitTests {
 			boolean testedFoo = false;
 			for (int i = 0; i < testLang2.getLexicon().size(); i++) {
 				Word w = testLang2.getLexicon().getWord(i);
-				if (w.getName().equals("hello")) {
+				if (w.getProperties().getProperty(WordProperty.NAME).equals("hello")) {
 					testedHi = true;
-					assertEquals("hi", w.getMeaning());
-					assertEquals(new Date(1234567890987654L), w.getCreationDate());
-					assertEquals(new Date(2000000000000L), w.getEditDate());
-				} else if (w.getName().equals("foo")) {
+					assertEquals("hi", w.getProperties().getProperty(WordProperty.MEANING));
+					assertEquals(new Date(1234567890987654L), w.getProperties().getCreationDate());
+					assertEquals(new Date(2000000000000L), w.getProperties().getEditDate());
+				} else if (w.getProperties().getProperty(WordProperty.NAME).equals("foo")) {
 					testedFoo = true;
-					assertEquals(new Date(1L), w.getCreationDate());
-					assertEquals(new Date(99999999999999L), w.getEditDate());
-					assertEquals("foo + bar", w.getEtymology());
-					assertEquals("foobar", w.getPronounciation());
+					assertEquals(new Date(1L), w.getProperties().getCreationDate());
+					assertEquals(new Date(99999999999999L), w.getProperties().getEditDate());
+					assertEquals("foo + bar", w.getProperties().getProperty(WordProperty.ETYMOLOGY));
+					assertEquals("foobar", w.getProperties().getProperty(WordProperty.PRONOUNCIATION));
 				}
 			}
 			assertTrue(testedHi);

@@ -1,9 +1,14 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.phonology;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-//last edit: 5/23/23 -N3
+import net.oijon.oling.Parser;
+import net.oijon.oling.datatypes.tags.Multitag;
+import net.oijon.oling.datatypes.tags.Tag;
+import net.oijon.olog.Log;
+
+//last edit: 6/19/23 -N3
 
 /**
  * Like an IPA table, but readable in Java
@@ -16,6 +21,8 @@ public class PhonoTable {
 	private ArrayList<String> columnNames;
 	private ArrayList<PhonoCategory> rows;
 	private int soundsPerCell;
+	
+	private static Log log = Parser.getLog();
 	
 	/**
 	 * Creates a PhonoTable
@@ -40,6 +47,49 @@ public class PhonoTable {
 		this.columnNames = new ArrayList<String>(pt.columnNames);
 		this.rows = new ArrayList<PhonoCategory>(pt.rows);
 		this.soundsPerCell = pt.soundsPerCell;
+	}
+	
+	/**
+	 * Parses a PhonoTable from a Multitag. Previously this function was a part 
+	 * of PhonoSystem.parse(), however this allows the program to be maintained more
+	 * easily.
+	 * @param tag The tag to parse the PhonoTable from
+	 * @return The PhonoTable stored in the multitag
+	 * @throws Exception Thrown when any data inside the PhonoTable is invalid, 
+	 * for example if soundsPerCell is a non-integer.
+	 */
+	public static PhonoTable parse(Multitag tag) throws Exception {
+		ArrayList<Tag> tableData = tag.getUnattachedData();
+		
+		String name = tag.getDirectChild("tableName").value();
+		ArrayList<String> columns = new ArrayList<String>(Arrays.asList(tag.getDirectChild("columnNames").value().split(",")));
+		ArrayList<String> rowNamesList = new ArrayList<String>(Arrays.asList(tag.getDirectChild("rowNames").value().split(",")));
+		int perCell;
+		try {
+			perCell = Integer.parseInt(tag.getDirectChild("soundsPerCell").value());
+		} catch (NumberFormatException nfe) {
+			log.err("soundsPerCell must be integer in " + tag.getDirectChild("tableName").value());
+			log.err(nfe.toString());
+			throw nfe;
+		}
+		
+		ArrayList<PhonoCategory> cats = new ArrayList<PhonoCategory>();
+		for (int j = 0; j < rowNamesList.size(); j++) {
+			PhonoCategory cat = new PhonoCategory(rowNamesList.get(j));
+			// TODO: allow multiple character sounds?
+			try {
+				String catData = tableData.get(j).value();
+				for (int k = 0; k < catData.length(); k++) {
+					cat.addSound(Character.toString(catData.charAt(k)));
+				}
+				cats.add(cat);
+			} catch (IndexOutOfBoundsException e) {
+				log.warn("No data found in table " + name);
+			}
+		}
+		
+		PhonoTable phonoTable = new PhonoTable(name, columns, cats, perCell);
+		return phonoTable;
 	}
 	
 	/**
@@ -110,13 +160,14 @@ public class PhonoTable {
 		return soundsPerCell;
 	}
 	
-	/**
-	 * Returns true
-	 * @deprecated as of v1.1.2, as this returns true always and verifying a PhonoTable does not make all that much sense. However, some code somewhere might still rely on it.
-	 */
-	@Deprecated
-	public boolean verify() {
-		return true;
+	public ArrayList<String> getSoundList() {
+		ArrayList<String> list = new ArrayList<String>();
+		
+		for (int i = 0; i < rows.size(); i++) {
+			list.addAll(rows.get(i).getSounds());
+		}
+		
+		return list;
 	}
 	
 	@Override

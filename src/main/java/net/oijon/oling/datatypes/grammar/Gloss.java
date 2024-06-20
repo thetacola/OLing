@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.grammar;
 
 //last edit: 5/24/23 -N3
 

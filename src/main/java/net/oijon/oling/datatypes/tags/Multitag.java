@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.tags;
 
 import java.util.ArrayList;
 
@@ -23,13 +23,6 @@ public class Multitag {
 	 */
 	public Multitag(String name, ArrayList<Tag> subtags, ArrayList<Multitag> subMultitags) {
 		this.name = name;
-	}
-	/**
-	 * Creates a multitag based on its children
-	 * @param subtags Tag objects that are a part of this multitag
-	 * @param subMultitags Multitag objects that are a part of this multitag
-	 */
-	public Multitag(ArrayList<Tag> subtags, ArrayList<Multitag> subMultitags) {
 		this.subtags = subtags;
 		this.subMultitags = subMultitags;
 	}
@@ -104,26 +97,13 @@ public class Multitag {
 			return false;
 		}
 	}
-	@Deprecated
-	/**
-	 * use equals() instead.
-	 * @param tag
-	 * @return
-	 * @deprecated as of 1.2.1, use equals() instead.
-	 */
-	public boolean isEqual(Multitag tag) {		
-		return this.equals(tag);
-	}
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Multitag) {
 			Multitag tag = (Multitag) obj;
-			if (this.name.equals(tag.getName())) {
-				if (this.subtags.equals(tag.getSubtags())) {
-					if (this.subMultitags.equals(tag.getSubMultitags())) {
-						return true;
-					}
-				}
+			if (this.name.equals(tag.getName()) & this.subtags.equals(tag.getSubtags())
+					& this.subMultitags.equals(tag.getSubMultitags())) {
+				return true;
 			}
 		}
 		return false;
@@ -154,6 +134,7 @@ public class Multitag {
 	public String getEnd() {
 		return "===" + this.name + " End===";
 	}
+	
 	/**
 	 * Gets a descendent multitag based on name. Child tag does not need to be direct.
 	 * @param name The name to search for

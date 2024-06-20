@@ -1,10 +1,13 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.orthography;
 
 import java.util.ArrayList;
 
 import net.oijon.olog.Log;
 
 import net.oijon.oling.Parser;
+import net.oijon.oling.datatypes.phonology.Phonology;
+import net.oijon.oling.datatypes.tags.Multitag;
+import net.oijon.oling.datatypes.tags.Tag;
 
 //last edit: 11/4/23 -N3
 
@@ -84,36 +87,6 @@ public class Orthography {
 	}
 	
 	/**
-	 * Guesses what the graphemes will be given phonemes
-	 * @param input The phonemes to use
-	 * @return A guess on graphemes
-	 */
-	public String orthoGuess(String input) {
-		String returnString = input;
-		for (int i = 0; i < orthoList.size(); i++) {
-			String phonemes = orthoList.get(i).getPhonemes();
-			String graphemes = orthoList.get(i).getGraphemes();
-			returnString = returnString.replaceAll(phonemes, graphemes);
-		}
-		return returnString;
-	}
-	
-	/**
-	 * Guesses what the phonemes will be given graphemes
-	 * @param input The graphemes to use
-	 * @return A guess on phonemes
-	 */
-	public String phonoGuess(String input) {
-		String returnString = new String(input);
-		for (int i = 0; i < orthoList.size(); i++) {
-			String phonemes = orthoList.get(i).getPhonemes();
-			String graphemes = orthoList.get(i).getGraphemes();
-			returnString = returnString.replaceAll(graphemes, phonemes);
-		}
-		return returnString;
-	}
-	
-	/**
 	 * Gets a pair at the given index
 	 * @param i The index of the pair in the orthography
 	 * @return The pair specified
@@ -136,7 +109,8 @@ public class Orthography {
 			Multitag orthoTag = docTag.getMultitag("Orthography");
 			ArrayList<Tag> orthoPairs = orthoTag.getSubtags();
 			for (int i = 0; i < orthoPairs.size(); i++) {
-				ortho.add(orthoPairs.get(i).getName(), orthoPairs.get(i).value());
+				Tag op = orthoPairs.get(i);
+				ortho.add(op.getName(), op.value());
 			}
 			return ortho;
 		} catch (Exception e) {
@@ -165,16 +139,20 @@ public class Orthography {
 		return orthoList.size();
 	}
 	
+	private boolean orthoListEqual(Orthography o) {
+		for (int i = 0; i < orthoList.size(); i++) {
+			if (!orthoList.get(i).equals(o.getPair(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Orthography) {
 			Orthography o = (Orthography) obj;
-			for (int i = 0; i < orthoList.size(); i++) {
-				if (!orthoList.get(i).equals(o.getPair(i))) {
-					return false;
-				}
-			}
-			return true;
+			return orthoListEqual(o);
 		}
 		return false;
 	}

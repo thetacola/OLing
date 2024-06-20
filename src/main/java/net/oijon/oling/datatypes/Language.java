@@ -178,6 +178,7 @@ public class Language {
 				"id:" + properties.getID() + "\n" +
 				"autonym:" + properties.getAutonym() + "\n" +
 				"timeCreated:" + properties.getCreated().getTime() + "\n" +
+				"lastEdited:" + properties.getEdited().getTime() + "\n" +
 				"readonly:" + properties.isReadOnly() + "\n" +
 				"parent:" + "null" + "\n" +
 				"===Meta End===\n" +

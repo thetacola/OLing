@@ -113,7 +113,7 @@ public class LanguageProperties {
 				setVersionEdited(ver.value());
 			}
 			log.warn("This language appears to have been created with a very early version of Oijon Utils!");
-			log.warn("The susquehannaVersion tag was deprecated as of 1.2.0.");
+			log.warn("The susquehannaVersion tag was deprecated as of Oijon Utils 1.2.0.");
 		}
 	}
 	

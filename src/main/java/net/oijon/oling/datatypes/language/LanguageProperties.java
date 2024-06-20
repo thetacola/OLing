@@ -25,10 +25,10 @@ public class LanguageProperties {
 	
 	public LanguageProperties(LanguageProperties lp) {
 		this.isReadOnly = lp.isReadOnly();
-		this.strings[0] = lp.getAutonym();
-		this.strings[1] = lp.getID();
-		this.strings[2] = lp.getName();
-		this.strings[3] = lp.getVersionEdited();
+		this.strings[0] = lp.getProperty(LanguageProperty.AUTONYM);
+		this.strings[1] = lp.getProperty(LanguageProperty.ID);
+		this.strings[2] = lp.getProperty(LanguageProperty.NAME);
+		this.strings[3] = lp.getProperty(LanguageProperty.VERSION_EDITED);
 		this.dates[0] = lp.getCreated();
 		this.dates[1] = lp.getEdited();
 	}
@@ -43,9 +43,9 @@ public class LanguageProperties {
 		LanguageProperties lp = new LanguageProperties();
 		
 		Multitag meta = docTag.getMultitag("Meta");
-		lp.setName(meta.getDirectChild("name").value());
+		lp.setProperty(LanguageProperty.NAME, meta.getDirectChild("name").value());
 		lp.checkID(meta);
-		lp.setAutonym(meta.getDirectChild("autonym").value());
+		lp.setProperty(LanguageProperty.AUTONYM, meta.getDirectChild("autonym").value());
 		lp.setReadOnly(Boolean.parseBoolean(meta.getDirectChild("readonly").value()));
 		lp.setCreated(new Date(Long.parseLong(meta.getDirectChild("timeCreated").value())));
 		lp.setEdited(new Date(Long.parseLong(meta.getDirectChild("lastEdited").value())));
@@ -63,7 +63,7 @@ public class LanguageProperties {
 		// "its deprecated" i dont care
 		// why does DateTimeFormatter not accept date objects :(
 		Date created = dates[0];
-		this.setID(strings[2].toUpperCase() +
+		this.setProperty(LanguageProperty.ID, strings[2].toUpperCase() +
 				created.getYear() +
 				created.getMonth() +
 				created.getDay() +
@@ -79,12 +79,12 @@ public class LanguageProperties {
 			id = meta.getDirectChild("id");
 			if (!id.value().isBlank() & !id.value().equals("null")) {
 				log.info("ID of language is " + id.value());
-				this.setID(id.value());
+				this.setProperty(LanguageProperty.ID, id.value());
 			} else {
 				log.err("This language appears to have a blank or null ID!");
 				log.warn("Generating new ID, this may break relations with other languages!");
 				generateID();
-				log.warn("New ID: " + this.getID() + ". If other languages are related to this language, "
+				log.warn("New ID: " + this.getProperty(LanguageProperty.ID) + ". If other languages are related to this language, "
 						+ "a manual switch to the new ID will be neccessary.");
 			}
 		} catch (Exception e) {
@@ -106,13 +106,13 @@ public class LanguageProperties {
 			ver = meta.getDirectChild("utilsVersion");
 			if (!ver.value().isBlank()) {
 				log.info("Language created with " + ver.value());
-				setVersionEdited(ver.value());
+				setProperty(LanguageProperty.VERSION_EDITED, ver.value());
 			}
 		} catch (Exception e) {
 			ver = meta.getDirectChild("susquehannaVersion");
 			if (!ver.value().isBlank()) {
 				log.info("Language created with " + ver.value());
-				setVersionEdited(ver.value());
+				setProperty(LanguageProperty.VERSION_EDITED, ver.value());
 			}
 			log.warn("This language appears to have been created with a very early version of Oijon Utils!");
 			log.warn("The susquehannaVersion tag was deprecated as of Oijon Utils 1.2.0.");
@@ -128,8 +128,10 @@ public class LanguageProperties {
 			 * - date edited (will never be equal)
 			 * - version edited (may or may not be equal)
 			 */
-			if (lp.getAutonym().equals(strings[0]) & lp.getID().equals(strings[1]) & 
-					lp.getName().equals(strings[2]) & lp.isReadOnly() == isReadOnly &
+			if (lp.getProperty(LanguageProperty.AUTONYM).equals(strings[0]) & 
+					lp.getProperty(LanguageProperty.ID).equals(strings[1]) & 
+					lp.getProperty(LanguageProperty.NAME).equals(strings[2]) &
+					lp.isReadOnly() == isReadOnly &
 					lp.getCreated().equals(dates[0])) {
 				return true;
 			}
@@ -137,15 +139,25 @@ public class LanguageProperties {
 		return false;
 	}
 	
-	public String getAutonym() {
-		return strings[0];
+	public String getProperty(LanguageProperty p) {
+		switch(p) {
+			case AUTONYM: return strings[0];
+			case ID: return strings[1];
+			case NAME: return strings[2];
+			case VERSION_EDITED: return strings[3];
+		}
+		return " ";
 	}
-	public String getID() {
-		return strings[1];
+	
+	public void setProperty(LanguageProperty p, String value) {
+		switch(p) {
+			case AUTONYM: strings[0] = value;
+			case ID: strings[1] = value;
+			case NAME: strings[2] = value;
+			case VERSION_EDITED: strings[3] = value;
+		}
 	}
-	public String getName() {
-		return strings[2];
-	}
+	
 	public boolean isReadOnly() {
 		return isReadOnly;
 	}
@@ -155,19 +167,7 @@ public class LanguageProperties {
 	public Date getEdited() {
 		return (Date) dates[1].clone();
 	}
-	public String getVersionEdited() {
-		return strings[3];
-	}
 	
-	public void setAutonym(String autonym) {
-		this.strings[0] = autonym;
-	}
-	public void setID(String id) {
-		this.strings[1] = id;
-	}
-	public void setName(String name) {
-		this.strings[2] = name;
-	}
 	public void setReadOnly(boolean isReadOnly) {
 		this.isReadOnly = isReadOnly;
 	}
@@ -176,9 +176,6 @@ public class LanguageProperties {
 	}
 	public void setEdited(Date edited) {
 		this.dates[1] = (Date) edited.clone();
-	}
-	public void setVersionEdited(String versionEdited) {
-		this.strings[3] = versionEdited;
 	}
 	
 }

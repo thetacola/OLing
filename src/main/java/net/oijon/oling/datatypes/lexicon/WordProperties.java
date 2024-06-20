@@ -15,25 +15,22 @@ public class WordProperties {
 	}
 	
 	public WordProperties(WordProperties wp) {
-		strings[0] = wp.getName();
-		strings[1] = wp.getMeaning();
-		strings[2] = wp.getPronounciation();
-		strings[3] = wp.getEtymology();
+		strings[0] = wp.getProperty(WordProperty.NAME);
+		strings[1] = wp.getProperty(WordProperty.MEANING);
+		strings[2] = wp.getProperty(WordProperty.PRONOUNCIATION);
+		strings[3] = wp.getProperty(WordProperty.ETYMOLOGY);
 		dates[0] = wp.getCreationDate();
 		dates[1] = wp.getEditDate();
 	}
 	
-	public String getName() {
-		return strings[0];
-	}
-	public String getMeaning() {
-		return strings[1];
-	}
-	public String getPronounciation() {
-		return strings[2];
-	}
-	public String getEtymology() {
-		return strings[3];
+	public String getProperty(WordProperty wp) {
+		switch(wp) {
+			case NAME: return strings[0];
+			case MEANING: return strings[1];
+			case PRONOUNCIATION: return strings[2];
+			case ETYMOLOGY: return strings[3];
+		}
+		return " ";
 	}
 	public Date getCreationDate() {
 		return (Date) dates[0].clone();
@@ -42,18 +39,15 @@ public class WordProperties {
 		return (Date) dates[1].clone();
 	}
 	
-	public void setName(String name) {
-		strings[0] = name;
+	public void setProperty(WordProperty wp, String value) {
+		switch(wp) {
+			case NAME: strings[0] = value;
+			case MEANING: strings[1] = value;
+			case PRONOUNCIATION: strings[2] = value;
+			case ETYMOLOGY: strings[3] = value;
+		}
 	}
-	public void setMeaning(String meaning) {
-		strings[1] = meaning;
-	}
-	public void setPronounciation(String meaning) {
-		strings[2] = meaning;
-	}
-	public void setEtymology(String etymology) {
-		strings[3] = etymology;
-	}
+	
 	public void setCreationDate(Date creationDate) {
 		dates[0] = (Date) creationDate.clone();
 	}

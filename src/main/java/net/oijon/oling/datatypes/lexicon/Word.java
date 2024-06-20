@@ -32,8 +32,8 @@ public class Word {
 	 * @param meaning What the word means
 	 */
 	public Word(String name, String meaning) {
-		wp.setName(name);
-		wp.setMeaning(meaning);
+		wp.setProperty(WordProperty.NAME, name);
+		wp.setProperty(WordProperty.MEANING, meaning);
 		//TODO: automatically get IPA from name via orthography
 	}
 	
@@ -60,10 +60,10 @@ public class Word {
 		try {
 			currentTag = "pronounciation";
 			Tag pronunciationTag = wordTag.getDirectChild("pronounciation");
-			word.getProperties().setPronounciation(pronunciationTag.value());
+			word.getProperties().setProperty(WordProperty.PRONOUNCIATION, pronunciationTag.value());
 			currentTag = "etymology";
 			Tag etymologyTag = wordTag.getDirectChild("etymology");
-			word.getProperties().setEtymology(etymologyTag.value());
+			word.getProperties().setProperty(WordProperty.ETYMOLOGY, etymologyTag.value());
 			//TODO: Attempt to find ID of source language in Susquehanna folder. If not found, revert to null.
 			//Tag sourceLanguageTag = wordTag.getDirectChild("sourceLanguage");
 			//word.setSourceLanguage(null);
@@ -175,20 +175,20 @@ public class Word {
 	@Override
 	public String toString() {
 		String returnString = "===Word Start===\n";
-		returnString += "wordname:" + wp.getName() + "\n" +
-				"meaning:" + wp.getMeaning() + "\n" +
-				"pronounciation:" + wp.getPronounciation() + "\n" +
-				"etymology:" + wp.getEtymology() + "\n" +
+		returnString += "wordname:" + wp.getProperty(WordProperty.NAME) + "\n" +
+				"meaning:" + wp.getProperty(WordProperty.MEANING) + "\n" +
+				"pronounciation:" + wp.getProperty(WordProperty.PRONOUNCIATION) + "\n" +
+				"etymology:" + wp.getProperty(WordProperty.ETYMOLOGY) + "\n" +
 				"creationDate:" + wp.getCreationDate().getTime() + "\n" +
 				"editDate:" + wp.getEditDate().getTime() + "\n" +
 				"===Synonym Start===\n";
 		for (int i = 0; i < synonyms.size(); i++) {
-			returnString += ":" + synonyms.get(i).getProperties().getName() + "\n";
+			returnString += ":" + synonyms.get(i).getProperties().getProperty(WordProperty.NAME) + "\n";
 		}
 		returnString += "===Synonym End===\n" +
 				"===Homonym Start===\n";
 		for (int i = 0; i < homonyms.size(); i++) {
-			returnString += ":" + homonyms.get(i).getProperties().getMeaning() + "\n";
+			returnString += ":" + homonyms.get(i).getProperties().getProperty(WordProperty.MEANING) + "\n";
 		}
 		returnString += "===Homonym End===\n" +
 				"===Classes Start===\n";

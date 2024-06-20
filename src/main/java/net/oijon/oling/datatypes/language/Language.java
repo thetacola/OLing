@@ -69,7 +69,7 @@ public class Language {
 	 * @param name The name of the language
 	 */
 	public Language(String name) {
-		this.properties.setName(name);
+		this.properties.setProperty(LanguageProperty.NAME, name);
 	}
 	
 	/**
@@ -86,7 +86,7 @@ public class Language {
 	public static Language parse(Multitag docTag) throws Exception {
 		// parse language properties, as a name is required
 		LanguageProperties lp = LanguageProperties.parse(docTag);
-		Language lang = new Language(lp.getName());		
+		Language lang = new Language(lp.getProperty(LanguageProperty.NAME));		
 		
 		// parse each property
 		lang.setPhono(Phonology.parse(docTag));
@@ -155,7 +155,7 @@ public class Language {
 	 */
 	public void toFile(File file) throws IOException {
 		properties.setEdited(Date.from(Instant.now()));
-		properties.setVersionEdited(Info.getVersion());
+		properties.setProperty(LanguageProperty.VERSION_EDITED, Info.getVersion());
 		
 		lexicon.checkHomonyms();
 		lexicon.checkSynonyms();
@@ -177,10 +177,10 @@ public class Language {
 	 */
 	public String toString() {
 		String returnString = "===Meta Start===\n";
-		returnString += "utilsVersion:" + properties.getVersionEdited() + "\n" +
-				"name:" + properties.getName() + "\n" +
-				"id:" + properties.getID() + "\n" +
-				"autonym:" + properties.getAutonym() + "\n" +
+		returnString += "utilsVersion:" + properties.getProperty(LanguageProperty.VERSION_EDITED) + "\n" +
+				"name:" + properties.getProperty(LanguageProperty.NAME) + "\n" +
+				"id:" + properties.getProperty(LanguageProperty.ID) + "\n" +
+				"autonym:" + properties.getProperty(LanguageProperty.AUTONYM) + "\n" +
 				"timeCreated:" + properties.getCreated().getTime() + "\n" +
 				"lastEdited:" + properties.getEdited().getTime() + "\n" +
 				"readonly:" + properties.isReadOnly() + "\n" +

@@ -66,8 +66,10 @@ public class Lexicon {
 	public void removeWord(Word word) {
 		for (int i = 0; i < wordList.size(); i++) {
 			Word checkWord = wordList.get(i);
-			if (checkWord.getProperties().getName().equals(word.getProperties().getName())
-					& checkWord.getProperties().getMeaning().equals(word.getProperties().getMeaning())) {
+			if (checkWord.getProperties().getProperty(WordProperty.NAME).equals(
+					word.getProperties().getProperty(WordProperty.NAME))
+					& checkWord.getProperties().getProperty(WordProperty.MEANING).equals(
+							word.getProperties().getProperty(WordProperty.MEANING))) {
 				wordList.remove(i);
 			}
 		}
@@ -97,7 +99,8 @@ public class Lexicon {
 		for (int i = 0; i < wordList.size(); i++) {
 			for (int j = 0; j < wordList.size(); j++) {
 				if (i != j) {
-					if (wordList.get(i).getProperties().getMeaning().equals(wordList.get(j).getProperties().getMeaning())) {
+					if (wordList.get(i).getProperties().getProperty(WordProperty.MEANING).equals(
+							wordList.get(j).getProperties().getProperty(WordProperty.MEANING))) {
 						wordList.get(i).addSynonym(wordList.get(j));
 					}
 				}
@@ -112,7 +115,8 @@ public class Lexicon {
 		for (int i = 0; i < wordList.size(); i++) {
 			for (int j = 0; j < wordList.size(); j++) {
 				if (i != j) {
-					if (wordList.get(i).getProperties().getName().equals(wordList.get(j).getProperties().getName())) {
+					if (wordList.get(i).getProperties().getProperty(WordProperty.NAME).equals(
+							wordList.get(j).getProperties().getProperty(WordProperty.NAME))) {
 						wordList.get(i).addHomonym(wordList.get(j));
 					}
 				}

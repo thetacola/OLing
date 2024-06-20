@@ -15,8 +15,10 @@ import net.oijon.olog.Log;
 
 import net.oijon.oling.Parser;
 import net.oijon.oling.datatypes.language.Language;
+import net.oijon.oling.datatypes.language.LanguageProperty;
 import net.oijon.oling.datatypes.lexicon.Lexicon;
 import net.oijon.oling.datatypes.lexicon.Word;
+import net.oijon.oling.datatypes.lexicon.WordProperty;
 import net.oijon.oling.datatypes.orthography.Guesser;
 import net.oijon.oling.datatypes.orthography.Orthography;
 import net.oijon.oling.datatypes.tags.Multitag;
@@ -275,20 +277,20 @@ public class UnitTests {
 			Parser parser = new Parser(Paths.get(UnitTests.class.getClassLoader().getResource("testish.language").toURI()).toFile());
 			Language testLang = parser.parseLanguage();
 			
-			log.debug("Old ID: " + testLang.getProperties().getID());
-			assertFalse(testLang.getProperties().getID().equals("null"));
+			log.debug("Old ID: " + testLang.getProperties().getProperty(LanguageProperty.ID));
+			assertFalse(testLang.getProperties().getProperty(LanguageProperty.ID).equals("null"));
 			
-			testLang.getProperties().setID("null");
-			log.debug("Null ID: " + testLang.getProperties().getID());
-			assertTrue(testLang.getProperties().getID().equals("null"));
+			testLang.getProperties().setProperty(LanguageProperty.ID, "null");
+			log.debug("Null ID: " + testLang.getProperties().getProperty(LanguageProperty.ID));
+			assertTrue(testLang.getProperties().getProperty(LanguageProperty.ID).equals("null"));
 			
 			testLang.toFile(new File(System.getProperty("user.home") + "/.oling/testish2.language"));
 			
 			Parser newparser = new Parser(new File(System.getProperty("user.home") + "/.oling/testish2.language"));
 			Language testLang2 = newparser.parseLanguage();
 			
-			log.debug("New ID: " + testLang2.getProperties().getID());
-			assertFalse(testLang2.getProperties().getID().equals("null"));
+			log.debug("New ID: " + testLang2.getProperties().getProperty(LanguageProperty.ID));
+			assertFalse(testLang2.getProperties().getProperty(LanguageProperty.ID).equals("null"));
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
@@ -306,8 +308,8 @@ public class UnitTests {
 			w1.getProperties().setEditDate(new Date(2000000000000L));
 			
 			Word w2 = new Word("foo", "bar");
-			w2.getProperties().setPronounciation("foobar");
-			w2.getProperties().setEtymology("foo + bar");
+			w2.getProperties().setProperty(WordProperty.PRONOUNCIATION, "foobar");
+			w2.getProperties().setProperty(WordProperty.ETYMOLOGY, "foo + bar");
 			w2.getProperties().setCreationDate(new Date(1L));
 			w2.getProperties().setEditDate(new Date(99999999999999L));
 			
@@ -326,17 +328,17 @@ public class UnitTests {
 			boolean testedFoo = false;
 			for (int i = 0; i < testLang2.getLexicon().size(); i++) {
 				Word w = testLang2.getLexicon().getWord(i);
-				if (w.getProperties().getName().equals("hello")) {
+				if (w.getProperties().getProperty(WordProperty.NAME).equals("hello")) {
 					testedHi = true;
-					assertEquals("hi", w.getProperties().getMeaning());
+					assertEquals("hi", w.getProperties().getProperty(WordProperty.MEANING));
 					assertEquals(new Date(1234567890987654L), w.getProperties().getCreationDate());
 					assertEquals(new Date(2000000000000L), w.getProperties().getEditDate());
-				} else if (w.getProperties().getName().equals("foo")) {
+				} else if (w.getProperties().getProperty(WordProperty.NAME).equals("foo")) {
 					testedFoo = true;
 					assertEquals(new Date(1L), w.getProperties().getCreationDate());
 					assertEquals(new Date(99999999999999L), w.getProperties().getEditDate());
-					assertEquals("foo + bar", w.getProperties().getEtymology());
-					assertEquals("foobar", w.getProperties().getPronounciation());
+					assertEquals("foo + bar", w.getProperties().getProperty(WordProperty.ETYMOLOGY));
+					assertEquals("foobar", w.getProperties().getProperty(WordProperty.PRONOUNCIATION));
 				}
 			}
 			assertTrue(testedHi);

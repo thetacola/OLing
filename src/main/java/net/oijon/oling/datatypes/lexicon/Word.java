@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 
-//last edit: 6/19/24 -N3
+//last edit: 6/20/24 -N3
 
 /**
  * Stores a word, including various properties about the word.
@@ -15,12 +15,7 @@ import java.util.Date;
 //TODO: re-add source language
 public class Word {
 
-	private String name;
-	private String meaning;
-	private String pronounciation = " ";
-	private String etymology = " ";
-	private Date creationDate = Date.from(Instant.now());
-	private Date editDate = Date.from(Instant.now());
+	private WordProperties wp = new WordProperties();
 	private ArrayList<String> classes = new ArrayList<String>();
 	private ArrayList<Word> synonyms = new ArrayList<Word>();
 	private ArrayList<Word> homonyms = new ArrayList<Word>();
@@ -31,8 +26,8 @@ public class Word {
 	 * @param meaning What the word means
 	 */
 	public Word(String name, String meaning) {
-		this.name = new String(name);
-		this.meaning = new String(meaning);
+		wp.setName(name);
+		wp.setMeaning(meaning);
 		//TODO: automatically get IPA from name via orthography
 	}
 	
@@ -41,110 +36,17 @@ public class Word {
 	 * @param w The word to be copied
 	 */
 	public Word(Word w) {
-		this.name = new String(w.getName());
-		this.meaning = new String(w.getMeaning());
-		this.pronounciation = new String(w.getPronounciation());
-		this.etymology = new String(w.getEtymology());
-		this.classes = new ArrayList<String>(w.classes);
-		this.editDate = new Date(w.getEditDate().toInstant().toEpochMilli());
+		this.wp = new WordProperties(w.getProperties());
 		this.synonyms = new ArrayList<Word>(w.getSynonyms());
 		this.homonyms = new ArrayList<Word>(w.getHomonyms());
 	}
 	
-	/**
-	 * Get the textual representation of a word
-	 * @return Textual representation of a word
-	 */
-	public String getName() {
-		return name;
+	public WordProperties getProperties() {
+		return wp;
 	}
 	
-	/**
-	 * Sets how a word is written
-	 * @param name The way the word is written
-	 */
-	public void setName(String name) {
-		this.name = new String(name);
-	}
-	
-	/**
-	 * Gets the meaning of a word
-	 * @return The meaning of the word
-	 */
-	public String getMeaning() {
-		return meaning;
-	}
-	
-	/**
-	 * Sets the meaning of a word
-	 * @param meaning The meaning of the word
-	 */
-	public void setMeaning(String meaning) {
-		this.meaning = new String(meaning);
-	}
-	
-	/**
-	 * Sets how a word is pronounced
-	 * @param pronounciation The way the word is pronounced.
-	 */
-	public void setPronounciation(String pronounciation) {
-		this.pronounciation = new String(pronounciation);
-	}
-	
-	/**
-	 * Gets the pronounciation of a word
-	 * @return The pronounciation of the word
-	 */
-	public String getPronounciation() {
-		return pronounciation;
-	}
-	
-	/**
-	 * Sets where the word comes from
-	 * @param etymology Where the word comes from
-	 */
-	public void setEtymology(String etymology) {
-		this.etymology = etymology;
-	}
-	
-	/**
-	 * Gets where the word comes from. Expect " " being returned as null.
-	 * @return The etymology of the word
-	 */
-	public String getEtymology() {
-		return etymology;
-	}
-	
-	/**
-	 * Gets the creation date of a word.
-	 * @return The datetime a word was created.
-	 */
-	public Date getCreationDate() {
-		return creationDate;
-	}
-	
-	/**
-	 * Sets the creation date of a word. Should only be used when reading files, not writing.
-	 * @param date The datetime a word was created.
-	 */
-	public void setCreationDate(Date date) {
-		this.creationDate = new Date(date.toInstant().toEpochMilli());
-	}
-	
-	/**
-	 * Gets the last time a word was edited
-	 * @return The datetime a word was last edited.
-	 */
-	public Date getEditDate() {
-		return editDate;
-	}
-	
-	/**
-	 * Sets the last time a word was edited. Should be used whenever a word is modified.
-	 * @param editDate The datetime a word was last edited.
-	 */
-	public void setEditDate(Date editDate) {
-		this.editDate = editDate;
+	public void setProperties(WordProperties wp) {
+		this.wp = new WordProperties(wp);
 	}
 	
 	/**
@@ -226,15 +128,8 @@ public class Word {
 	public boolean equals(Object obj) {
 		if (obj instanceof Word) {
 			Word w = (Word) obj;
-			if (w.name.equals(name) & w.meaning.equals(meaning) & w.pronounciation.equals(pronounciation) &
-					w.etymology.equals(etymology) & w.classes.equals(classes) &
-					w.creationDate.equals(creationDate) & w.synonyms.equals(synonyms) &
+			if (w.getProperties().equals(wp) & w.synonyms.equals(synonyms) &
 					w.homonyms.equals(homonyms)) {
-				/**
-				 * Does not check for:
-				 * - Source language (will probably be removed)
-				 * - Edit date (not relevant to equals)
-				 */
 				return true;
 			}
 		}
@@ -244,28 +139,28 @@ public class Word {
 	@Override
 	public String toString() {
 		String returnString = "===Word Start===\n";
-		returnString += "wordname:" + name + "\n";
-		returnString += "meaning:" + meaning + "\n";
-		returnString += "pronounciation:" + pronounciation + "\n";
-		returnString += "etymology:" + etymology + "\n";
-		returnString += "creationDate:" + creationDate.getTime() + "\n";
-		returnString += "editDate:" + editDate.getTime() + "\n";
-		returnString += "===Synonym Start===\n";
+		returnString += "wordname:" + wp.getName() + "\n" +
+				"meaning:" + wp.getMeaning() + "\n" +
+				"pronounciation:" + wp.getPronounciation() + "\n" +
+				"etymology:" + wp.getEtymology() + "\n" +
+				"creationDate:" + wp.getCreationDate().getTime() + "\n" +
+				"editDate:" + wp.getEditedDate().getTime() + "\n" +
+				"===Synonym Start===\n";
 		for (int i = 0; i < synonyms.size(); i++) {
-			returnString += ":" + synonyms.get(i).getName() + "\n";
+			returnString += ":" + synonyms.get(i).getProperties().getName() + "\n";
 		}
-		returnString += "===Synonym End===\n";
-		returnString += "===Homonym Start===\n";
+		returnString += "===Synonym End===\n" +
+				"===Homonym Start===\n";
 		for (int i = 0; i < homonyms.size(); i++) {
-			returnString += ":" + homonyms.get(i).getMeaning() + "\n";
+			returnString += ":" + homonyms.get(i).getProperties().getMeaning() + "\n";
 		}
-		returnString += "===Homonym End===\n";
-		returnString += "===Classes Start===\n";
+		returnString += "===Homonym End===\n" +
+				"===Classes Start===\n";
 		for (int i = 0; i < classes.size(); i++) {
 			returnString += ":" + classes.get(i) + "\n";
 		}
-		returnString += "===Classes End===\n";
-		returnString += "===Word End===";
+		returnString += "===Classes End===\n" +
+				"===Word End===";
 		return returnString;
 	}
 }

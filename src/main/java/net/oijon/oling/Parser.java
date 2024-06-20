@@ -74,73 +74,7 @@ public class Parser {
 	 */
 	public Multitag getPHOSYSTag() {
 		return this.tag;
-	}
-	
-	/**
-	 * Checks if a line contains a multitag marker
-	 * @param line The line to be checked
-	 * @return true if the line is a multitag marker, false otherwise
-	 */
-	private boolean isMultitagMarker(String line) {
-		String[] splitSpace = line.split(" ");
-		String[] splitColon = line.split(":");
-		if (splitSpace.length == 2 & splitColon.length != 2) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Gets the second part of a multitag marker. Should either be "Start===" or "End==="
-	 * @param line The line to use for grabbing the second part of the marker
-	 * @return The second part of the multitag marker. If not a multitag marker, returns a blank string.
-	 */
-	private String getSecondPartOfMarker(String line) {
-		String[] splitSpace = line.split(" ");
-		if (isMultitagMarker(line)) {
-			return splitSpace[1];
-		}
-		return "";
-	}
-	
-	/**
-	 * Checks if a line contains a starting multitag marker
-	 * @param line The line to be checked
-	 * @return true if the line is a starting multitag marker, false otherwise
-	 */
-	private boolean isMultitagStart(String line) {
-		if (getSecondPartOfMarker(line).equals("Start===")) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Checks if a line contains an ending multitag marker
-	 * @param line The line to be checked
-	 * @return true if the line is an ending multitag marker, false otherwise
-	 */
-	private boolean isMultitagEnd(String line) {
-		if (getSecondPartOfMarker(line).equals("End===")) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Gets the name of a multitag from its marker
-	 * @param line The line with the marker in it
-	 * @return The name of the given multitag
-	 */
-	private String getMarkerTagName(String line) {
-		if (isMultitagMarker(line)) {
-			String[] splitSpace = line.split(" ");
-			String name = splitSpace[0].substring(3);
-			return name;
-		} else {
-			return "";
-		}
-	}
+	}	
 	
 	/**
 	 * Checks if a closing tag is the correct tag for a given tag name
@@ -149,8 +83,8 @@ public class Parser {
 	 * @return true if line is the expected closing tag, false if either not a closing tag or a closing tag for a different multitag
 	 */
 	private boolean isCloseForName(String line, String name) {
-		if (isMultitagEnd(line)) {
-			if (getMarkerTagName(line).equals(name)) {
+		if (Multitag.isMultitagEnd(line)) {
+			if (Multitag.getMarkerTagName(line).equals(name)) {
 				return true;
 			}
 		}
@@ -206,14 +140,14 @@ public class Parser {
 		// Splits each line based off line breaks
 		String[] splitLines = input.split("\n");
 		// Gets the tag name from the start tag. This removes the beginning '==='
-		String tagName = getMarkerTagName(splitLines[0]);
+		String tagName = Multitag.getMarkerTagName(splitLines[0]);
 		
 		// This creates a new Multitag in memory named after the tag just named
 		Multitag tag = new Multitag(tagName);
 		// Loop over each line in file
 		for (int i = 1; i < splitLines.length; i++) {
 			// Checks if the line matches the pattern of a multitag start marker
-			if (isMultitagStart(splitLines[i])) {
+			if (Multitag.isMultitagStart(splitLines[i])) {
 				tag.addMultitag(readChildMultitag(splitLines, i));
 			// Checks if line is named tag
 			} else if (isDataTag(splitLines[i])) {
@@ -235,7 +169,7 @@ public class Parser {
 	
 	private Multitag readChildMultitag(String[] splitLines, int startLine) {
 		// Gets the name of the start marker
-		String name = getMarkerTagName(splitLines[startLine]);
+		String name = Multitag.getMarkerTagName(splitLines[startLine]);
 		// Gets the line number the tag was found on
 		int lineNum = startLine + 1;
 		// Creates a variable for the loop below

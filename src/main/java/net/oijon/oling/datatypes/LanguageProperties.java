@@ -82,7 +82,7 @@ public class LanguageProperties {
 				log.err("This language appears to have a blank or null ID!");
 				log.warn("Generating new ID, this may break relations with other languages!");
 				generateID();
-				log.warn("New ID: " + id + ". If other languages are related to this language, "
+				log.warn("New ID: " + this.getID() + ". If other languages are related to this language, "
 						+ "a manual switch to the new ID will be neccessary.");
 			}
 		} catch (Exception e) {

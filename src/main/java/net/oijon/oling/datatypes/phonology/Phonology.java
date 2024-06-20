@@ -29,7 +29,7 @@ public class Phonology {
 	public Phonology(String[] array) {
 		this.phonoSystem = PhonoSystem.IPA;
 		for (int i = 0; i < array.length; i++) {
-			if (phonoSystem.isIn(array[i])) {
+			if (phonoSystem.contains(array[i])) {
 				phonoList.add(array[i]);
 			}
 		}
@@ -43,7 +43,7 @@ public class Phonology {
 	public Phonology(String[] array, PhonoSystem sys) {
 		this.phonoSystem = sys;
 		for (int i = 0; i < array.length; i++) {
-			if (phonoSystem.isIn(array[i])) {
+			if (phonoSystem.contains(array[i])) {
 				phonoList.add(array[i]);
 			} else if (!array[i].equals(" ") & !array[i].equals("")) {
 				log.warn(array[i] + " is not in PhonoSystem " + sys.getName());
@@ -97,7 +97,7 @@ public class Phonology {
 	 * @param value The phoneme to be added
 	 */
 	public void add(String value) {
-		if (phonoSystem.isIn(value)) {
+		if (phonoSystem.contains(value)) {
 			phonoList.add(value);
 		}
 	}

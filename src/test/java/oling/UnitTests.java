@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import net.oijon.olog.Log;
 
 import net.oijon.oling.Parser;
+import net.oijon.oling.datatypes.Guesser;
 import net.oijon.oling.datatypes.Language;
 import net.oijon.oling.datatypes.Lexicon;
 import net.oijon.oling.datatypes.Multitag;
@@ -257,8 +258,8 @@ public class UnitTests {
 			log.info(newLang.toString());
 			assertEquals(testOrtho, newLang.getOrtho());
 			
-			assertEquals(testOrtho.phonoGuess("ough"), "ɔː");
-			assertEquals(testOrtho.orthoGuess("jutɪlz"), "yutylz");
+			assertEquals(Guesser.phonoGuess("ough", testOrtho), "ɔː");
+			assertEquals(Guesser.orthoGuess("jutɪlz", testOrtho), "yutylz");
 			
 			
 		} catch (Exception e) {

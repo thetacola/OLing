@@ -156,8 +156,9 @@ public class Lexicon {
 						Tag editDateTag = wordTag.getDirectChild("editDate");
 						word.getProperties().setEditDate(new Date(Long.parseLong(editDateTag.value())));
 					} catch (Exception e) {
-						log.warn("Could not find optional property " + currentTag + " for " + valueTag.value() + 
-								" (" + valueTag.getName() + "). Was this word added manually?");
+						log.warn("Could not find optional property " + currentTag + " for '" + valueTag.value() + 
+								"'. Was this word added manually?");
+						e.printStackTrace();
 					}
 					lexicon.addWord(word);
 				}

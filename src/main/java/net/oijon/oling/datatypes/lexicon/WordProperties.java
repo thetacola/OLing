@@ -6,7 +6,7 @@ import java.util.Date;
 public class WordProperties {
 
 	// 0 = name, 1 = meaning, 2 = pronounciation, 3 = etymology
-	private String[] strings = {"", "", "", ""};
+	private String[] strings = {" ", " ", " ", " "};
 	// 0 = creation date, 1 = edit date
 	private Date[] dates = {Date.from(Instant.now()), Date.from(Instant.now())};
 	

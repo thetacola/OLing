@@ -66,7 +66,8 @@ public class Lexicon {
 	public void removeWord(Word word) {
 		for (int i = 0; i < wordList.size(); i++) {
 			Word checkWord = wordList.get(i);
-			if (checkWord.getName().equals(word.getName()) & checkWord.getMeaning().equals(word.getMeaning())) {
+			if (checkWord.getProperties().getName().equals(word.getProperties().getName())
+					& checkWord.getProperties().getMeaning().equals(word.getProperties().getMeaning())) {
 				wordList.remove(i);
 			}
 		}
@@ -96,7 +97,7 @@ public class Lexicon {
 		for (int i = 0; i < wordList.size(); i++) {
 			for (int j = 0; j < wordList.size(); j++) {
 				if (i != j) {
-					if (wordList.get(i).getMeaning().equals(wordList.get(j).getMeaning())) {
+					if (wordList.get(i).getProperties().getMeaning().equals(wordList.get(j).getProperties().getMeaning())) {
 						wordList.get(i).addSynonym(wordList.get(j));
 					}
 				}
@@ -111,7 +112,7 @@ public class Lexicon {
 		for (int i = 0; i < wordList.size(); i++) {
 			for (int j = 0; j < wordList.size(); j++) {
 				if (i != j) {
-					if (wordList.get(i).getName().equals(wordList.get(j).getName())) {
+					if (wordList.get(i).getProperties().getName().equals(wordList.get(j).getProperties().getName())) {
 						wordList.get(i).addHomonym(wordList.get(j));
 					}
 				}
@@ -141,19 +142,19 @@ public class Lexicon {
 					try {
 						currentTag = "pronounciation";
 						Tag pronunciationTag = wordTag.getDirectChild("pronounciation");
-						word.setPronounciation(pronunciationTag.value());
+						word.getProperties().setPronounciation(pronunciationTag.value());
 						currentTag = "etymology";
 						Tag etymologyTag = wordTag.getDirectChild("etymology");
-						word.setEtymology(etymologyTag.value());
+						word.getProperties().setEtymology(etymologyTag.value());
 						//TODO: Attempt to find ID of source language in Susquehanna folder. If not found, revert to null.
 						//Tag sourceLanguageTag = wordTag.getDirectChild("sourceLanguage");
 						//word.setSourceLanguage(null);
 						currentTag = "creationDate";
 						Tag creationDateTag = wordTag.getDirectChild("creationDate");
-						word.setCreationDate(new Date(Long.parseLong(creationDateTag.value())));
+						word.getProperties().setCreationDate(new Date(Long.parseLong(creationDateTag.value())));
 						currentTag = "editDate";
 						Tag editDateTag = wordTag.getDirectChild("editDate");
-						word.setEditDate(new Date(Long.parseLong(editDateTag.value())));
+						word.getProperties().setEditDate(new Date(Long.parseLong(editDateTag.value())));
 					} catch (Exception e) {
 						log.warn("Could not find optional property " + currentTag + " for " + valueTag.value() + 
 								" (" + valueTag.getName() + "). Was this word added manually?");

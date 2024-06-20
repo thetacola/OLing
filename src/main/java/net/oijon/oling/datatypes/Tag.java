@@ -116,10 +116,8 @@ public class Tag {
 	public boolean equals(Object obj) {
 		if (obj instanceof Tag) {
 			Tag tag = (Tag) obj;
-			if (this.name.equals(tag.getName())) {
-				if (this.data.equals(tag.value())) {
-					return true;
-				}
+			if (this.name.equals(tag.getName()) & this.data.equals(tag.value())) {
+				return true;
 			}
 		}
 		return false;

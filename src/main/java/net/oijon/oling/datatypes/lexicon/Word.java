@@ -1,6 +1,12 @@
 package net.oijon.oling.datatypes.lexicon;
 
 import java.util.ArrayList;
+import java.util.Date;
+
+import net.oijon.oling.Parser;
+import net.oijon.oling.datatypes.tags.Multitag;
+import net.oijon.oling.datatypes.tags.Tag;
+import net.oijon.olog.Log;
 
 //last edit: 6/20/24 -N3
 
@@ -13,6 +19,8 @@ import java.util.ArrayList;
 //TODO: re-add source language
 public class Word {
 
+	public static Log log = Parser.getLog();
+	
 	private WordProperties wp = new WordProperties();
 	private ArrayList<String> classes = new ArrayList<String>();
 	private ArrayList<Word> synonyms = new ArrayList<Word>();
@@ -41,6 +49,36 @@ public class Word {
 	
 	public WordProperties getProperties() {
 		return wp;
+	}
+	
+	public static Word parse(Multitag wordTag) throws Exception {
+		Tag valueTag = wordTag.getDirectChild("wordname");
+		Tag meaningTag = wordTag.getDirectChild("meaning");
+		Word word = new Word(valueTag.value(), meaningTag.value());
+		// current tag string very useful for debugging this try/catch here :)
+		String currentTag = "";
+		try {
+			currentTag = "pronounciation";
+			Tag pronunciationTag = wordTag.getDirectChild("pronounciation");
+			word.getProperties().setPronounciation(pronunciationTag.value());
+			currentTag = "etymology";
+			Tag etymologyTag = wordTag.getDirectChild("etymology");
+			word.getProperties().setEtymology(etymologyTag.value());
+			//TODO: Attempt to find ID of source language in Susquehanna folder. If not found, revert to null.
+			//Tag sourceLanguageTag = wordTag.getDirectChild("sourceLanguage");
+			//word.setSourceLanguage(null);
+			currentTag = "creationDate";
+			Tag creationDateTag = wordTag.getDirectChild("creationDate");
+			word.getProperties().setCreationDate(new Date(Long.parseLong(creationDateTag.value())));
+			currentTag = "editDate";
+			Tag editDateTag = wordTag.getDirectChild("editDate");
+			word.getProperties().setEditDate(new Date(Long.parseLong(editDateTag.value())));
+		} catch (Exception e) {
+			log.warn("Could not find optional property " + currentTag + " for '" + valueTag.value() + 
+					"'. Was this word added manually?");
+			e.printStackTrace();
+		}
+		return word;
 	}
 	
 	public void setProperties(WordProperties wp) {

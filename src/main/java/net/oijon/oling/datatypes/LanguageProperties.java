@@ -2,7 +2,6 @@ package net.oijon.oling.datatypes;
 
 import java.time.Instant;
 import java.util.Date;
-
 import net.oijon.oling.Parser;
 import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
@@ -11,27 +10,25 @@ public class LanguageProperties {
 
 	public static Log log = Parser.getLog();
 	
-	private String autonym = "null";
-	private String id = "null";
-	private String name = "null";
-	private boolean isReadOnly = false;
-	private Date created = Date.from(Instant.now());
-	private Date edited = Date.from(Instant.now());
-	private String versionEdited = Info.getVersion();
+	// 0 = autonym, 1 = id, 2 = name, 3 = versionEdited
+	private String[] strings = {"null", "null", "null", Info.getVersion()};	
+	// 0 = created, 1 = edited
+	private Date[] dates = {Date.from(Instant.now()), Date.from(Instant.now())};
 	
+	private boolean isReadOnly = false;
 	
 	public LanguageProperties() {
 		
 	}
 	
 	public LanguageProperties(LanguageProperties lp) {
-		this.autonym = lp.getAutonym();
-		this.id = lp.getID();
-		this.name = lp.getName();
 		this.isReadOnly = lp.isReadOnly();
-		this.created = lp.getCreated();
-		this.edited = lp.getEdited();
-		this.versionEdited = lp.getVersionEdited();
+		this.strings[0] = lp.getAutonym();
+		this.strings[1] = lp.getID();
+		this.strings[2] = lp.getName();
+		this.strings[3] = lp.getVersionEdited();
+		this.dates[0] = lp.getCreated();
+		this.dates[1] = lp.getEdited();
 	}
 	
 	/**
@@ -61,11 +58,12 @@ public class LanguageProperties {
 	 */
 	private void generateID() {
 		// theoretically this prevents an id from being overwritten
-		if (id.equals("null")) {
+		if (strings[1].equals("null")) {
 			int rand = (int) (Math.random() * 100000);
 			// "its deprecated" i dont care
 			// why does DateTimeFormatter not accept date objects :(
-			this.setID(name.toUpperCase() +
+			Date created = dates[0];
+			this.setID(strings[2].toUpperCase() +
 					created.getYear() +
 					created.getMonth() +
 					created.getDay() +
@@ -131,9 +129,9 @@ public class LanguageProperties {
 			 * - date edited (will never be equal)
 			 * - version edited (may or may not be equal)
 			 */
-			if (lp.getAutonym().equals(autonym) & lp.getID().equals(id) & 
-					lp.getName().equals(name) & lp.isReadOnly() == isReadOnly &
-					lp.getCreated().equals(created)) {
+			if (lp.getAutonym().equals(strings[0]) & lp.getID().equals(strings[1]) & 
+					lp.getName().equals(strings[2]) & lp.isReadOnly() == isReadOnly &
+					lp.getCreated().equals(dates[0])) {
 				return true;
 			}
 		}
@@ -141,47 +139,47 @@ public class LanguageProperties {
 	}
 	
 	public String getAutonym() {
-		return autonym;
+		return strings[0];
 	}
 	public String getID() {
-		return id;
+		return strings[1];
 	}
 	public String getName() {
-		return name;
+		return strings[2];
 	}
 	public boolean isReadOnly() {
 		return isReadOnly;
 	}
 	public Date getCreated() {
-		return (Date) created.clone();
+		return (Date) dates[0].clone();
 	}
 	public Date getEdited() {
-		return (Date) edited.clone();
+		return (Date) dates[1].clone();
 	}
 	public String getVersionEdited() {
-		return versionEdited;
+		return strings[3];
 	}
 	
 	public void setAutonym(String autonym) {
-		this.autonym = autonym;
+		this.strings[0] = autonym;
 	}
 	public void setID(String id) {
-		this.id = id;
+		this.strings[1] = id;
 	}
 	public void setName(String name) {
-		this.name = name;
+		this.strings[2] = name;
 	}
 	public void setReadOnly(boolean isReadOnly) {
 		this.isReadOnly = isReadOnly;
 	}
 	public void setCreated(Date created) {
-		this.created = (Date) created.clone();
+		this.dates[0] = (Date) created.clone();
 	}
 	public void setEdited(Date edited) {
-		this.edited = (Date) edited.clone();
+		this.dates[1] = (Date) edited.clone();
 	}
 	public void setVersionEdited(String versionEdited) {
-		this.versionEdited = versionEdited;
+		this.strings[3] = versionEdited;
 	}
 	
 }

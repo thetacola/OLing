@@ -4,23 +4,24 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 
-//last edit: 5/23/23 -N3
+//last edit: 6/19/24 -N3
 
 /**
  * Stores a word, including various properties about the word.
  * @author alex
  *
  */
+
+//TODO: re-add source language
 public class Word {
 
 	private String name;
 	private String meaning;
 	private String pronounciation = " ";
 	private String etymology = " ";
-	private Language sourceLanguage = Language.NULL;
-	private ArrayList<String> classes = new ArrayList<String>();
 	private Date creationDate = Date.from(Instant.now());
 	private Date editDate = Date.from(Instant.now());
+	private ArrayList<String> classes = new ArrayList<String>();
 	private ArrayList<Word> synonyms = new ArrayList<Word>();
 	private ArrayList<Word> homonyms = new ArrayList<Word>();
 	
@@ -44,7 +45,6 @@ public class Word {
 		this.meaning = new String(w.getMeaning());
 		this.pronounciation = new String(w.getPronounciation());
 		this.etymology = new String(w.getEtymology());
-		this.sourceLanguage = new Language(w.getSourceLanguage());
 		this.classes = new ArrayList<String>(w.classes);
 		this.editDate = new Date(w.getEditDate().toInstant().toEpochMilli());
 		this.synonyms = new ArrayList<Word>(w.getSynonyms());
@@ -113,25 +113,6 @@ public class Word {
 	 */
 	public String getEtymology() {
 		return etymology;
-	}
-	
-	/**
-	 * Sets the language the word came from
-	 * @param sourceLanguage
-	 * @deprecated as of v1.1.2, writing an entire language for each word to the file seems like a disaster waiting to happen
-	 */
-	@Deprecated
-	public void setSourceLanguage(Language sourceLanguage) {
-		sourceLanguage = this.sourceLanguage;
-	}
-	
-	/**
-	 * Gets the language the word came from
-	 * @return The Language object of where the word came from
-	 * @deprecated as of v1.1.2, writing an entire language for each word to the file seems like a disaster waiting to happen
-	 */
-	public Language getSourceLanguage() {
-		return sourceLanguage;
 	}
 	
 	/**
@@ -267,7 +248,6 @@ public class Word {
 		returnString += "meaning:" + meaning + "\n";
 		returnString += "pronounciation:" + pronounciation + "\n";
 		returnString += "etymology:" + etymology + "\n";
-		returnString += "sourceLanguage:" + sourceLanguage.getProperties().getName() + "\n";
 		returnString += "creationDate:" + creationDate.getTime() + "\n";
 		returnString += "editDate:" + editDate.getTime() + "\n";
 		returnString += "===Synonym Start===\n";

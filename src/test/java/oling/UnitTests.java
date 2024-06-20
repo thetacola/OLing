@@ -14,12 +14,12 @@ import org.junit.jupiter.api.Test;
 import net.oijon.olog.Log;
 
 import net.oijon.oling.Parser;
-import net.oijon.oling.datatypes.Guesser;
-import net.oijon.oling.datatypes.Language;
-import net.oijon.oling.datatypes.Lexicon;
-import net.oijon.oling.datatypes.Multitag;
-import net.oijon.oling.datatypes.Orthography;
-import net.oijon.oling.datatypes.Word;
+import net.oijon.oling.datatypes.language.Language;
+import net.oijon.oling.datatypes.lexicon.Lexicon;
+import net.oijon.oling.datatypes.lexicon.Word;
+import net.oijon.oling.datatypes.orthography.Guesser;
+import net.oijon.oling.datatypes.orthography.Orthography;
+import net.oijon.oling.datatypes.tags.Multitag;
 
 public class UnitTests {
 

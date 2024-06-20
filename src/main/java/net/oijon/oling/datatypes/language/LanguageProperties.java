@@ -1,8 +1,10 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.language;
 
 import java.time.Instant;
 import java.util.Date;
 import net.oijon.oling.Parser;
+import net.oijon.oling.datatypes.tags.Multitag;
+import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
 

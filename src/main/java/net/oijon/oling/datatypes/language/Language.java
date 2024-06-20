@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.language;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,6 +12,10 @@ import net.oijon.olog.Log;
 
 import net.oijon.oling.info.Info;
 import net.oijon.oling.Parser;
+import net.oijon.oling.datatypes.lexicon.Lexicon;
+import net.oijon.oling.datatypes.orthography.Orthography;
+import net.oijon.oling.datatypes.phonology.Phonology;
+import net.oijon.oling.datatypes.tags.Multitag;
 
 //last edit: 6/19/24 -N3
 

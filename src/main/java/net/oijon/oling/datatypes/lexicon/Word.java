@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.lexicon;
 
 import java.time.Instant;
 import java.util.ArrayList;

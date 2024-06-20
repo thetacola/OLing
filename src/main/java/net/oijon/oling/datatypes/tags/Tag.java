@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.tags;
 
 //last edit: 5/24/23 -N3
 

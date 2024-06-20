@@ -5,14 +5,14 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import net.oijon.olog.Log;
-import net.oijon.oling.datatypes.Language;
-import net.oijon.oling.datatypes.Lexicon;
-import net.oijon.oling.datatypes.Multitag;
-import net.oijon.oling.datatypes.MultitagUtils;
-import net.oijon.oling.datatypes.Orthography;
-import net.oijon.oling.datatypes.PhonoSystem;
-import net.oijon.oling.datatypes.Phonology;
-import net.oijon.oling.datatypes.Tag;
+import net.oijon.oling.datatypes.language.Language;
+import net.oijon.oling.datatypes.lexicon.Lexicon;
+import net.oijon.oling.datatypes.orthography.Orthography;
+import net.oijon.oling.datatypes.phonology.PhonoSystem;
+import net.oijon.oling.datatypes.phonology.Phonology;
+import net.oijon.oling.datatypes.tags.Multitag;
+import net.oijon.oling.datatypes.tags.MultitagUtils;
+import net.oijon.oling.datatypes.tags.Tag;
 
 //last edit: 6/20/2023 -N3
 

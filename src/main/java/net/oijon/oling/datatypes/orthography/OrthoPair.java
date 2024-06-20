@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.orthography;
 
 public class OrthoPair implements Comparable<OrthoPair> {
 

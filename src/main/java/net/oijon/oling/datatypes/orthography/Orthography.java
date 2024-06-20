@@ -1,10 +1,13 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.orthography;
 
 import java.util.ArrayList;
 
 import net.oijon.olog.Log;
 
 import net.oijon.oling.Parser;
+import net.oijon.oling.datatypes.phonology.Phonology;
+import net.oijon.oling.datatypes.tags.Multitag;
+import net.oijon.oling.datatypes.tags.Tag;
 
 //last edit: 11/4/23 -N3
 

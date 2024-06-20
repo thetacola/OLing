@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.phonology;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,6 +12,8 @@ import java.util.Arrays;
 
 import net.oijon.olog.Log;
 import net.oijon.oling.Parser;
+import net.oijon.oling.datatypes.tags.Multitag;
+import net.oijon.oling.datatypes.tags.Tag;
 
 //last edit: 12/17/23 -N3
 

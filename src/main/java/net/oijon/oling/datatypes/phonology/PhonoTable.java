@@ -1,9 +1,11 @@
-package net.oijon.oling.datatypes;
+package net.oijon.oling.datatypes.phonology;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import net.oijon.oling.Parser;
+import net.oijon.oling.datatypes.tags.Multitag;
+import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.olog.Log;
 
 //last edit: 6/19/23 -N3

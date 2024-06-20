@@ -20,7 +20,7 @@ public class WordProperties {
 		strings[2] = wp.getPronounciation();
 		strings[3] = wp.getEtymology();
 		dates[0] = wp.getCreationDate();
-		dates[1] = wp.getEditedDate();
+		dates[1] = wp.getEditDate();
 	}
 	
 	public String getName() {
@@ -38,7 +38,7 @@ public class WordProperties {
 	public Date getCreationDate() {
 		return (Date) dates[0].clone();
 	}
-	public Date getEditedDate() {
+	public Date getEditDate() {
 		return (Date) dates[1].clone();
 	}
 	
@@ -57,7 +57,7 @@ public class WordProperties {
 	public void setCreationDate(Date creationDate) {
 		dates[0] = (Date) creationDate.clone();
 	}
-	public void setEditedDate(Date editedDate) {
+	public void setEditDate(Date editedDate) {
 		dates[1] = (Date) editedDate.clone();
 	}
 	

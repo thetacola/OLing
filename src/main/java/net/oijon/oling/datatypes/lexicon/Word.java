@@ -1,8 +1,6 @@
 package net.oijon.oling.datatypes.lexicon;
 
-import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 
 //last edit: 6/20/24 -N3
 
@@ -144,7 +142,7 @@ public class Word {
 				"pronounciation:" + wp.getPronounciation() + "\n" +
 				"etymology:" + wp.getEtymology() + "\n" +
 				"creationDate:" + wp.getCreationDate().getTime() + "\n" +
-				"editDate:" + wp.getEditedDate().getTime() + "\n" +
+				"editDate:" + wp.getEditDate().getTime() + "\n" +
 				"===Synonym Start===\n";
 		for (int i = 0; i < synonyms.size(); i++) {
 			returnString += ":" + synonyms.get(i).getProperties().getName() + "\n";

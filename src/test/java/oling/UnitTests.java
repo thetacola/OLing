@@ -302,14 +302,14 @@ public class UnitTests {
 			Language testLang = parser.parseLanguage();
 			
 			Word w1 = new Word("hello", "hi");
-			w1.setCreationDate(new Date(1234567890987654L));
-			w1.setEditDate(new Date(2000000000000L));
+			w1.getProperties().setCreationDate(new Date(1234567890987654L));
+			w1.getProperties().setEditDate(new Date(2000000000000L));
 			
 			Word w2 = new Word("foo", "bar");
-			w2.setPronounciation("foobar");
-			w2.setEtymology("foo + bar");
-			w2.setCreationDate(new Date(1L));
-			w2.setEditDate(new Date(99999999999999L));
+			w2.getProperties().setPronounciation("foobar");
+			w2.getProperties().setEtymology("foo + bar");
+			w2.getProperties().setCreationDate(new Date(1L));
+			w2.getProperties().setEditDate(new Date(99999999999999L));
 			
 			Lexicon l = new Lexicon();
 			l.addWord(w1);
@@ -326,17 +326,17 @@ public class UnitTests {
 			boolean testedFoo = false;
 			for (int i = 0; i < testLang2.getLexicon().size(); i++) {
 				Word w = testLang2.getLexicon().getWord(i);
-				if (w.getName().equals("hello")) {
+				if (w.getProperties().getName().equals("hello")) {
 					testedHi = true;
-					assertEquals("hi", w.getMeaning());
-					assertEquals(new Date(1234567890987654L), w.getCreationDate());
-					assertEquals(new Date(2000000000000L), w.getEditDate());
-				} else if (w.getName().equals("foo")) {
+					assertEquals("hi", w.getProperties().getMeaning());
+					assertEquals(new Date(1234567890987654L), w.getProperties().getCreationDate());
+					assertEquals(new Date(2000000000000L), w.getProperties().getEditDate());
+				} else if (w.getProperties().getName().equals("foo")) {
 					testedFoo = true;
-					assertEquals(new Date(1L), w.getCreationDate());
-					assertEquals(new Date(99999999999999L), w.getEditDate());
-					assertEquals("foo + bar", w.getEtymology());
-					assertEquals("foobar", w.getPronounciation());
+					assertEquals(new Date(1L), w.getProperties().getCreationDate());
+					assertEquals(new Date(99999999999999L), w.getProperties().getEditDate());
+					assertEquals("foo + bar", w.getProperties().getEtymology());
+					assertEquals("foobar", w.getProperties().getPronounciation());
 				}
 			}
 			assertTrue(testedHi);

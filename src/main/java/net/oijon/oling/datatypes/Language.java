@@ -156,9 +156,9 @@ public class Language {
 		lexicon.checkHomonyms();
 		lexicon.checkSynonyms();
 		
-		String data = "===PHOSYS Start===\n";
-		data += this.toString();
-		data += "\n===PHOSYS End===";
+		String data = "===PHOSYS Start===\n" +
+				this.toString() +
+				"\n===PHOSYS End===";
 		if (!file.exists()) {
 			file.createNewFile();
 		}
@@ -173,18 +173,17 @@ public class Language {
 	 */
 	public String toString() {
 		String returnString = "===Meta Start===\n";
-		returnString += "utilsVersion:" + properties.getVersionEdited() + "\n";
-		returnString += "name:" + properties.getName() + "\n";
-		returnString += "id:" + properties.getID() + "\n";
-		returnString += "autonym:" + properties.getAutonym() + "\n";
-		returnString += "timeCreated:" + properties.getCreated().getTime() + "\n";
-		returnString += "lastEdited:" + properties.getEdited().getTime() + "\n";
-		returnString += "readonly:" + properties.isReadOnly() + "\n";
-		returnString += "parent:" + "null" + "\n";
-		returnString += "===Meta End===\n";
-		returnString += phono.toString() + "\n";
-		returnString += ortho.toString() + "\n";
-		returnString += lexicon.toString();
+		returnString += "utilsVersion:" + properties.getVersionEdited() + "\n" +
+				"name:" + properties.getName() + "\n" +
+				"id:" + properties.getID() + "\n" +
+				"autonym:" + properties.getAutonym() + "\n" +
+				"timeCreated:" + properties.getCreated().getTime() + "\n" +
+				"readonly:" + properties.isReadOnly() + "\n" +
+				"parent:" + "null" + "\n" +
+				"===Meta End===\n" +
+				phono.toString() + "\n" +
+				ortho.toString() + "\n" +
+				lexicon.toString();
 		return returnString;
 	}
 	

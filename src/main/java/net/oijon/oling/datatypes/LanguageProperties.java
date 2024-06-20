@@ -50,9 +50,7 @@ public class LanguageProperties {
 		lp.setReadOnly(Boolean.parseBoolean(meta.getDirectChild("readonly").value()));
 		lp.setCreated(new Date(Long.parseLong(meta.getDirectChild("timeCreated").value())));
 		lp.setEdited(new Date(Long.parseLong(meta.getDirectChild("lastEdited").value())));
-		Tag ver = new Tag("utilsVersion");
-		lp.checkVersion(meta, ver);
-		lp.setVersionEdited(ver.value());
+		lp.checkVersion(meta);
 		
 		return lp;
 	}
@@ -93,7 +91,6 @@ public class LanguageProperties {
 						+ "a manual switch to the new ID will be neccessary.");
 			}
 		} catch (Exception e) {
-			//TODO: keep old ID instead of generating new one
 			log.warn("This language appears to have been created with a very early version of Oijon Utils!");
 			log.warn("The id tag was required as of 1.2.0.");
 			generateID();
@@ -106,16 +103,19 @@ public class LanguageProperties {
 	 * @param ver The version tag
 	 * @throws Exception Thrown if neither utilsVersion nor susquehannaVersion exist
 	 */
-	private void checkVersion(Multitag meta, Tag ver) throws Exception {
+	private void checkVersion(Multitag meta) throws Exception {
+		Tag ver;
 		try {
 			ver = meta.getDirectChild("utilsVersion");
 			if (!ver.value().isBlank()) {
 				log.info("Language created with " + ver.value());
+				setVersionEdited(ver.value());
 			}
 		} catch (Exception e) {
 			ver = meta.getDirectChild("susquehannaVersion");
 			if (!ver.value().isBlank()) {
 				log.info("Language created with " + ver.value());
+				setVersionEdited(ver.value());
 			}
 			log.warn("This language appears to have been created with a very early version of Oijon Utils!");
 			log.warn("The susquehannaVersion tag was deprecated as of 1.2.0.");

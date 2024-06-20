@@ -134,22 +134,6 @@ public class PhonoSystem {
 	}
 	
 	/**
-	 * Adds a table to a phono system
-	 * @param table The table to be added
-	 */
-	public void addTable(PhonoTable table) {
-		tables.add(table);
-	}
-	
-	/**
-	 * Removes table based off index.
-	 * @param i index
-	 */
-	public void removeTable(int i) {
-		tables.remove(i);
-	}
-	
-	/**
 	 * Removes table based off name. As this is slower than removing via index, removing via index is preferred.
 	 * @param name Name of category to be removed
 	 */
@@ -173,9 +157,6 @@ public class PhonoSystem {
 		return tables.get(i).getRow(x).getSound(y);
 	}
 	
-	public void addDiacritic(String value) {
-		diacriticList.add(value);
-	}
 	public void setDiacritics(ArrayList<String> newList) {
 		diacriticList = newList;
 	}
@@ -205,7 +186,7 @@ public class PhonoSystem {
 				if (tablelist.getSubMultitags().get(i).getName().equals("PhonoTable")) {
 					Multitag phonoTableTag = tablelist.getSubMultitags().get(i);
 					PhonoTable phonoTable = PhonoTable.parse(phonoTableTag);
-					phonoSystem.addTable(phonoTable);
+					phonoSystem.getTables().add(phonoTable);
 				}
 			}
 			return phonoSystem;

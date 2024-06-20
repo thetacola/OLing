@@ -64,7 +64,7 @@ public class PhonoTable {
 		String name = tag.getDirectChild("tableName").value();
 		ArrayList<String> columns = new ArrayList<String>(Arrays.asList(tag.getDirectChild("columnNames").value().split(",")));
 		ArrayList<String> rowNamesList = new ArrayList<String>(Arrays.asList(tag.getDirectChild("rowNames").value().split(",")));
-		int perCell = 0;
+		int perCell;
 		try {
 			perCell = Integer.parseInt(tag.getDirectChild("soundsPerCell").value());
 		} catch (NumberFormatException nfe) {

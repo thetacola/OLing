@@ -23,13 +23,6 @@ public class Multitag {
 	 */
 	public Multitag(String name, ArrayList<Tag> subtags, ArrayList<Multitag> subMultitags) {
 		this.name = name;
-	}
-	/**
-	 * Creates a multitag based on its children
-	 * @param subtags Tag objects that are a part of this multitag
-	 * @param subMultitags Multitag objects that are a part of this multitag
-	 */
-	public Multitag(ArrayList<Tag> subtags, ArrayList<Multitag> subMultitags) {
 		this.subtags = subtags;
 		this.subMultitags = subMultitags;
 	}
@@ -104,26 +97,13 @@ public class Multitag {
 			return false;
 		}
 	}
-	@Deprecated
-	/**
-	 * use equals() instead.
-	 * @param tag
-	 * @return
-	 * @deprecated as of 1.2.1, use equals() instead.
-	 */
-	public boolean isEqual(Multitag tag) {		
-		return this.equals(tag);
-	}
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Multitag) {
 			Multitag tag = (Multitag) obj;
-			if (this.name.equals(tag.getName())) {
-				if (this.subtags.equals(tag.getSubtags())) {
-					if (this.subMultitags.equals(tag.getSubMultitags())) {
-						return true;
-					}
-				}
+			if (this.name.equals(tag.getName()) & this.subtags.equals(tag.getSubtags())
+					& this.subMultitags.equals(tag.getSubMultitags())) {
+				return true;
 			}
 		}
 		return false;
@@ -153,72 +133,6 @@ public class Multitag {
 	 */
 	public String getEnd() {
 		return "===" + this.name + " End===";
-	}
-	
-	/**
-	 * Checks if a line contains a starting multitag marker
-	 * @param line The line to be checked
-	 * @return true if the line is a starting multitag marker, false otherwise
-	 */
-	public static boolean isMultitagStart(String line) {
-		if (getSecondPartOfMarker(line).equals("Start===")) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Checks if a line contains an ending multitag marker
-	 * @param line The line to be checked
-	 * @return true if the line is an ending multitag marker, false otherwise
-	 */
-	public static boolean isMultitagEnd(String line) {
-		if (getSecondPartOfMarker(line).equals("End===")) {
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Gets the second part of a multitag marker. Should either be "Start===" or "End==="
-	 * @param line The line to use for grabbing the second part of the marker
-	 * @return The second part of the multitag marker. If not a multitag marker, returns a blank string.
-	 */
-	public static String getSecondPartOfMarker(String line) {
-		String[] splitSpace = line.split(" ");
-		if (isMultitagMarker(line)) {
-			return splitSpace[1];
-		}
-		return "";
-	}
-	
-	/**
-	 * Gets the name of a multitag from its marker
-	 * @param line The line with the marker in it
-	 * @return The name of the given multitag
-	 */
-	public static String getMarkerTagName(String line) {
-		if (isMultitagMarker(line)) {
-			String[] splitSpace = line.split(" ");
-			String name = splitSpace[0].substring(3);
-			return name;
-		} else {
-			return "";
-		}
-	}
-	
-	/**
-	 * Checks if a line contains a multitag marker
-	 * @param line The line to be checked
-	 * @return true if the line is a multitag marker, false otherwise
-	 */
-	public static boolean isMultitagMarker(String line) {
-		String[] splitSpace = line.split(" ");
-		String[] splitColon = line.split(":");
-		if (splitSpace.length == 2 & splitColon.length != 2) {
-			return true;
-		}
-		return false;
 	}
 	
 	/**

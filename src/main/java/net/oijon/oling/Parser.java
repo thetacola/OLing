@@ -8,6 +8,7 @@ import net.oijon.olog.Log;
 import net.oijon.oling.datatypes.Language;
 import net.oijon.oling.datatypes.Lexicon;
 import net.oijon.oling.datatypes.Multitag;
+import net.oijon.oling.datatypes.MultitagUtils;
 import net.oijon.oling.datatypes.Orthography;
 import net.oijon.oling.datatypes.PhonoSystem;
 import net.oijon.oling.datatypes.Phonology;
@@ -83,8 +84,8 @@ public class Parser {
 	 * @return true if line is the expected closing tag, false if either not a closing tag or a closing tag for a different multitag
 	 */
 	private boolean isCloseForName(String line, String name) {
-		if (Multitag.isMultitagEnd(line)) {
-			if (Multitag.getMarkerTagName(line).equals(name)) {
+		if (MultitagUtils.isMultitagEnd(line)) {
+			if (MultitagUtils.getMarkerTagName(line).equals(name)) {
 				return true;
 			}
 		}
@@ -140,14 +141,14 @@ public class Parser {
 		// Splits each line based off line breaks
 		String[] splitLines = input.split("\n");
 		// Gets the tag name from the start tag. This removes the beginning '==='
-		String tagName = Multitag.getMarkerTagName(splitLines[0]);
+		String tagName = MultitagUtils.getMarkerTagName(splitLines[0]);
 		
 		// This creates a new Multitag in memory named after the tag just named
 		Multitag tag = new Multitag(tagName);
 		// Loop over each line in file
 		for (int i = 1; i < splitLines.length; i++) {
 			// Checks if the line matches the pattern of a multitag start marker
-			if (Multitag.isMultitagStart(splitLines[i])) {
+			if (MultitagUtils.isMultitagStart(splitLines[i])) {
 				tag.addMultitag(readChildMultitag(splitLines, i));
 			// Checks if line is named tag
 			} else if (isDataTag(splitLines[i])) {
@@ -169,7 +170,7 @@ public class Parser {
 	
 	private Multitag readChildMultitag(String[] splitLines, int startLine) {
 		// Gets the name of the start marker
-		String name = Multitag.getMarkerTagName(splitLines[startLine]);
+		String name = MultitagUtils.getMarkerTagName(splitLines[startLine]);
 		// Gets the line number the tag was found on
 		int lineNum = startLine + 1;
 		// Creates a variable for the loop below

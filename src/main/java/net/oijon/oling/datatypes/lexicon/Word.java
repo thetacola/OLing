@@ -164,8 +164,8 @@ public class Word {
 	public boolean equals(Object obj) {
 		if (obj instanceof Word) {
 			Word w = (Word) obj;
-			if (w.getProperties().equals(wp) & w.synonyms.equals(synonyms) &
-					w.homonyms.equals(homonyms)) {
+			// does not check for synonyms or homonyms, see issue #4
+			if (w.getProperties().equals(wp)) {
 				return true;
 			}
 		}

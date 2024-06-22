@@ -13,7 +13,7 @@ public class Info {
 	private static String fullVersion = "OLing - v" + versionNum;
 	
 	private static String generateVersionNum() {
-		return "2.0.0";
+		return "2.0.1";
 	}
 	
 	/**

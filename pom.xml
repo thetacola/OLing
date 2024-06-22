@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.oijon</groupId>
 	<artifactId>oling</artifactId>
-	<version>2.0.0</version>
+	<version>2.0.1</version>
 	<name>OLing</name>
 	<description>A library to help model languages.</description>
 	<url>https://oijon.net/oling</url>

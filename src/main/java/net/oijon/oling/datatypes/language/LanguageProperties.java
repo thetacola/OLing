@@ -50,7 +50,6 @@ public class LanguageProperties {
 		lp.setCreated(new Date(Long.parseLong(meta.getDirectChild("timeCreated").value())));
 		lp.setEdited(new Date(Long.parseLong(meta.getDirectChild("lastEdited").value())));
 		lp.checkVersion(meta);
-		
 		return lp;
 	}
 	
@@ -152,9 +151,13 @@ public class LanguageProperties {
 	public void setProperty(LanguageProperty p, String value) {
 		switch(p) {
 			case AUTONYM: strings[0] = value;
+			break;
 			case ID: strings[1] = value;
+			break;
 			case NAME: strings[2] = value;
+			break;
 			case VERSION_EDITED: strings[3] = value;
+			break;
 		}
 	}
 	

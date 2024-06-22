@@ -3,8 +3,12 @@ package net.oijon.oling.datatypes.lexicon;
 import java.time.Instant;
 import java.util.Date;
 
+import net.oijon.oling.Parser;
+import net.oijon.olog.Log;
+
 public class WordProperties {
 
+	public Log log = Parser.getLog();
 	// 0 = name, 1 = meaning, 2 = pronounciation, 3 = etymology
 	private String[] strings = {" ", " ", " ", " "};
 	// 0 = creation date, 1 = edit date
@@ -64,9 +68,17 @@ public class WordProperties {
 		// does not check edited date, as that can still be different
 		if (o instanceof WordProperties) {
 			WordProperties wp = (WordProperties) o;
-			if (strings.equals(wp.strings) & dates[0].equals(wp.getCreationDate())) {
-				return true;
+			for (int i = 0; i < strings.length; i++) {
+				if (!strings[i].equals(wp.strings[i])) {
+					return false;
+				}
 			}
+			for (int i = 0; i < dates.length; i++) {
+				if (!dates[i].equals(wp.dates[i])) {
+					return false;
+				}
+			}
+			return true;
 		}
 		return false;
 	}

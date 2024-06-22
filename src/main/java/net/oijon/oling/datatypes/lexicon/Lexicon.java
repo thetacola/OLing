@@ -163,7 +163,8 @@ public class Lexicon {
 	public boolean equals(Object obj) {
 		if (obj instanceof Lexicon) {
 			Lexicon l = (Lexicon) obj;
-			if (wordList.equals(l.wordList)) {
+			if (wordList.containsAll(l.wordList) &
+					l.wordList.containsAll(wordList)) {
 				return true;
 			}
 		}

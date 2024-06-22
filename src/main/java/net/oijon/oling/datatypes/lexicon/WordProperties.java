@@ -42,9 +42,13 @@ public class WordProperties {
 	public void setProperty(WordProperty wp, String value) {
 		switch(wp) {
 			case NAME: strings[0] = value;
+			break;
 			case MEANING: strings[1] = value;
+			break;
 			case PRONOUNCIATION: strings[2] = value;
+			break;
 			case ETYMOLOGY: strings[3] = value;
+			break;
 		}
 	}
 	

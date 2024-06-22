@@ -1,15 +1,16 @@
 ===PHOSYS Start===
 ===Meta Start===
-susquehannaVersion:0.0.2 "Otsego", build 23w02c ***SNAPSHOT VERSION***
-name:testish
-autonym:testspraak
-timeCreated:1673475246411
-lastEdited:1673724452237
+utilsVersion:OLing - v2.0.1
+name:newtestlang
+id:NEWTESTLANG124563222768163
+autonym:testlang autonym
+timeCreated:1719040942215
+lastEdited:1719041113203
 readonly:false
 parent:null
 ===Meta End===
 ===Phonology Start===
-soundlist: ,p,b,t,d,k,ɡ,ʔ,m,n,ŋ,θ,ð,i,u,e,o,a,ǀ,w,ɚ
+soundlist: ,p,b,t,d,k,ɡ,ʔ,m,n,ŋ,f,v,θ,ð,s,z,ʃ,ʒ,h,ɹ,l,j,i,ɪ,u,ʊ,e,ɛ,æ,a,ə,o,ʌ,ɔ,ɑ,w
 ===Tablelist Start===
 tablelistName:IPA
 diacriticList:̥,̬,ʰ,̹,̜,̟,̠,̈,̽,̩,̯,˞,̤,̰,̼,ʷ,ʲ,ˠ,ˤ,̴,̝,̞,̘,̙,̪,̺,̻,̃,ⁿ,ˡ,̚,̋,́,̄,̀,̏,̌,̂,᷄,᷅,᷈,ˈ,ˌ,ː,ˑ,̆,|,‖,.,‿,͡
@@ -52,6 +53,54 @@ rowNames:Click,Implosive,Other,.encodingAnomoly
 ===PhonoTable End===
 ===Tablelist End===
 ===Phonology End===
+===Orthography Start===
+===Orthography End===
 ===Lexicon Start===
+===Word Start===
+wordname:test word name
+meaning:test word meaning
+pronounciation:test word pronounciation
+etymology:test word etymology
+creationDate:1719041061077
+editDate:1719041061077
+===Synonym Start===
+:test word synonym
+===Synonym End===
+===Homonym Start===
+:test word homonym
+===Homonym End===
+===Classes Start===
+===Classes End===
+===Word End===
+===Word Start===
+wordname:test word name
+meaning:test word homonym
+pronounciation:test word homonym pronounciation
+etymology:test word homonym etymology
+creationDate:1719041086402
+editDate:1719041086402
+===Synonym Start===
+===Synonym End===
+===Homonym Start===
+:test word meaning
+===Homonym End===
+===Classes Start===
+===Classes End===
+===Word End===
+===Word Start===
+wordname:test word synonym
+meaning:test word meaning
+pronounciation:test word synonym pronounciation
+etymology:test word synonym etymology
+creationDate:1719041113203
+editDate:1719041113203
+===Synonym Start===
+:test word name
+===Synonym End===
+===Homonym Start===
+===Homonym End===
+===Classes Start===
+===Classes End===
+===Word End===
 ===Lexicon End===
 ===PHOSYS End===

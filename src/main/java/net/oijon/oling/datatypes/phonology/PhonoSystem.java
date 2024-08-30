@@ -92,9 +92,8 @@ public class PhonoSystem {
 	
 	/**
 	 * Loads a PhonoSystem object from a file
-	 * 
+	 * @param file The file to load from
 	 */
-	
 	public PhonoSystem(File file) {
 		try {
 			Parser parser = new Parser(file);

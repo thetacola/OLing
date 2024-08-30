@@ -71,7 +71,7 @@ public class Parser {
 	
 	/**
 	 * Gets the containing tag, including all subtags
-	 * @return
+	 * @return The containing tag
 	 */
 	public Multitag getPHOSYSTag() {
 		return this.tag;
@@ -238,7 +238,7 @@ public class Parser {
 	
 	/**
 	 * Gets the log the parser outputs to. Useful for parse methods in data types.
-	 * @return
+	 * @return The log the parser is outputting to.
 	 */
 	public static Log getLog() {
 		return log;

@@ -122,14 +122,14 @@ public class Multitag {
 	}
 	/**
 	 * Gets the start of a tag's string
-	 * @return
+	 * @return The start tag
 	 */
 	public String getStart() {
 		return "===" + this.name + " Start===";
 	}
 	/**
 	 * Gets the end of a tag's string
-	 * @return
+	 * @return The end tag
 	 */
 	public String getEnd() {
 		return "===" + this.name + " End===";

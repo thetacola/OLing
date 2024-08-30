@@ -50,6 +50,11 @@ public class Orthography {
 		this.orthoList = new ArrayList<OrthoPair>(o.orthoList);
 	}
 	
+	/**
+	 * Adds an orthopair with given constituents
+	 * @param phonemes The phoneme(s) for the grapheme(s)
+	 * @param graphemes The grapheme(s) for the phoneme(s)
+	 */
 	public void add(String phonemes, String graphemes) {
 		// TODO: check if phonemes are actually in phonology
 		orthoList.add(new OrthoPair(phonemes, graphemes));
@@ -139,6 +144,11 @@ public class Orthography {
 		return orthoList.size();
 	}
 	
+	/**
+	 * Checks if two ortholists are equal. Note that this is order-dependent.
+	 * @param o The orthography to check
+	 * @return true if equal, false otherwise
+	 */
 	private boolean orthoListEqual(Orthography o) {
 		for (int i = 0; i < orthoList.size(); i++) {
 			if (!orthoList.get(i).equals(o.getPair(i))) {

@@ -8,6 +8,10 @@ import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
 
+/**
+ * Bundles metadata about a language into one object
+ * @author alex
+ */
 public class LanguageProperties {
 
 	public static Log log = Parser.getLog();
@@ -72,6 +76,10 @@ public class LanguageProperties {
 				+ rand);
 	}
 	
+	/**
+	 * Checks if the ID tag is using an old, unsupported version. Useful for backwards-compatibility.
+	 * @param meta
+	 */
 	private void checkID(Multitag meta) {
 		Tag id = new Tag("id");
 		try {
@@ -138,6 +146,11 @@ public class LanguageProperties {
 		return false;
 	}
 	
+	/**
+	 * Gets the value of a property
+	 * @param p The name of the property
+	 * @return The value of the property
+	 */
 	public String getProperty(LanguageProperty p) {
 		switch(p) {
 			case AUTONYM: return strings[0];
@@ -148,6 +161,11 @@ public class LanguageProperties {
 		return " ";
 	}
 	
+	/**
+	 * Sets the value of a property
+	 * @param p The property to set the value of
+	 * @param value The value to change the property to
+	 */
 	public void setProperty(LanguageProperty p, String value) {
 		switch(p) {
 			case AUTONYM: strings[0] = value;
@@ -161,22 +179,45 @@ public class LanguageProperties {
 		}
 	}
 	
+	/**
+	 * Check if the language is marked as read only
+	 * @return true if read-only, false if not
+	 */
 	public boolean isReadOnly() {
 		return isReadOnly;
 	}
+	/**
+	 * Gets the date the language was created
+	 * @return The date the language was created
+	 */
 	public Date getCreated() {
 		return (Date) dates[0].clone();
 	}
+	/**
+	 * Gets the date the language was last edited
+	 * @return The date the language was last edited
+	 */
 	public Date getEdited() {
 		return (Date) dates[1].clone();
 	}
-	
+	/**
+	 * Set read only status
+	 * @param isReadOnly The read only status to change to
+	 */
 	public void setReadOnly(boolean isReadOnly) {
 		this.isReadOnly = isReadOnly;
 	}
+	/**
+	 * Set the date the language was created
+	 * @param created The date the language was created
+	 */
 	public void setCreated(Date created) {
 		this.dates[0] = (Date) created.clone();
 	}
+	/**
+	 * Set the date the language was last edited
+	 * @param edited The date the language was last edited
+	 */
 	public void setEdited(Date edited) {
 		this.dates[1] = (Date) edited.clone();
 	}

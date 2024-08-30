@@ -1,5 +1,9 @@
 package net.oijon.oling.datatypes.tags;
 
+/**
+ * Some helpful tools for dealing with multitags. Separate from Multitag as to improve readability.
+ * @author alex
+ */
 public class MultitagUtils {
 
 

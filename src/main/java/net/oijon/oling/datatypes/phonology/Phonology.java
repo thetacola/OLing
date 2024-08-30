@@ -114,6 +114,13 @@ public class Phonology {
 		}
 	}
 	
+	/**
+	 * Parses a phonology from a given multitag
+	 * 99% of the time, you want to use {@link net.oijon.oling.Parser#parsePhono()} instead
+	 * @param docTag The multitag to parse from
+	 * @return The parsed phonology
+	 * @throws Exception Thrown for various issues, mostly for unsuccessful parsing of subelements
+	 */
 	public static Phonology parse(Multitag docTag) throws Exception {
 		try {
 			PhonoSystem phonoSystem = PhonoSystem.parse(docTag);
@@ -158,6 +165,9 @@ public class Phonology {
 		return false;
 	}
 	
+	/**
+	 * Clears all sounds in a phonology
+	 */
 	public void clear() {
 		phonoList.clear();
 	}

@@ -17,6 +17,7 @@ public class GlossList extends ArrayList<Gloss> {
 	
 	/**
 	 * Creates an empty GlossList
+	 * @param name The name of the GlossList (ex. Leipzig)
 	 */
 	public GlossList(String name) {
 		super();
@@ -25,7 +26,7 @@ public class GlossList extends ArrayList<Gloss> {
 	
 	/**
 	 * Copy constructor
-	 * @param gl
+	 * @param gl The GlossList to copy
 	 */
 	public GlossList(GlossList gl) {
 		super(gl);

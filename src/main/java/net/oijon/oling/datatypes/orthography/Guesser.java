@@ -5,6 +5,7 @@ public class Guesser {
 	/**
 	 * Guesses what the graphemes will be given phonemes
 	 * @param input The phonemes to use
+	 * @param o The orthography to use
 	 * @return A guess on graphemes
 	 */
 	public static String orthoGuess(String input, Orthography o) {
@@ -20,6 +21,7 @@ public class Guesser {
 	/**
 	 * Guesses what the phonemes will be given graphemes
 	 * @param input The graphemes to use
+	 * @param o The orthography to use
 	 * @return A guess on phonemes
 	 */
 	public static String phonoGuess(String input, Orthography o) {

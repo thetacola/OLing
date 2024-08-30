@@ -1,8 +1,12 @@
 package net.oijon.oling.soundchange;
 
+
 import java.util.ArrayList;
 import java.util.Stack;
 
+/**
+ * @deprecated This will be part of Phonutate instead
+ */
 public class Rule {
 
 	String target = "";

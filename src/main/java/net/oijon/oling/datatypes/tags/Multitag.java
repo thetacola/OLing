@@ -109,6 +109,7 @@ public class Multitag {
 		return false;
 	}
 	
+	@Override
 	public String toString() {
 		String returnString = this.getStart() + "\n";
 		for (int i = 0; i < subtags.size(); i++) {
@@ -122,14 +123,14 @@ public class Multitag {
 	}
 	/**
 	 * Gets the start of a tag's string
-	 * @return
+	 * @return The start tag
 	 */
 	public String getStart() {
 		return "===" + this.name + " Start===";
 	}
 	/**
 	 * Gets the end of a tag's string
-	 * @return
+	 * @return The end tag
 	 */
 	public String getEnd() {
 		return "===" + this.name + " End===";

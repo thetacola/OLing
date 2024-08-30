@@ -160,6 +160,10 @@ public class PhonoTable {
 		return soundsPerCell;
 	}
 	
+	/**
+	 * Gets a list of all sounds in the table
+	 * @return A list of all sounds in the table
+	 */
 	public ArrayList<String> getSoundList() {
 		ArrayList<String> list = new ArrayList<String>();
 		

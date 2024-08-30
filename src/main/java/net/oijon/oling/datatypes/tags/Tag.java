@@ -105,7 +105,7 @@ public class Tag {
 	 * Checks if two tags are equal
 	 * @param tag The tag to check
 	 * @return true if equal, false otherwise
-	 * @deprecated as of v1.2.0, as this should have been handled via equals() instead.
+	 * @deprecated as of Utils v1.2.0, as this should have been handled via equals() instead.
 	 */
 	@Deprecated
 	public boolean isEqual(Tag tag) {

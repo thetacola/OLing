@@ -47,10 +47,21 @@ public class Word {
 		this.homonyms = new ArrayList<Word>(w.getHomonyms());
 	}
 	
+	/**
+	 * Gets the word properties
+	 * @return The properties of the word
+	 */
 	public WordProperties getProperties() {
 		return wp;
 	}
 	
+	/**
+	 * Parses a word via a multitag.
+	 * If you are using a lexicon, try {@link net.oijon.oling.Parser#parseLexicon()} instead
+	 * @param wordTag The multitag to parse
+	 * @return A word object from the given multitag
+	 * @throws Exception
+	 */
 	public static Word parse(Multitag wordTag) throws Exception {
 		Tag valueTag = wordTag.getDirectChild("wordname");
 		Tag meaningTag = wordTag.getDirectChild("meaning");
@@ -81,6 +92,10 @@ public class Word {
 		return word;
 	}
 	
+	/**
+	 * Sets metadata for a word
+	 * @param wp The metadata for the word
+	 */
 	public void setProperties(WordProperties wp) {
 		this.wp = new WordProperties(wp);
 	}

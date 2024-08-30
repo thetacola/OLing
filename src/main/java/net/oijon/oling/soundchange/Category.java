@@ -2,6 +2,10 @@ package net.oijon.oling.soundchange;
 
 import java.util.ArrayList;
 
+/**
+ * Creates a category for sound changes
+ * @deprecated This will be part of Phonutate instead
+ */
 public class Category {
 
 	private String name = "";

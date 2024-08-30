@@ -109,6 +109,7 @@ public class Multitag {
 		return false;
 	}
 	
+	@Override
 	public String toString() {
 		String returnString = this.getStart() + "\n";
 		for (int i = 0; i < subtags.size(); i++) {

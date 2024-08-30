@@ -1,5 +1,8 @@
 package net.oijon.oling.soundchange;
 
+/**
+ * @deprecated This will be part of Phonutate instead
+ */
 public class InvalidRuleSyntaxException extends Exception {
 
 	private static final long serialVersionUID = 1466969619682772857L;

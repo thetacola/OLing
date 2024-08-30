@@ -67,6 +67,12 @@ public class PhonoSystem {
 		this.name = name;
 		this.tables = tables;
 	}
+	/**
+	 * Creates a PhonoSystem object with a pre-defined ArrayList and diacritic list
+	 * @param name The name of the phono system
+	 * @param tables The list of all tables used in the phono system
+	 * @param diacriticList The list of all tables used in the phono system
+	 */
 	public PhonoSystem(String name, ArrayList<PhonoTable> tables, ArrayList<String> diacriticList) {
 		this.name = name;
 		this.tables = tables;
@@ -155,14 +161,26 @@ public class PhonoSystem {
 	public String getSound(int i, int x, int y) {
 		return tables.get(i).getRow(x).getSound(y);
 	}
-	
+	/**
+	 * Sets the diacritic list to a new list
+	 * @param newList The new list of diacritics
+	 */
 	public void setDiacritics(ArrayList<String> newList) {
 		diacriticList = newList;
 	}
+	/**
+	 * Gets the list of diacritics
+	 * @return The list of diacritics
+	 */
 	public ArrayList<String> getDiacritics() {
 		return diacriticList;
 	}
 	
+	/**
+	 * Parses a list of diacritics from a tablelist multitag
+	 * @param tablelist The table list to parse diacritics from
+	 * @return The list of diacritics defined in the multitag
+	 */
 	private static Tag parseDiacritics(Multitag tablelist) {
 		Tag diacriticList;
 		try {
@@ -174,6 +192,13 @@ public class PhonoSystem {
 		return diacriticList;
 	}
 	
+	/**
+	 * Parses a PhonoSystem from a given multitag
+	 * 99% of the time, you want to use {@link net.oijon.oling.Parser#parsePhonoSys()} instead
+	 * @param docTag The multitag to parse from
+	 * @return A PhonoSystem parsed from the given multitag
+	 * @throws Exception Thrown when any subelements cannot be parsed
+	 */
 	public static PhonoSystem parse(Multitag docTag) throws Exception {
 		try {
 			Multitag tablelist = docTag.getMultitag("Tablelist");

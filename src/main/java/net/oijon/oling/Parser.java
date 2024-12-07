@@ -14,7 +14,7 @@ import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.MultitagUtils;
 import net.oijon.oling.datatypes.tags.Tag;
 
-//last edit: 6/20/2023 -N3
+//last edit: 12/7/2024 -N3
 
 /**
  * Parses a .language file, and allows various parts to be accessed
@@ -23,7 +23,7 @@ import net.oijon.oling.datatypes.tags.Tag;
  */
 public class Parser {
 	
-	static Log log = new Log(System.getProperty("user.home") + "/.oling", true);
+	static Log log = new Log(System.getProperty("user.home") + "/.oling");
 	private Multitag tag;
 	
 	/**

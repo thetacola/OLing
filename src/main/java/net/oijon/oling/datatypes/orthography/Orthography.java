@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import net.oijon.olog.Log;
 
-import net.oijon.oling.Parser;
 import net.oijon.oling.datatypes.phonology.Phonology;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
+import net.oijon.oling.info.Info;
 
 //last edit: 11/4/23 -N3
 
@@ -22,7 +22,7 @@ public class Orthography {
 	private Phonology ph = new Phonology();
 	private ArrayList<OrthoPair> orthoList = new ArrayList<OrthoPair>();
 	
-	static Log log = Parser.getLog();
+	static Log log = Info.log;
 	
 	// TODO: allow ortho rules to have exceptions
 	
@@ -106,22 +106,6 @@ public class Orthography {
 	 */
 	public void remove(int i) {
 		orthoList.remove(i);
-	}
-	
-	public static Orthography parse(Multitag docTag) {
-		try {
-			Orthography ortho = new Orthography();
-			Multitag orthoTag = docTag.getMultitag("Orthography");
-			ArrayList<Tag> orthoPairs = orthoTag.getSubtags();
-			for (int i = 0; i < orthoPairs.size(); i++) {
-				Tag op = orthoPairs.get(i);
-				ortho.add(op.getName(), op.value());
-			}
-			return ortho;
-		} catch (Exception e) {
-			log.err("No orthography found! Has one been created? Returning a blank orthography...");
-			return new Orthography();
-		}
 	}
 	
 	public String toString() {

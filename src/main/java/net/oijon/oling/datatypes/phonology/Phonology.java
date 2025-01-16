@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.oijon.olog.Log;
-import net.oijon.oling.Parser;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
+import net.oijon.oling.info.Info;
 
 //last edit: 6/20/2024 -N3
 
@@ -20,7 +20,7 @@ public class Phonology {
 
 	private List<String> phonoList = new ArrayList<String>(Arrays.asList(" "));
 	private PhonoSystem phonoSystem;
-	static Log log = Parser.getLog();
+	static Log log = Info.log;
 	
 	/**
 	 * Converts a string array of sounds into a phonology
@@ -111,30 +111,6 @@ public class Phonology {
 			if (value.equals(phonoList.get(i))) {
 				phonoList.remove(i);
 			}
-		}
-	}
-	
-	/**
-	 * Parses a phonology from a given multitag
-	 * 99% of the time, you want to use {@link net.oijon.oling.Parser#parsePhono()} instead
-	 * @param docTag The multitag to parse from
-	 * @return The parsed phonology
-	 * @throws Exception Thrown for various issues, mostly for unsuccessful parsing of subelements
-	 */
-	public static Phonology parse(Multitag docTag) throws Exception {
-		try {
-			PhonoSystem phonoSystem = PhonoSystem.parse(docTag);
-			Multitag phonoTag = docTag.getMultitag("Phonology");
-			Tag soundListTag = phonoTag.getDirectChild("soundlist");
-			String soundData = soundListTag.value();
-			String[] soundList = soundData.split(",");
-			// TODO: parse phonotactics
-			Phonology phono = new Phonology(soundList, phonoSystem);
-			return phono;
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.err(e.toString());
-			throw e;
 		}
 	}
 	

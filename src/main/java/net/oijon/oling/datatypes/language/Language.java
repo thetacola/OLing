@@ -11,7 +11,7 @@ import java.util.Date;
 import net.oijon.olog.Log;
 
 import net.oijon.oling.info.Info;
-import net.oijon.oling.Parser;
+import net.oijon.oling.LegacyParser;
 import net.oijon.oling.datatypes.lexicon.Lexicon;
 import net.oijon.oling.datatypes.orthography.Orthography;
 import net.oijon.oling.datatypes.phonology.Phonology;
@@ -28,7 +28,7 @@ import net.oijon.oling.datatypes.tags.Multitag;
 // TODO: re-add parent
 public class Language {
 
-	public static Log log = Parser.getLog();
+	public static Log log = Info.log;
 	public static final Language NULL = new Language("null");
 	
 	private LanguageProperties properties = new LanguageProperties();
@@ -81,19 +81,6 @@ public class Language {
 		phono = new Phonology(l.phono); 
 		lexicon = new Lexicon(l.lexicon);
 		ortho = new Orthography(l.ortho);
-	}
-	
-	public static Language parse(Multitag docTag) throws Exception {
-		// parse language properties, as a name is required
-		LanguageProperties lp = LanguageProperties.parse(docTag);
-		Language lang = new Language(lp.getProperty(LanguageProperty.NAME));		
-		
-		// parse each property
-		lang.setPhono(Phonology.parse(docTag));
-		lang.setOrtho(Orthography.parse(docTag));
-		lang.setLexicon(Lexicon.parse(docTag));
-		lang.setProperties(lp);
-		return lang;
 	}
 	
 	public LanguageProperties getProperties() {

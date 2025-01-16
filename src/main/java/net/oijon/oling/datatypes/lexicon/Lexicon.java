@@ -1,13 +1,9 @@
 package net.oijon.oling.datatypes.lexicon;
 
 import java.util.ArrayList;
-import java.util.Date;
-
 import net.oijon.olog.Log;
 
-import net.oijon.oling.Parser;
-import net.oijon.oling.datatypes.tags.Multitag;
-import net.oijon.oling.datatypes.tags.Tag;
+import net.oijon.oling.info.Info;
 
 //last edit: 6/20/24 -N3
 
@@ -20,7 +16,7 @@ public class Lexicon {
 
 	private ArrayList<Word> wordList = new ArrayList<Word>();
 	
-	static Log log = Parser.getLog();
+	static Log log = Info.log;
 	
 	/**
 	 * Creates an empty lexicon.
@@ -123,31 +119,6 @@ public class Lexicon {
 			}
 		}
 	}
-	
-	/**
-	 * Parses a Lexicon from a multitag.
-	 * 99% of the time, you want to use {@link net.oijon.oling.Parser#parseLexicon()} instead
-	 * @param docTag The multitag containing the entire .language file
-	 * @return The lexicon contained in the multitag
-	 */
-	public static Lexicon parse(Multitag docTag) {
-		try {
-			Lexicon lexicon = new Lexicon();
-			Multitag lexiconTag = docTag.getMultitag("Lexicon");
-			ArrayList<Multitag> wordList = lexiconTag.getSubMultitags();
-			for (int i = 0; i < wordList.size(); i++) {
-				if (wordList.get(i).getName().equals("Word")) {
-					Multitag wordTag = wordList.get(i);
-					lexicon.addWord(Word.parse(wordTag));
-				}
-			}
-			return lexicon;
-		} catch (Exception e) {
-			log.err("No lexicon found! Has one been created? Returning a blank lexicon...");
-			return new Lexicon();
-		}
-	}
-	
 	
 	@Override
 	public String toString() {

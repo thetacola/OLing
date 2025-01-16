@@ -8,12 +8,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
-
 import net.oijon.olog.Log;
-import net.oijon.oling.Parser;
-import net.oijon.oling.datatypes.tags.Multitag;
-import net.oijon.oling.datatypes.tags.Tag;
+import net.oijon.oling.LegacyParser;
+import net.oijon.oling.info.Info;
 
 //last edit: 6/20/24 -N3
 
@@ -30,7 +27,7 @@ public class PhonoSystem {
 	private ArrayList<PhonoTable> tables = new ArrayList<PhonoTable>();
 	private ArrayList<String> diacriticList = new ArrayList<String>();
 	
-	static Log log = Parser.getLog();
+	static Log log = Info.log;
 	
 	/**
 	 * Creates an IPA preset. Useful when we just want the default PhonoSystem.
@@ -102,7 +99,7 @@ public class PhonoSystem {
 	 */
 	public PhonoSystem(File file) {
 		try {
-			Parser parser = new Parser(file);
+			LegacyParser parser = new LegacyParser(file);
 			// this is silly
 			PhonoSystem parsedSys = parser.parsePhonoSys();
 			this.diacriticList = parsedSys.getDiacritics();
@@ -175,51 +172,6 @@ public class PhonoSystem {
 	public ArrayList<String> getDiacritics() {
 		return diacriticList;
 	}
-	
-	/**
-	 * Parses a list of diacritics from a tablelist multitag
-	 * @param tablelist The table list to parse diacritics from
-	 * @return The list of diacritics defined in the multitag
-	 */
-	private static Tag parseDiacritics(Multitag tablelist) {
-		Tag diacriticList;
-		try {
-			diacriticList = tablelist.getDirectChild("diacriticList");
-		} catch (Exception e) {
-			log.warn(e.toString());
-			diacriticList = new Tag("diacriticList", "");
-		}
-		return diacriticList;
-	}
-	
-	/**
-	 * Parses a PhonoSystem from a given multitag
-	 * 99% of the time, you want to use {@link net.oijon.oling.Parser#parsePhonoSys()} instead
-	 * @param docTag The multitag to parse from
-	 * @return A PhonoSystem parsed from the given multitag
-	 * @throws Exception Thrown when any subelements cannot be parsed
-	 */
-	public static PhonoSystem parse(Multitag docTag) throws Exception {
-		try {
-			Multitag tablelist = docTag.getMultitag("Tablelist");
-			Tag diacriticList = parseDiacritics(tablelist);
-			PhonoSystem phonoSystem = new PhonoSystem(tablelist.getDirectChild("tablelistName").value());
-			ArrayList<String> diacritics = new ArrayList<String>(Arrays.asList(diacriticList.value().split(",")));
-			phonoSystem.setDiacritics(diacritics);
-			for (int i = 0; i < tablelist.getSubMultitags().size(); i++) {
-				if (tablelist.getSubMultitags().get(i).getName().equals("PhonoTable")) {
-					Multitag phonoTableTag = tablelist.getSubMultitags().get(i);
-					PhonoTable phonoTable = PhonoTable.parse(phonoTableTag);
-					phonoSystem.getTables().add(phonoTable);
-				}
-			}
-			return phonoSystem;
-		} catch (Exception e) {
-			log.err(e.toString());
-			throw e;
-		}
-	}
-	
 	
 	
 	/**

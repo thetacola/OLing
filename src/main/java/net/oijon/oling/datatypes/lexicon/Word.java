@@ -3,9 +3,9 @@ package net.oijon.oling.datatypes.lexicon;
 import java.util.ArrayList;
 import java.util.Date;
 
-import net.oijon.oling.Parser;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
+import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
 
 //last edit: 6/20/24 -N3
@@ -19,7 +19,7 @@ import net.oijon.olog.Log;
 //TODO: re-add source language
 public class Word {
 
-	public static Log log = Parser.getLog();
+	public static Log log = Info.log;
 	
 	private WordProperties wp = new WordProperties();
 	private ArrayList<String> classes = new ArrayList<String>();

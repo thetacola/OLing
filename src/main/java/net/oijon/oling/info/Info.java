@@ -1,5 +1,7 @@
 package net.oijon.oling.info;
 
+import net.oijon.olog.Log;
+
 //last edit: 12/7/24 -N3
 
 /**
@@ -9,6 +11,7 @@ package net.oijon.oling.info;
  */
 public class Info {
 
+	public static Log log = new Log(System.getProperty("user.home") + "/.oling");
 	private static String versionNum = generateVersionNum();
 	private static String fullVersion = "OLing - v" + versionNum;
 	

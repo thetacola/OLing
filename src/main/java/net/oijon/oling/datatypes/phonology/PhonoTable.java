@@ -3,9 +3,9 @@ package net.oijon.oling.datatypes.phonology;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import net.oijon.oling.Parser;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
+import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
 
 //last edit: 6/19/23 -N3
@@ -22,7 +22,7 @@ public class PhonoTable {
 	private ArrayList<PhonoCategory> rows;
 	private int soundsPerCell;
 	
-	private static Log log = Parser.getLog();
+	private static Log log = Info.log;
 	
 	/**
 	 * Creates a PhonoTable

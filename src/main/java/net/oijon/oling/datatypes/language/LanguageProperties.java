@@ -2,7 +2,6 @@ package net.oijon.oling.datatypes.language;
 
 import java.time.Instant;
 import java.util.Date;
-import net.oijon.oling.Parser;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;
@@ -14,7 +13,7 @@ import net.oijon.olog.Log;
  */
 public class LanguageProperties {
 
-	public static Log log = Parser.getLog();
+	public static Log log = Info.log;
 	
 	// 0 = autonym, 1 = id, 2 = name, 3 = versionEdited
 	private String[] strings = {"null", "null", "null", Info.getVersion()};	

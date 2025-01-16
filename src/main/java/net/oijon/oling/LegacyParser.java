@@ -2,35 +2,42 @@ package net.oijon.oling;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import net.oijon.olog.Log;
+import net.oijon.oling.info.Info;
 import net.oijon.oling.datatypes.language.Language;
+import net.oijon.oling.datatypes.language.LanguageProperties;
+import net.oijon.oling.datatypes.language.LanguageProperty;
 import net.oijon.oling.datatypes.lexicon.Lexicon;
+import net.oijon.oling.datatypes.lexicon.Word;
 import net.oijon.oling.datatypes.orthography.Orthography;
 import net.oijon.oling.datatypes.phonology.PhonoSystem;
+import net.oijon.oling.datatypes.phonology.PhonoTable;
 import net.oijon.oling.datatypes.phonology.Phonology;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.MultitagUtils;
 import net.oijon.oling.datatypes.tags.Tag;
 
-//last edit: 12/7/2024 -N3
+//last edit: 1/13/2025 -N3
 
 /**
  * Parses a .language file, and allows various parts to be accessed
  * @author alex
- *
+ * @deprecated as of 3.0.0, as files are now stored via XML
  */
-public class Parser {
+public class LegacyParser {
 	
-	static Log log = new Log(System.getProperty("user.home") + "/.oling");
+	public static Log log = Info.log;
 	private Multitag tag;
 	
 	/**
 	 * Creates an object to hold the contents of a .language structured string
 	 * @param input The string to be parsed.
 	 */
-	public Parser(String input) {
+	public LegacyParser(String input) {
 		initString(input);
 	}
 	
@@ -38,7 +45,18 @@ public class Parser {
 	 * Creates an object to hold the contents of a .language structured file
 	 * @param file The file to be read
 	 */
-	public Parser(File file) {
+	public LegacyParser(File file) {
+		// check for converted .xml file existing already
+		File parentDir = file.getParentFile();
+		File estimatedConvertedFile = new File(parentDir + file.getName().replace(".language", "-converted.xml"));
+		
+		if (estimatedConvertedFile.exists()) {
+			log.warn("You are parsing from a legacy file when a converted file already exists!");
+			log.warn("The converted file can be found at " + estimatedConvertedFile.toString() + ".");
+		}
+		
+		// even if there's already a converted file, let's assume that the 
+		// person parsing a legacy file knows what they're doing
 		log.setDebug(true);
 		try {
 			Scanner scanner = new Scanner(file);
@@ -56,6 +74,8 @@ public class Parser {
 	}
 	
 	private void initString(String input) {
+		log.warn("You are using the legacy parser for files made before OLing 3!");
+		log.warn("If this is parsing from a file, a converted file will be made.");
 		input.replace("	", "");
 		String[] splitLines = input.split("\n");
 		/**
@@ -202,30 +222,86 @@ public class Parser {
 	 * @throws Exception Thrown when a phonology system could not be found
 	 */
 	public PhonoSystem parsePhonoSys() throws Exception {
-		return PhonoSystem.parse(this.tag);
+		try {
+			Multitag tablelist = this.tag.getMultitag("Tablelist");
+			Tag diacriticList;
+			try {
+				diacriticList = tablelist.getDirectChild("diacriticList");
+			} catch (Exception e) {
+				log.warn(e.toString());
+				diacriticList = new Tag("diacriticList", "");
+			}			
+			PhonoSystem phonoSystem = new PhonoSystem(tablelist.getDirectChild("tablelistName").value());
+			ArrayList<String> diacritics = new ArrayList<String>(Arrays.asList(diacriticList.value().split(",")));
+			phonoSystem.setDiacritics(diacritics);
+			for (int i = 0; i < tablelist.getSubMultitags().size(); i++) {
+				if (tablelist.getSubMultitags().get(i).getName().equals("PhonoTable")) {
+					Multitag phonoTableTag = tablelist.getSubMultitags().get(i);
+					PhonoTable phonoTable = PhonoTable.parse(phonoTableTag);
+					phonoSystem.getTables().add(phonoTable);
+				}
+			}
+			return phonoSystem;
+		} catch (Exception e) {
+			log.err(e.toString());
+			throw e;
+		}
 	}
+	
 	/**
 	 * Parses a phonology from a Parser
 	 * @return A Phonology object with data from the Parser.
 	 * @throws Exception Thrown when a phonology could not be found
 	 */
 	public Phonology parsePhono() throws Exception {
-		return Phonology.parse(this.tag);
+		try {
+			PhonoSystem phonoSystem = parsePhonoSys();
+			Multitag phonoTag = this.tag.getMultitag("Phonology");
+			Tag soundListTag = phonoTag.getDirectChild("soundlist");
+			String soundData = soundListTag.value();
+			String[] soundList = soundData.split(",");
+			// TODO: parse phonotactics
+			Phonology phono = new Phonology(soundList, phonoSystem);
+			return phono;
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.err(e.toString());
+			throw e;
+		}
 	}
+	
 	/**
 	 * Parses a language from a Parser
 	 * @return A Language object with data from the Parser.
 	 * @throws Exception Thrown when a language could not be found
 	 */
-	//@SuppressWarnings("deprecation") // still not sure how im gonna handle language parents
-	// perhaps each language could have an ID, and the language parent could be written
-	// as {name}{date-created}{randomnum}?
 	public Language parseLanguage() throws Exception {
-		return Language.parse(this.tag);
+		// parse language properties, as a name is required
+		LanguageProperties lp = LanguageProperties.parse(this.tag);
+		Language lang = new Language(lp.getProperty(LanguageProperty.NAME));		
+				
+		// parse each property
+		lang.setPhono(parsePhono());
+		lang.setOrtho(parseOrtho());
+		lang.setLexicon(parseLexicon());
+		lang.setProperties(lp);
+		return lang;
 	}
 	
 	public Orthography parseOrtho() {
-		return Orthography.parse(this.tag);
+		try {
+			Orthography ortho = new Orthography();
+			Multitag orthoTag = this.tag.getMultitag("Orthography");
+			ArrayList<Tag> orthoPairs = orthoTag.getSubtags();
+			for (int i = 0; i < orthoPairs.size(); i++) {
+				Tag op = orthoPairs.get(i);
+				ortho.add(op.getName(), op.value());
+			}
+			return ortho;
+		} catch (Exception e) {
+			log.err("No orthography found! Has one been created? Returning a blank orthography...");
+			return new Orthography();
+		}
 	}
 	
 	/**
@@ -233,7 +309,21 @@ public class Parser {
 	 * @return A Lexicon object with data from the Parser.
 	 */
 	public Lexicon parseLexicon() {
-		return Lexicon.parse(this.tag);
+		try {
+			Lexicon lexicon = new Lexicon();
+			Multitag lexiconTag = this.tag.getMultitag("Lexicon");
+			ArrayList<Multitag> wordList = lexiconTag.getSubMultitags();
+			for (int i = 0; i < wordList.size(); i++) {
+				if (wordList.get(i).getName().equals("Word")) {
+					Multitag wordTag = wordList.get(i);
+					lexicon.addWord(Word.parse(wordTag));
+				}
+			}
+			return lexicon;
+		} catch (Exception e) {
+			log.err("No lexicon found! Has one been created? Returning a blank lexicon...");
+			return new Lexicon();
+		}
 	}
 	
 	/**

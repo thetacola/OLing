@@ -7,9 +7,9 @@
 	<description>A library to help model languages.</description>
 	<url>https://oijon.net/oling</url>
 	<scm>
-		<connection>scm:git:git@github.com/alexdcramer/OLing.git</connection>
-		<developerConnection>scm:git:git@github.com:alexdcramer/OLing.git</developerConnection>
-		<url>git@github.com/alexdcramer/OLing/tree/main</url>
+		<connection>scm:git:git@github.com/thetacola/OLing.git</connection>
+		<developerConnection>scm:git:git@github.com:thetacola/OLing.git</developerConnection>
+		<url>git@github.com/thetacola/OLing/tree/main</url>
 		<tag>v${project.version}</tag>
 	</scm>
 	<properties>

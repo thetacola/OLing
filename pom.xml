@@ -28,6 +28,12 @@
 			<version>5.9.3</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
+		<dependency>
+		    <groupId>jakarta.xml.bind</groupId>
+		    <artifactId>jakarta.xml.bind-api</artifactId>
+		    <version>4.0.2</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>${project.artifactId}-${project.version}</finalName>
@@ -161,7 +167,7 @@
 	</licenses>
 	<developers>
 		<developer>
-			<id>adcramer</id>
+			<id>thetacola</id>
 			<name>A. D. Cramer</name>
 			<email>alex@consus.fun</email>
 			<url>https://oijon.net/</url>

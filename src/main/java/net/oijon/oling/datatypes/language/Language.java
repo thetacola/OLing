@@ -17,7 +17,7 @@ import net.oijon.oling.datatypes.orthography.Orthography;
 import net.oijon.oling.datatypes.phonology.Phonology;
 import net.oijon.oling.datatypes.tags.Multitag;
 
-//last edit: 6/19/24 -N3
+//last edit: 1/18/25 -N3
 
 /**
  * Bundles all parts of a language together into one object
@@ -25,7 +25,6 @@ import net.oijon.oling.datatypes.tags.Multitag;
  *
  */
 
-// TODO: re-add parent
 public class Language {
 
 	public static Log log = Info.log;

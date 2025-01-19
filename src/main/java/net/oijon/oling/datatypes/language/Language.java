@@ -6,8 +6,6 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.Date;
-
 import net.oijon.olog.Log;
 
 import net.oijon.oling.info.Info;
@@ -16,8 +14,6 @@ import net.oijon.oling.datatypes.lexicon.Lexicon;
 import net.oijon.oling.datatypes.orthography.Orthography;
 import net.oijon.oling.datatypes.phonology.Phonology;
 import net.oijon.oling.datatypes.tags.Multitag;
-
-//last edit: 6/19/24 -N3
 
 /**
  * Bundles all parts of a language together into one object
@@ -154,7 +150,7 @@ public class Language {
 	 * @throws IOException Should never be thrown, however would not compile without it. If thrown, something has gone horribly wrong...
 	 */
 	public void toFile(File file) throws IOException {
-		properties.setEdited(Date.from(Instant.now()));
+		properties.setEdited(Instant.now());
 		properties.setProperty(LanguageProperty.VERSION_EDITED, Info.getVersion());
 		
 		lexicon.checkHomonyms();
@@ -181,8 +177,8 @@ public class Language {
 				"name:" + properties.getProperty(LanguageProperty.NAME) + "\n" +
 				"id:" + properties.getProperty(LanguageProperty.ID) + "\n" +
 				"autonym:" + properties.getProperty(LanguageProperty.AUTONYM) + "\n" +
-				"timeCreated:" + properties.getCreated().getTime() + "\n" +
-				"lastEdited:" + properties.getEdited().getTime() + "\n" +
+				"timeCreated:" + properties.getCreated().toEpochMilli() + "\n" +
+				"lastEdited:" + properties.getEdited().toEpochMilli() + "\n" +
 				"readonly:" + properties.isReadOnly() + "\n" +
 				"parent:" + "null" + "\n" +
 				"===Meta End===\n" +

@@ -1,7 +1,10 @@
 package net.oijon.oling.datatypes.language;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
+
 import net.oijon.oling.Parser;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
@@ -16,10 +19,10 @@ public class LanguageProperties {
 
 	public static Log log = Parser.getLog();
 	
-	// 0 = autonym, 1 = id, 2 = name, 3 = versionEdited
+	// 0 = autonym, 1 = id, 2 = name, 3 = versionEdited, 4 = parentID
 	private String[] strings = {"null", "null", "null", Info.getVersion()};	
 	// 0 = created, 1 = edited
-	private Date[] dates = {Date.from(Instant.now()), Date.from(Instant.now())};
+	private Instant[] instants = {Instant.now(), Instant.now()};
 	
 	private boolean isReadOnly = false;
 	
@@ -33,8 +36,9 @@ public class LanguageProperties {
 		this.strings[1] = lp.getProperty(LanguageProperty.ID);
 		this.strings[2] = lp.getProperty(LanguageProperty.NAME);
 		this.strings[3] = lp.getProperty(LanguageProperty.VERSION_EDITED);
-		this.dates[0] = lp.getCreated();
-		this.dates[1] = lp.getEdited();
+		this.strings[4] = lp.getProperty(LanguageProperty.PARENT_ID);
+		this.instants[0] = lp.getCreated();
+		this.instants[1] = lp.getEdited();
 	}
 	
 	/**
@@ -57,23 +61,24 @@ public class LanguageProperties {
 		return lp;
 	}
 	
-	@SuppressWarnings("deprecation")
 	/**
 	 * Generates an ID for the language
 	 */
 	private void generateID() {
 		int rand = (int) (Math.random() * 100000);
-		// "its deprecated" i dont care
-		// why does DateTimeFormatter not accept date objects :(
-		Date created = dates[0];
-		this.setProperty(LanguageProperty.ID, strings[2].toUpperCase() +
-				created.getYear() +
-				created.getMonth() +
-				created.getDay() +
-				created.getHours() +
-				created.getMinutes() +
-				created.getSeconds()
-				+ rand);
+		Instant created = instants[0];
+		// generate ID based off UTC
+		// previously, the generation of this was arbitrary based on user timezone
+		ZoneId zid = ZoneId.of("UTC");
+		ZonedDateTime zdt = created.atZone(zid);
+		this.setProperty(LanguageProperty.ID, strings[2].toUpperCase() +				
+			zdt.getYear() +
+			zdt.getMonth() +
+			zdt.getDayOfYear() +
+			zdt.getHour() +
+			zdt.getMinute() +
+			zdt.getSecond()
+			+ rand);
 	}
 	
 	/**
@@ -139,7 +144,7 @@ public class LanguageProperties {
 					lp.getProperty(LanguageProperty.ID).equals(strings[1]) & 
 					lp.getProperty(LanguageProperty.NAME).equals(strings[2]) &
 					lp.isReadOnly() == isReadOnly &
-					lp.getCreated().equals(dates[0])) {
+					lp.getCreated().equals(instants[0])) {
 				return true;
 			}
 		}
@@ -157,6 +162,7 @@ public class LanguageProperties {
 			case ID: return strings[1];
 			case NAME: return strings[2];
 			case VERSION_EDITED: return strings[3];
+			case PARENT_ID: return strings[4];
 		}
 		return " ";
 	}
@@ -176,6 +182,8 @@ public class LanguageProperties {
 			break;
 			case VERSION_EDITED: strings[3] = value;
 			break;
+			case PARENT_ID: strings[4] = value;
+			break;
 		}
 	}
 	
@@ -190,15 +198,15 @@ public class LanguageProperties {
 	 * Gets the date the language was created
 	 * @return The date the language was created
 	 */
-	public Date getCreated() {
-		return (Date) dates[0].clone();
+	public Instant getCreated() {
+		return instants[0];
 	}
 	/**
 	 * Gets the date the language was last edited
 	 * @return The date the language was last edited
 	 */
-	public Date getEdited() {
-		return (Date) dates[1].clone();
+	public Instant getEdited() {
+		return instants[1];
 	}
 	/**
 	 * Set read only status
@@ -207,19 +215,30 @@ public class LanguageProperties {
 	public void setReadOnly(boolean isReadOnly) {
 		this.isReadOnly = isReadOnly;
 	}
+	
+	public void setCreated(Instant created) {
+		this.instants[0] = created;
+	}
+	
+	public void setEdited(Instant edited) {
+		this.instants[1] = edited;
+	}
+	
 	/**
 	 * Set the date the language was created
 	 * @param created The date the language was created
+	 * @deprecated as of v2.1.0, as Instants are now used internally instead
 	 */
 	public void setCreated(Date created) {
-		this.dates[0] = (Date) created.clone();
+		this.instants[0] = created.toInstant();
 	}
 	/**
 	 * Set the date the language was last edited
 	 * @param edited The date the language was last edited
+	 * @deprecated as of v2.1.0, as Instants are now used internally instead
 	 */
 	public void setEdited(Date edited) {
-		this.dates[1] = (Date) edited.clone();
+		this.instants[1] = edited.toInstant();
 	}
 	
 }

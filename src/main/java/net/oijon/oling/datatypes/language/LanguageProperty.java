@@ -9,5 +9,6 @@ public enum LanguageProperty {
 	AUTONYM,
 	ID,
 	NAME,
-	VERSION_EDITED;
+	VERSION_EDITED,
+	PARENT_ID;
 }

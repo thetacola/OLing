@@ -52,11 +52,12 @@ public class LanguageProperties {
 		
 		Multitag meta = docTag.getMultitag("Meta");
 		lp.setProperty(LanguageProperty.NAME, meta.getDirectChild("name").value());
+		// ID generation is dependent on time
+		lp.setCreated(Instant.ofEpochMilli(Long.parseLong(meta.getDirectChild("timeCreated").value())));
+		lp.setEdited(Instant.ofEpochMilli(Long.parseLong(meta.getDirectChild("lastEdited").value())));
 		lp.checkID(meta);
 		lp.setProperty(LanguageProperty.AUTONYM, meta.getDirectChild("autonym").value());
 		lp.setReadOnly(Boolean.parseBoolean(meta.getDirectChild("readonly").value()));
-		lp.setCreated(new Date(Long.parseLong(meta.getDirectChild("timeCreated").value())));
-		lp.setEdited(new Date(Long.parseLong(meta.getDirectChild("lastEdited").value())));
 		lp.checkVersion(meta);
 		return lp;
 	}
@@ -71,14 +72,16 @@ public class LanguageProperties {
 		// previously, the generation of this was arbitrary based on user timezone
 		ZoneId zid = ZoneId.of("UTC");
 		ZonedDateTime zdt = created.atZone(zid);
-		this.setProperty(LanguageProperty.ID, strings[2].toUpperCase() +				
+		this.setProperty(LanguageProperty.ID,
+			strings[2].toUpperCase() +				
 			zdt.getYear() +
-			zdt.getMonth() +
-			zdt.getDayOfYear() +
+			zdt.getMonthValue() +
+			zdt.getDayOfMonth() +
 			zdt.getHour() +
 			zdt.getMinute() +
-			zdt.getSecond()
-			+ rand);
+			zdt.getSecond() +
+			rand
+		);
 	}
 	
 	/**

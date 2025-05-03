@@ -22,6 +22,8 @@ import net.oijon.oling.datatypes.lexicon.WordProperty;
 import net.oijon.oling.datatypes.orthography.Guesser;
 import net.oijon.oling.datatypes.orthography.Orthography;
 import net.oijon.oling.datatypes.tags.Multitag;
+import net.oijon.oling.tree.TreeNodeB;
+import net.oijon.oling.tree.TreeNodeM;
 
 public class UnitTests {
 
@@ -348,6 +350,84 @@ public class UnitTests {
 			e.printStackTrace();
 			fail();
 		}
+	}
+	
+	@Test
+	void testBinaryTree() {
+		// create a binary tree of "This is a test sentence"
+		
+		TreeNodeB ntest = new TreeNodeB("Adj", "test");
+		
+		TreeNodeB na = new TreeNodeB("D", "a");
+		TreeNodeB adjp1 = new TreeNodeB("AdjP");
+		adjp1.setLeftNode(ntest);
+		TreeNodeB nsentence = new TreeNodeB("N", "sentence");
+		
+		TreeNodeB dp1 = new TreeNodeB("DP");
+		dp1.setLeftNode(na);		
+		TreeNodeB nbar1 = new TreeNodeB("N'");
+		nbar1.setLeftNode(adjp1);
+		nbar1.setRightNode(nsentence);
+		
+		TreeNodeB vø = new TreeNodeB("V", "Ø");
+		TreeNodeB np1 = new TreeNodeB("NP");
+		np1.setLeftNode(dp1);
+		np1.setRightNode(nbar1);
+		
+		TreeNodeB nthis = new TreeNodeB("N", "this");
+		TreeNodeB nis = new TreeNodeB("I", "is");
+		TreeNodeB vp1 = new TreeNodeB("VP");
+		vp1.setLeftNode(vø);
+		vp1.setRightNode(np1);
+		
+		TreeNodeB np2 = new TreeNodeB("NP");
+		np2.setLeftNode(nthis);
+		TreeNodeB ibar1 = new TreeNodeB("I'");
+		ibar1.setLeftNode(nis);
+		ibar1.setRightNode(vp1);
+		
+		TreeNodeB treeStart = new TreeNodeB("I");
+		treeStart.setLeftNode(np2);
+		treeStart.setRightNode(ibar1);
+		
+		String treeStr = "[I [NP [N this]] [I' [I is] [VP [V Ø] [NP [DP [D a]] [N' [AdjP [Adj test]] [N sentence]]]]]]";
+		assertEquals(treeStart.toString(), treeStr);
+		assertEquals(treeStart.getWidth(), 300);
+	}
+	
+	@Test
+	void testMultiTree() {
+		// creates a non-binary tree of "this is a test sentence"
+		TreeNodeM na = new TreeNodeM("D", "a");
+		TreeNodeM ntest = new TreeNodeM("Adj", "test");
+		
+		TreeNodeM dp1 = new TreeNodeM("DP");
+		dp1.getChildren().add(na);
+		TreeNodeM adjp1 = new TreeNodeM("AdjP");
+		adjp1.getChildren().add(ntest);
+		TreeNodeM nsentence = new TreeNodeM("N", "sentence");
+		
+		TreeNodeM nthis = new TreeNodeM("N", "this");
+		TreeNodeM nis = new TreeNodeM("V", "is");
+		TreeNodeM np1 = new TreeNodeM("NP");
+		np1.getChildren().add(dp1);
+		np1.getChildren().add(adjp1);
+		np1.getChildren().add(nsentence);
+		
+		TreeNodeM np2 = new TreeNodeM("NP");
+		np2.getChildren().add(nthis);
+		TreeNodeM vp1 = new TreeNodeM("VP");
+		vp1.getChildren().add(nis);
+		vp1.getChildren().add(np1);
+		
+		TreeNodeM s = new TreeNodeM("S");
+		s.getChildren().add(np2);
+		s.getChildren().add(vp1);
+		
+		String treeString = "[S [NP [N this]] [VP [V is] [NP [DP [D a]] [AdjP [Adj test]] [N sentence]]]]";
+		assertEquals(s.toString(), treeString);
+		assertEquals(s.getWidth(), 250);
+		
 	}
 	
 }

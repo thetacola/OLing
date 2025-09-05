@@ -7,9 +7,9 @@
 	<description>A library to help model languages.</description>
 	<url>https://oijon.net/oling</url>
 	<scm>
-		<connection>scm:git:git@github.com/alexdcramer/OLing.git</connection>
-		<developerConnection>scm:git:git@github.com:alexdcramer/OLing.git</developerConnection>
-		<url>git@github.com/alexdcramer/OLing/tree/main</url>
+		<connection>scm:git:git@github.com/thetacola/OLing.git</connection>
+		<developerConnection>scm:git:git@github.com:thetacola/OLing.git</developerConnection>
+		<url>git@github.com/thetacola/OLing/tree/main</url>
 		<tag>v${project.version}</tag>
 	</scm>
 	<properties>
@@ -23,9 +23,14 @@
 			<version>1.0.2</version>
 		</dependency>
 		<dependency>
+			<groupId>net.oijon</groupId>
+			<artifactId>OSCA</artifactId>
+			<version>0.1.1</version>
+		</dependency>
+		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.9.3</version>
+			<version>5.13.0-M3</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -41,7 +46,7 @@
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.7</version>
+				<version>1.7.0</version>
 				<extensions>true</extensions>
 				<configuration>
 					<serverId>ossrh</serverId>
@@ -53,7 +58,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.9</version>
+				<version>2.10</version>
 				<configuration>
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>false</downloadJavadocs>
@@ -63,7 +68,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.14.0</version>
 				<configuration>
 					<!-- best practice is to use ${jdk.version}, ${jdk.version} returns 1.5 (?!) -->
 					<source>11</source>
@@ -73,7 +78,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.2.1</version>
+				<version>3.3.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -86,7 +91,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.7.0</version>
+				<version>3.11.2</version>
 				<configuration>
 					<source>11</source>
 					<detectJavaApiLink>false</detectJavaApiLink>
@@ -104,7 +109,7 @@
 			<plugin>
 				<groupId>net.nicoulaj.maven.plugins</groupId>
 				<artifactId>checksum-maven-plugin</artifactId>
-				<version>1.10</version>
+				<version>1.11</version>
 				<executions>
 					<execution>
 						<goals>
@@ -119,7 +124,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
-				<version>3.2.4</version>
+				<version>3.2.7</version>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
@@ -139,7 +144,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>3.2.2</version>
+				<version>3.4.0</version>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<archive>
@@ -161,8 +166,8 @@
 	</licenses>
 	<developers>
 		<developer>
-			<id>adcramer</id>
-			<name>A. D. Cramer</name>
+			<id>thetacola</id>
+			<name>thetacola</name>
 			<email>alex@consus.fun</email>
 			<url>https://oijon.net/</url>
 			<roles>

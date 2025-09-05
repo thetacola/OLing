@@ -1,15 +1,12 @@
 package net.oijon.oling.datatypes.lexicon;
 
 import java.util.ArrayList;
-import java.util.Date;
-
 import net.oijon.olog.Log;
 
 import net.oijon.oling.Parser;
 import net.oijon.oling.datatypes.tags.Multitag;
-import net.oijon.oling.datatypes.tags.Tag;
 
-//last edit: 6/20/24 -N3
+//last edit: 9/5/25 -N3
 
 /**
  * The words and meaning of a language

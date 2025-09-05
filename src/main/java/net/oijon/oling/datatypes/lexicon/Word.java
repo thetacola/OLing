@@ -8,7 +8,7 @@ import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.olog.Log;
 
-//last edit: 6/20/24 -N3
+//last edit: 9/5/25 -N3
 
 /**
  * Stores a word, including various properties about the word.
@@ -20,6 +20,7 @@ import net.oijon.olog.Log;
 public class Word {
 
 	public static Log log = Parser.getLog();
+	private long id;
 	
 	private WordProperties wp = new WordProperties();
 	private ArrayList<String> classes = new ArrayList<String>();
@@ -37,6 +38,8 @@ public class Word {
 		//TODO: automatically get IPA from name via orthography
 	}
 	
+	
+	
 	/**
 	 * Copy constructor
 	 * @param w The word to be copied
@@ -45,6 +48,7 @@ public class Word {
 		this.wp = new WordProperties(w.getProperties());
 		this.synonyms = new ArrayList<Word>(w.getSynonyms());
 		this.homonyms = new ArrayList<Word>(w.getHomonyms());
+		this.id = w.id;
 	}
 	
 	/**
@@ -65,7 +69,20 @@ public class Word {
 	public static Word parse(Multitag wordTag) throws Exception {
 		Tag valueTag = wordTag.getDirectChild("wordname");
 		Tag meaningTag = wordTag.getDirectChild("meaning");
+		
 		Word word = new Word(valueTag.value(), meaningTag.value());
+		
+		// ID tag did not exist in 2.0.2 and below
+		try {
+			Tag idTag = wordTag.getDirectChild("id");
+			word.id = Long.parseLong(idTag.value());
+		} catch (Exception e) {
+			log.warn("No ID found for word '" + valueTag.value() + "'! Word IDs were required as of v2.1.0.");
+			// FIXME: This can cause ID clashes! Either check or generate in a way they don't clash...
+			word.id = (long) (Math.random() * Long.MAX_VALUE);
+			log.debug("ID for word '" + valueTag.value() + "' is now " + Long.toString(word.id));
+		}
+		
 		// current tag string very useful for debugging this try/catch here :)
 		String currentTag = "";
 		try {
@@ -193,6 +210,7 @@ public class Word {
 		returnString += "wordname:" + wp.getProperty(WordProperty.NAME) + "\n" +
 				"meaning:" + wp.getProperty(WordProperty.MEANING) + "\n" +
 				"pronounciation:" + wp.getProperty(WordProperty.PRONOUNCIATION) + "\n" +
+				"id:" + Long.toString(id) + "\n" +
 				"etymology:" + wp.getProperty(WordProperty.ETYMOLOGY) + "\n" +
 				"creationDate:" + wp.getCreationDate().getTime() + "\n" +
 				"editDate:" + wp.getEditDate().getTime() + "\n" +

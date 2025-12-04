@@ -11,9 +11,14 @@ public class Guesser {
 	public static String orthoGuess(String input, Orthography o) {
 		String returnString = input;
 		for (int i = 0; i < o.size(); i++) {
-			String phonemes = o.getPair(i).getPhonemes();
-			String graphemes = o.getPair(i).getGraphemes();
-			returnString = returnString.replaceAll(phonemes, graphemes);
+            try {
+                String phonemes = o.getPair(i).getPhonemes();
+                String graphemes = o.getPair(i).getGraphemes();
+                returnString = returnString.replaceAll(phonemes, graphemes);
+            } catch (IndexOutOfBoundsException e) {
+                // If this is thrown, then something's gone horribly wrong and the loop ought to be exited
+                break;
+            }
 		}
 		return returnString;
 	}
@@ -25,7 +30,7 @@ public class Guesser {
 	 * @return A guess on phonemes
 	 */
 	public static String phonoGuess(String input, Orthography o) {
-		String returnString = new String(input);
+		String returnString = input;
 		
 		for (int i = 0; i < o.size(); i++) {
 			String phonemes = o.getPair(i).getPhonemes();

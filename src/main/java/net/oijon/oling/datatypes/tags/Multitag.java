@@ -143,6 +143,11 @@ public class Multitag {
 	 * @throws Exception Thrown if no multitag was found
 	 */
 	public Multitag getMultitag(String name) throws Exception {
+        if (name.equals(this.name)) {
+            return this;
+        }
+
+
 		for (int i = 0; i < subMultitags.size(); i++) {
 			if (subMultitags.get(i).getName().equals(name)) {
 				return subMultitags.get(i);

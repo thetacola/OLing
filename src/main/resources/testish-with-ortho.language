@@ -1,0 +1,151 @@
+===PHOSYS Start===
+===Meta Start===
+susquehannaVersion:0.0.2 "Otsego", build 23w02c ***SNAPSHOT VERSION***
+name:testish
+autonym:testspraak
+timeCreated:1673475246411
+lastEdited:1673724452237
+readonly:false
+parent:null
+===Meta End===
+===Phonology Start===
+soundlist: ,p,b,t,d,k,ɡ,ʔ,m,n,ŋ,θ,ð,i,u,e,o,a,ǀ,w,ɚ
+===Tablelist Start===
+tablelistName:IPA
+diacriticList:̥,̬,ʰ,̹,̜,̟,̠,̈,̽,̩,̯,˞,̤,̰,̼,ʷ,ʲ,ˠ,ˤ,̴,̝,̞,̘,̙,̪,̺,̻,̃,ⁿ,ˡ,̚,̋,́,̄,̀,̏,̌,̂,᷄,᷅,᷈,ˈ,ˌ,ː,ˑ,̆,|,‖,.,‿,͡
+===PhonoTable Start===
+tableName:IPA Consonants
+columnNames:Bilabial,Labiodental,Dental,Alveolar,Postalveolar,Retroflex,Palatal,Velar,Uvular,Pharyngeal,Glottal
+soundsPerCell:2
+rowNames:Plosive,Nasal,Trill,Tap or Flap,Fricative,Lateral Fricative,Approximant,Lateral Approximant
+:pb****td**ʈɖcɟkɡqɢ*#ʔ#
+:*m*ɱ***n***ɳ*ɲ*ŋ*ɴ####
+:*ʙ*****r******##*ʀ**##
+:***ⱱ***ɾ***ɽ**##****##
+:ɸβfvθðszʃʒʂʐçʝxɣχʁħʕhɦ
+:####**ɬɮ**********####
+:***ʋ***ɹ***ɻ*j*ɰ****##
+:####***l***ɭ*ʎ*ʟ**####
+===PhonoTable End===
+===PhonoTable Start===
+tableName:IPA Vowels
+columnNames:Front,Central,Back
+soundsPerCell:2
+rowNames:Close,Near Close,Close Mid,Mid,Open Mid,Close Open,Other
+:iyɨʉɯu
+:ɪʏ***ʊ
+:eøɘɵɤo
+:**ə***
+:ɛœɜɞʌɔ
+:æ*ɐ***
+:aɶ**ɑɒ
+===PhonoTable End===
+===PhonoTable Start===
+tableName:IPA Non-Pulmonics
+columnNames:No column names
+soundsPerCell:1
+rowNames:Click,Implosive,Other,.encodingAnomoly
+:ʘǀǃǂǁ#####
+:ɓɗʄɠʛ#####
+:ʍwɥʜʢʡɕʑɺɧ
+:gɚ########
+===PhonoTable End===
+===Tablelist End===
+===Phonology End===
+===Orthography Start===
+ɔː:ough
+ɔː:augh
+tʃ:tch
+æɹ:arr
+aɪəɹ:ire
+aʊəɹ:our
+ɛɹ:err
+ɛəɹ:are
+ɪɹ:irr
+ɪəɹ:ear
+ɔːɹ:oar
+ɔɪəɹ:oir
+ʊɹ:our
+ʊəɹ:our
+ʊəɹ:ure
+ɜːɹ:urr
+ʌɹ:urr
+ð:th
+hw:wh
+ŋ:ng
+ʃ:sh
+tʃ:ch
+θ:th
+θj:th
+aɪ:ie
+aʊ:ou
+aʊ:ow
+iː:ee
+oʊ:oa
+ɔː:au
+ɔɪ:oi
+ʊ:oo
+uː:oo
+ɑːɹ:ar
+ɒɹ:or
+ɛəɹ:ar
+ɪɹ:ir
+ɪəɹ:er
+ɔːɹ:or
+ɜːɹ:ur
+ɜːɹ:or
+əɹ:er
+əɹ:ar
+əɹ:or
+oʊ:ow
+iə:ia
+uə:ue
+əl:le
+b:b
+d:d
+dj:d
+dʒ:j
+f:f
+g:g
+h:h
+j:y
+k:k
+k:c
+l:l
+lj:l
+m:m
+n:n
+nj:n
+p:p
+ɹ:r
+s:s
+s:c
+sj:s
+t:t
+tj:t
+v:v
+w:w
+z:z
+zj:z
+ʒ:s
+ɑː:a
+ɒ:o
+æ:a
+aɪ:i
+ɛ:e
+eɪ:a
+ɪ:i
+iː:e
+uː:u
+ʌ:u
+ə:a
+ə:o
+ɪ:i
+i:i
+i:y
+u:u
+oʊ:o
+===Orthography End===
+===Lexicon Start===
+===Lexicon End===
+===PHOSYS End===

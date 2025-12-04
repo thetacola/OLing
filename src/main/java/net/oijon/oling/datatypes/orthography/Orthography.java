@@ -20,7 +20,7 @@ import net.oijon.oling.datatypes.tags.Tag;
 public class Orthography {
 
 	private Phonology ph = new Phonology();
-	private ArrayList<OrthoPair> orthoList = new ArrayList<OrthoPair>();
+	private ArrayList<OrthoPair> orthoList = new ArrayList<>();
 	
 	static Log log = Parser.getLog();
 	
@@ -47,7 +47,7 @@ public class Orthography {
 	 */
 	public Orthography(Orthography o) {
 		this.ph = new Phonology(o.ph);
-		this.orthoList = new ArrayList<OrthoPair>(o.orthoList);
+		this.orthoList = new ArrayList<>(o.orthoList);
 	}
 	
 	/**
@@ -82,7 +82,7 @@ public class Orthography {
 	 */
 	private void sortOrthoList() {
 		for (int i = 1; i < orthoList.size() - 1; i++) {
-			if (orthoList.get(i).compareTo(orthoList.get(i + 1)) == 1) {
+			if (orthoList.get(i).compareTo(orthoList.get(i + 1)) > 0) {
 				OrthoPair temp = orthoList.get(i + 1);
 				orthoList.set(i + 1, orthoList.get(i));
 				orthoList.set(i, temp);
@@ -96,7 +96,7 @@ public class Orthography {
 	 * @param i The index of the pair in the orthography
 	 * @return The pair specified
 	 */
-	public OrthoPair getPair(int i) {
+	public OrthoPair getPair(int i) throws IndexOutOfBoundsException {
 		return orthoList.get(i);
 	}
 	
@@ -104,7 +104,7 @@ public class Orthography {
 	 * Removes a pair from an orthography based on index
 	 * @param i The index of the pair to be removed
 	 */
-	public void remove(int i) {
+	public void remove(int i) throws IndexOutOfBoundsException {
 		orthoList.remove(i);
 	}
 	
@@ -113,27 +113,29 @@ public class Orthography {
 			Orthography ortho = new Orthography();
 			Multitag orthoTag = docTag.getMultitag("Orthography");
 			ArrayList<Tag> orthoPairs = orthoTag.getSubtags();
-			for (int i = 0; i < orthoPairs.size(); i++) {
-				Tag op = orthoPairs.get(i);
-				ortho.add(op.getName(), op.value());
-			}
+            for (Tag op : orthoPairs) {
+                ortho.add(op.getName(), op.value());
+            }
+            ortho.sortOrthoList();
 			return ortho;
 		} catch (Exception e) {
 			log.err("No orthography found! Has one been created? Returning a blank orthography...");
+            log.debug(e.toString());
+            e.printStackTrace();
 			return new Orthography();
 		}
 	}
 	
 	public String toString() {
 		sortOrthoList();
-		String returnString = "===Orthography Start===\n";
-		for (int i = 0; i < orthoList.size(); i++) {
-			returnString += orthoList.get(i).toString() + "\n";
-		}
-		returnString += "===Orthography End===";
+		StringBuilder returnString = new StringBuilder("===Orthography Start===\n");
+        for (OrthoPair orthoPair : orthoList) {
+            returnString.append(orthoPair.toString()).append("\n");
+        }
+		returnString.append("===Orthography End===");
 		
 		
-		return returnString;
+		return returnString.toString();
 	}
 	
 	/**
@@ -150,10 +152,19 @@ public class Orthography {
 	 * @return true if equal, false otherwise
 	 */
 	private boolean orthoListEqual(Orthography o) {
+        if (orthoList.size() != o.orthoList.size()) {
+            return false;
+        }
+
 		for (int i = 0; i < orthoList.size(); i++) {
-			if (!orthoList.get(i).equals(o.getPair(i))) {
-				return false;
-			}
+            try {
+                if (!orthoList.get(i).equals(o.getPair(i))) {
+                    return false;
+                }
+            } catch (IndexOutOfBoundsException e) {
+                // If we go over the array index, they cannot be equal.
+                return false;
+            }
 		}
 		return true;
 	}

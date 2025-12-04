@@ -55,7 +55,13 @@ public class UnitTests {
 		try {
 			log.info("Parsing testish.language...");
 			log.info("Expect an error about no orthography existing, this test creates it.");
-			Parser parser = new Parser(Paths.get(UnitTests.class.getClassLoader().getResource("testish.language").toURI()).toFile());
+            Parser expectedParser = new Parser(Paths.get(UnitTests.class.getClassLoader().getResource(
+                    "testish-with-ortho.language").toURI()).toFile());
+            Language expectedLang = expectedParser.parseLanguage();
+            Orthography expectedOrtho = expectedLang.getOrtho();
+
+			Parser parser = new Parser(Paths.get(UnitTests.class.getClassLoader().getResource(
+                    "testish.language").toURI()).toFile());
 			Language testLang = parser.parseLanguage();
 			Orthography testOrtho = testLang.getOrtho();
 			// sourced via wikipedia
@@ -155,104 +161,10 @@ public class UnitTests {
 			testOrtho.add("əl", "le");
 			log.info("Added vowels!");
 			testLang.setOrtho(testOrtho);
-			log.info("Printing language...");
-			log.info(testLang.toString());
-			String expectedOrthoString = "===Orthography Start===\n"
-					+ "ɔː:ough\n"
-					+ "ɔː:augh\n"
-					+ "tʃ:tch\n"
-					+ "æɹ:arr\n"
-					+ "aɪəɹ:ire\n"
-					+ "aʊəɹ:our\n"
-					+ "ɛɹ:err\n"
-					+ "ɛəɹ:are\n"
-					+ "ɪɹ:irr\n"
-					+ "ɪəɹ:ear\n"
-					+ "ɔːɹ:oar\n"
-					+ "ɔɪəɹ:oir\n"
-					+ "ʊɹ:our\n"
-					+ "ʊəɹ:our\n"
-					+ "ʊəɹ:ure\n"
-					+ "ɜːɹ:urr\n"
-					+ "ʌɹ:urr\n"
-					+ "ð:th\n"
-					+ "hw:wh\n"
-					+ "ŋ:ng\n"
-					+ "ʃ:sh\n"
-					+ "tʃ:ch\n"
-					+ "θ:th\n"
-					+ "θj:th\n"
-					+ "aɪ:ie\n"
-					+ "aʊ:ou\n"
-					+ "aʊ:ow\n"
-					+ "iː:ee\n"
-					+ "oʊ:oa\n"
-					+ "ɔː:au\n"
-					+ "ɔɪ:oi\n"
-					+ "ʊ:oo\n"
-					+ "uː:oo\n"
-					+ "ɑːɹ:ar\n"
-					+ "ɒɹ:or\n"
-					+ "ɛəɹ:ar\n"
-					+ "ɪɹ:ir\n"
-					+ "ɪəɹ:er\n"
-					+ "ɔːɹ:or\n"
-					+ "ɜːɹ:ur\n"
-					+ "ɜːɹ:or\n"
-					+ "əɹ:er\n"
-					+ "əɹ:ar\n"
-					+ "əɹ:or\n"
-					+ "oʊ:ow\n"
-					+ "iə:ia\n"
-					+ "uə:ue\n"
-					+ "əl:le\n"
-					+ "b:b\n"
-					+ "d:d\n"
-					+ "dj:d\n"
-					+ "dʒ:j\n"
-					+ "f:f\n"
-					+ "g:g\n"
-					+ "h:h\n"
-					+ "j:y\n"
-					+ "k:k\n"
-					+ "k:c\n"
-					+ "l:l\n"
-					+ "lj:l\n"
-					+ "m:m\n"
-					+ "n:n\n"
-					+ "nj:n\n"
-					+ "p:p\n"
-					+ "ɹ:r\n"
-					+ "s:s\n"
-					+ "s:c\n"
-					+ "sj:s\n"
-					+ "t:t\n"
-					+ "tj:t\n"
-					+ "v:v\n"
-					+ "w:w\n"
-					+ "z:z\n"
-					+ "zj:z\n"
-					+ "ʒ:s\n"
-					+ "ɑː:a\n"
-					+ "ɒ:o\n"
-					+ "æ:a\n"
-					+ "aɪ:i\n"
-					+ "ɛ:e\n"
-					+ "eɪ:a\n"
-					+ "ɪ:i\n"
-					+ "iː:e\n"
-					+ "uː:u\n"
-					+ "ʌ:u\n"
-					+ "ə:a\n"
-					+ "ə:o\n"
-					+ "ɪ:i\n"
-					+ "i:i\n"
-					+ "i:y\n"
-					+ "u:u\n"
-					+ "oʊ:o\n"
-					+ "===Orthography End===";
-			Orthography expectedOrtho = Orthography.parse(new Multitag(expectedOrthoString));
-			assertEquals(testOrtho, expectedOrtho);
+			//log.info("Printing language...");
+			//log.info(testLang.toString());
+			assertEquals(expectedOrtho, testOrtho);
+            assertEquals(expectedOrtho, testLang.getOrtho());
 			log.info("Parsing new language...");
 			testLang.toFile(new File(System.getProperty("user.home") + "/.oling/testish2.language"));
 			Parser newparser = new Parser(new File(System.getProperty("user.home") + "/.oling/testish2.language"));
@@ -260,8 +172,8 @@ public class UnitTests {
 			log.info(newLang.toString());
 			assertEquals(testOrtho, newLang.getOrtho());
 			
-			assertEquals(Guesser.phonoGuess("ough", testOrtho), "ɔː");
-			assertEquals(Guesser.orthoGuess("jutɪlz", testOrtho), "yutylz");
+			assertEquals("ɔː", Guesser.phonoGuess("ough", testOrtho));
+			assertEquals("yutylz", Guesser.orthoGuess("jutɪlz", testOrtho));
 			
 			
 		} catch (Exception e) {

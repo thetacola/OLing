@@ -17,14 +17,27 @@ public class NewUnitTests {
     /**
      * Grammar Tests
      */
+
+    // gloss
+
     @Test
     void glossTest() {
         Gloss gloss = new Gloss("test", "test meaning");
+
+        assertEquals("test", gloss.getAbbreviation());
+        assertEquals("test meaning", gloss.getMeaning());
+
+        gloss.setAbbreviation("test2");
+        gloss.setMeaning("test meaning2");
+
+        String expectedGlossStr = "===Gloss Start===\nabb:test2\nmeaning:test meaning2\n===Gloss End===";
         Gloss gloss2 = new Gloss(gloss);
-        String expectedGlossStr = "===Gloss Start===\nabb:test\nmeaning:test meaning\n===Gloss End===";
+
         assertEquals(expectedGlossStr, gloss.toString());
         assertEquals(expectedGlossStr, gloss2.toString());
     }
+
+    // glosslist
 
     @Test
     void glossListTest() {
@@ -34,13 +47,18 @@ public class NewUnitTests {
         gl.add(new Gloss("2", "second person"));
         gl.add(new Gloss("3", "third person"));
 
-        String expectedListStr = "===GlossList Start===\nname:Test list\n===Glosses Start===\n===Gloss Start===\nabb:1\n" +
+        assertEquals("Test list", gl.getName());
+        gl.setName("Test list2");
+
+        String expectedListStr = "===GlossList Start===\nname:Test list2\n===Glosses Start===\n===Gloss Start===\nabb:1\n" +
                 "meaning:first person\n===Gloss End===\n===Gloss Start===\nabb:2\nmeaning:second person\n" +
                 "===Gloss End===\n===Gloss Start===\nabb:3\nmeaning:third person\n===Gloss End===\n===Glosses End===\n" +
                 "===GlossList End===";
 
         assertEquals(expectedListStr, gl.toString());
     }
+
+    // grammar
 
     /**
      * Language tests
@@ -68,6 +86,47 @@ public class NewUnitTests {
      * Lexicon tests
      */
 
+    // lexicon
+
+    // word
+
+    // wordproperties
+
+    /**
+     * Orthography tests
+     */
+
+    // guesser
+
+    // orthography
+
+    // orthopair
+
+    /**
+     * Phonology tests
+     */
+
+    // phonocategory
+
+    // phonology
+
+    // phonosystem
+
+    // phonotable
+
+    /**
+     * Tags
+     */
+
+    // multitag
+
+    // multitagutils
+
+    // tag
+
+    /**
+     * Parser
+     */
 
 
 }

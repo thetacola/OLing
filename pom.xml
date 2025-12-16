@@ -28,12 +28,12 @@
 			<version>5.9.3</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
-		<dependency>
-		    <groupId>jakarta.xml.bind</groupId>
-		    <artifactId>jakarta.xml.bind-api</artifactId>
-		    <version>4.0.2</version>
-		</dependency>
+        <!-- https://mvnrepository.com/artifact/xerces/xercesImpl -->
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.12.2</version>
+        </dependency>
 	</dependencies>
 	<build>
 		<finalName>${project.artifactId}-${project.version}</finalName>
@@ -168,7 +168,7 @@
 	<developers>
 		<developer>
 			<id>thetacola</id>
-			<name>A. D. Cramer</name>
+			<name>thetacola</name>
 			<email>alex@consus.fun</email>
 			<url>https://oijon.net/</url>
 			<roles>

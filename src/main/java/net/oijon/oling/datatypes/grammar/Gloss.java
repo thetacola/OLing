@@ -1,7 +1,5 @@
 package net.oijon.oling.datatypes.grammar;
 
-import jakarta.xml.bind.annotation.XmlElement;
-
 //last edit: 1/19/25 -N3
 
 /**
@@ -11,12 +9,6 @@ import jakarta.xml.bind.annotation.XmlElement;
  * @author alex
  *
  */
-
-import jakarta.xml.bind.annotation.XmlRootElement;
-import jakarta.xml.bind.annotation.XmlType;
-
-@XmlRootElement(name = "gloss")
-@XmlType(propOrder = {"abbreviation", "meaning"})
 public class Gloss {
 
 	private String abbreviation;
@@ -61,7 +53,6 @@ public class Gloss {
 	 * Sets the abbreviation of the gloss
 	 * @param abbreviation The new abbreviation for the gloss
 	 */
-	@XmlElement(name = "abbreviation") 
 	public void setAbbreviation(String abbreviation) {
 		this.abbreviation = abbreviation;
 	}
@@ -70,7 +61,6 @@ public class Gloss {
 	 * Sets the meaning of the gloss
 	 * @param meaning The new meaning of the gloss
 	 */
-	@XmlElement(name = "meaning")
 	public void setMeaning(String meaning) {
 		this.meaning = meaning;
 	}

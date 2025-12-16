@@ -2,6 +2,15 @@ package net.oijon.oling.datatypes.grammar;
 
 //last edit: 1/19/25 -N3
 
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 /**
  * Attaches a meaning to a gloss abbreviation, allowing users to create their
  * own, or see what a certain abbreviation means.
@@ -9,7 +18,7 @@ package net.oijon.oling.datatypes.grammar;
  * @author alex
  *
  */
-public class Gloss {
+public class Gloss implements XMLDatatype {
 
 	private String abbreviation;
 	private String meaning;
@@ -64,9 +73,29 @@ public class Gloss {
 	public void setMeaning(String meaning) {
 		this.meaning = meaning;
 	}
-	
-	
-	
+
+	@Override
+	public Element toXML() throws ParserConfigurationException {
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document doc = builder.newDocument();
+		Element root = doc.createElement("gloss");
+
+		Element abb = doc.createElement("abb");
+		abb.appendChild(doc.createTextNode(this.abbreviation));
+		root.appendChild(abb);
+
+		Element meaning = doc.createElement("meaning");
+		meaning.appendChild(doc.createTextNode(this.meaning));
+		root.appendChild(meaning);
+
+		return root;
+	}
+
+	@Override
+	public void fromXML(Element e) throws InvalidXMLException {
+
+	}
+
 	@Override
 	public String toString() {
 		String returnString = "Gloss\n";
@@ -84,7 +113,6 @@ public class Gloss {
 			}
 		}
 		return false;
-	}	
-
+	}
 
 }

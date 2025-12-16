@@ -1,11 +1,12 @@
 package net.oijon.oling.datatypes.grammar;
 
-//last edit: 1/19/25 -N3
+//last edit: 12/15/25 -N3
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -32,6 +33,14 @@ public class Gloss implements XMLDatatype {
 		this.abbreviation = abbreviation;
 		this.meaning = meaning;
 	}
+
+    /**
+     * Creates a Gloss from an XML element
+     * @param e The element to use
+     */
+    public Gloss(Element e) throws InvalidXMLException {
+        this.fromXML(e);
+    }
 	
 	/**
 	 * Copy constructor
@@ -93,7 +102,23 @@ public class Gloss implements XMLDatatype {
 
 	@Override
 	public void fromXML(Element e) throws InvalidXMLException {
+        if (e.getTagName().equals("gloss")) {
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                // Note that this doesn't throw an exception if it can't find any of the elements.
+                // This is intentional, as they should just be null if that's the case.
+                switch (nl.item(i).getNodeName()) {
+                    case "abb":
+                        this.setAbbreviation(nl.item(i).getTextContent());
+                    case "meaning":
+                        this.setMeaning(nl.item(i).getTextContent());
+                    default:
 
+                }
+            }
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: gloss; Actual: " + e.getTagName());
+        }
 	}
 
 	@Override
@@ -108,9 +133,7 @@ public class Gloss implements XMLDatatype {
 	public boolean equals(Object o) {
 		if (o instanceof Gloss) {
 			Gloss g = (Gloss) o;
-			if (g.getAbbreviation().equals(abbreviation) & g.getMeaning().equals(meaning)) {
-				return true;
-			}
+            return g.getAbbreviation().equals(abbreviation) & g.getMeaning().equals(meaning);
 		}
 		return false;
 	}

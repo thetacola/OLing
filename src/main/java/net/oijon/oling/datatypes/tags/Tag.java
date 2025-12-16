@@ -5,7 +5,7 @@ package net.oijon.oling.datatypes.tags;
 /**
  * Stores a tag in a .language file
  * @author alex
- *
+ * @deprecated as of 3.0.0, as this is part of the legacy parser
  */
 public class Tag {
 	

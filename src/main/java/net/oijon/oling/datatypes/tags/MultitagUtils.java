@@ -3,6 +3,7 @@ package net.oijon.oling.datatypes.tags;
 /**
  * Some helpful tools for dealing with multitags. Separate from Multitag as to improve readability.
  * @author alex
+ * @deprecated as of 3.0.0, as this is part of the legacy parser
  */
 public class MultitagUtils {
 

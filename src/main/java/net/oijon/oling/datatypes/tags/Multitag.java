@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * A tag that can have child tags
  * @author alex
- *
+ * @deprecated as of 3.0.0, as it is part of the legacy parser.
  */
 public class Multitag {
 

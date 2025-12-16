@@ -1,5 +1,8 @@
 package net.oijon.oling.datatypes.grammar;
 
+import jakarta.xml.bind.annotation.XmlRootElement;
+import jakarta.xml.bind.annotation.XmlType;
+
 import java.util.ArrayList;
 
 //last edit: 5/23/23 -N3
@@ -10,6 +13,9 @@ import java.util.ArrayList;
  * @author alex
  *
  */
+
+@XmlRootElement(name = "glosslist")
+@XmlType(propOrder =  {"name", "gloss"})
 public class GlossList extends ArrayList<Gloss> {
 
 	private static final long serialVersionUID = 2940848265098898582L;

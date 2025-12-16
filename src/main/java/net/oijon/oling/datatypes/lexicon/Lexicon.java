@@ -1,18 +1,30 @@
 package net.oijon.oling.datatypes.lexicon;
 
 import java.util.ArrayList;
+
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
+import net.oijon.oling.datatypes.grammar.Gloss;
 import net.oijon.olog.Log;
 
 import net.oijon.oling.info.Info;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-//last edit: 6/20/24 -N3
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+//last edit: 12/16/25 -N3
 
 /**
  * The words and meaning of a language
  * @author alex
  *
  */
-public class Lexicon {
+public class Lexicon implements XMLDatatype {
 
 	private ArrayList<Word> wordList = new ArrayList<Word>();
 	
@@ -34,7 +46,15 @@ public class Lexicon {
 			this.addWord(words.get(i));
 		}
 	}
-	
+
+    /**
+     * Creates a lexicon from an XML element
+     * @param e The XML element to use
+     */
+    public Lexicon(Element e) throws InvalidXMLException {
+        fromXML(e);
+    }
+
 	/**
 	 * Copy constructor
 	 * @param l The lexicon to copy
@@ -141,4 +161,32 @@ public class Lexicon {
 		}
 		return false;
 	}
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("lexicon");
+
+        for (Word w : this.wordList) {
+            root.appendChild(w.toXML());
+        }
+
+        return root;
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+        if (e.getTagName().equals("lexicon")) {
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                if (nl.item(i).getNodeName().equals("word") & nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    Word w = new Word((Element) nl.item(i));
+                    wordList.add(w);
+                }
+            }
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: lexicon; Actual: " + e.getTagName());
+        }
+    }
 }

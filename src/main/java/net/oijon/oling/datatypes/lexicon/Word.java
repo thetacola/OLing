@@ -3,10 +3,19 @@ package net.oijon.oling.datatypes.lexicon;
 import java.util.ArrayList;
 import java.util.Date;
 
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 //last edit: 6/20/24 -N3
 
@@ -17,7 +26,7 @@ import net.oijon.olog.Log;
  */
 
 //TODO: re-add source language
-public class Word {
+public class Word implements XMLDatatype {
 
 	public static Log log = Info.log;
 	
@@ -36,7 +45,15 @@ public class Word {
 		wp.setProperty(WordProperty.MEANING, meaning);
 		//TODO: automatically get IPA from name via orthography
 	}
-	
+
+    /**
+     * Creates a word from an XML element.
+     * @param e The XML element to use.
+     */
+    public Word(Element e) throws InvalidXMLException {
+        this.fromXML(e);
+    }
+
 	/**
 	 * Copy constructor
 	 * @param w The word to be copied
@@ -57,10 +74,11 @@ public class Word {
 	
 	/**
 	 * Parses a word via a multitag.
-	 * If you are using a lexicon, try {@link net.oijon.oling.Parser#parseLexicon()} instead
+	 * If you are using a lexicon, try {@link net.oijon.oling.LegacyParser#parseLexicon()} instead
 	 * @param wordTag The multitag to parse
 	 * @return A word object from the given multitag
 	 * @throws Exception
+     * @deprecated since 3.0.0, as OLing now uses XML
 	 */
 	public static Word parse(Multitag wordTag) throws Exception {
 		Tag valueTag = wordTag.getDirectChild("wordname");
@@ -214,4 +232,97 @@ public class Word {
 				"===Word End===";
 		return returnString;
 	}
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("word");
+
+        Element name = doc.createElement("name");
+        name.appendChild(doc.createTextNode(wp.getProperty(WordProperty.NAME)));
+        root.appendChild(name);
+
+        Element meaning = doc.createElement("meaning");
+        meaning.appendChild(doc.createTextNode(wp.getProperty(WordProperty.MEANING)));
+        root.appendChild(meaning);
+
+        Element pronunciation = doc.createElement("pronunciation");
+        name.appendChild(doc.createTextNode(wp.getProperty(WordProperty.PRONOUNCIATION)));
+        root.appendChild(pronunciation);
+
+        Element etymology = doc.createElement("etymology");
+        meaning.appendChild(doc.createTextNode(wp.getProperty(WordProperty.ETYMOLOGY)));
+        root.appendChild(etymology);
+
+        Element created = doc.createElement("timeCreated");
+        created.appendChild(doc.createTextNode(wp.getCreationDate().toInstant().toEpochMilli() + ""));
+        root.appendChild(created);
+
+        Element edited = doc.createElement("timeEdited");
+        edited.appendChild(doc.createTextNode(wp.getEditDate().toInstant().toEpochMilli() + ""));
+        root.appendChild(edited);
+
+        Element synonyms = doc.createElement("synonyms");
+        for (Word w : this.synonyms) {
+            Element synonym = doc.createElement("synonym");
+            synonym.appendChild(doc.createTextNode(w.getProperties().getProperty(WordProperty.NAME)));
+            synonyms.appendChild(synonym);
+        }
+        root.appendChild(synonyms);
+
+        Element homonyms = doc.createElement("homonyms");
+        for (Word w : this.homonyms) {
+            Element homonym = doc.createElement("homonym");
+            homonym.appendChild(doc.createTextNode(w.getProperties().getProperty(WordProperty.MEANING)));
+            homonyms.appendChild(homonym);
+        }
+        root.appendChild(homonyms);
+
+        Element classes = doc.createElement("classes");
+        for (String s : this.classes) {
+            Element wordclass = doc.createElement("class");
+            wordclass.appendChild(doc.createTextNode(s));
+            classes.appendChild(wordclass);
+        }
+        root.appendChild(classes);
+
+        return root;
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+        if (e.getTagName().equals("word")) {
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                // Note that this doesn't throw an exception if it can't find any of the elements.
+                // This is intentional, as they should just be null if that's the case.
+                switch (nl.item(i).getNodeName()) {
+                    case "name":
+                        this.wp.setProperty(WordProperty.NAME, nl.item(i).getTextContent());
+                    case "meaning":
+                        this.wp.setProperty(WordProperty.MEANING, nl.item(i).getTextContent());
+                    case "pronunciation":
+                        this.wp.setProperty(WordProperty.PRONOUNCIATION, nl.item(i).getTextContent());
+                    case "etymology":
+                        this.wp.setProperty(WordProperty.ETYMOLOGY, nl.item(i).getTextContent());
+                    case "timeCreated":
+                        this.wp.setCreationDate(new Date(Long.parseLong(nl.item(i).getTextContent())));
+                    case "lastEdited":
+                        this.wp.setEditDate(new Date(Long.parseLong(nl.item(i).getTextContent())));
+                    case "classes":
+                        NodeList classList = nl.item(i).getChildNodes();
+                        for (int j = 0; j < classList.getLength(); j++) {
+                            if (classList.item(j).getNodeName().equals("class")) {
+                                this.classes.add(classList.item(j).getTextContent());
+                            }
+                        }
+                    default:
+                        // TODO: add synonyms and homonyms
+                }
+            }
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: word; Actual: " + e.getTagName());
+        }
+    }
 }

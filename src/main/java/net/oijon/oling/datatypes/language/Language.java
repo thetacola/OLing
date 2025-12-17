@@ -183,7 +183,7 @@ public class Language {
 		if (obj instanceof Language) {
 			Language l = (Language) obj;
 			
-			if (l.properties.equals(properties) & l.phono.equals(phono) &
+			if (l.properties.equals(properties) && l.phono.equals(phono) &
 					l.lexicon.equals(lexicon)) {
 				/*
 				 * Does not check for:

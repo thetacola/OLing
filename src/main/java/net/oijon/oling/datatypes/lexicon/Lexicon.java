@@ -180,7 +180,7 @@ public class Lexicon implements XMLDatatype {
         if (e.getTagName().equals("lexicon")) {
             NodeList nl = e.getChildNodes();
             for (int i = 0; i < nl.getLength(); i++) {
-                if (nl.item(i).getNodeName().equals("word") & nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                if (nl.item(i).getNodeName().equals("word") && nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
                     Word w = new Word((Element) nl.item(i));
                     wordList.add(w);
                 }

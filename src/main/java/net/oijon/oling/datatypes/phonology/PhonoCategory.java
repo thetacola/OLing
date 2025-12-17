@@ -143,7 +143,7 @@ public class PhonoCategory implements XMLDatatype {
 	public boolean equals(Object obj) {
 		if (obj instanceof PhonoCategory) {
 			PhonoCategory p = (PhonoCategory) obj;
-            return p.name.equals(name) & p.cells.equals(cells);
+            return p.name.equals(name) && p.cells.equals(cells);
 		}
 		return false;
 	}
@@ -159,7 +159,11 @@ public class PhonoCategory implements XMLDatatype {
             // Assuming here that there's no row of *all* spacers, because why in the world would you do that
             // Of course, this is not a guarantee, so this may make unneeded rows if that truly is the case.
             // This is such an edge case with such a trivial result that I *really* don't feel like fixing this
-            if (pc.sizeWithoutSpacers() != 0 | pc.size() == 0) {
+            // Just to clarify: This edge case only happens if the user has done something profoundly odd and
+            // unintuitive with zero benefit (unless you count a few extra millis when parsing a benefit?!).
+            // If this edge case does appear, there is a 99.9% chance the user has done something wrong and has
+            // manually edited config files to add a completely useless spacer row.
+            if (pc.sizeWithoutSpacers() != 0 || pc.size() == 0) {
                 Element pe = pc.toXML();
                 root.appendChild(pe);
             }
@@ -176,7 +180,7 @@ public class PhonoCategory implements XMLDatatype {
             NodeList nl = e.getChildNodes();
             for (int i = 0; i < nl.getLength(); i++) {
                 Node n = nl.item(i);
-                if (n.getNodeName().equals("cell") & n.getNodeType() == Node.ELEMENT_NODE) {
+                if (n.getNodeName().equals("cell") && n.getNodeType() == Node.ELEMENT_NODE) {
                     PhonoCell pc = new PhonoCell((Element) n);
                     cells.add(pc);
                 }

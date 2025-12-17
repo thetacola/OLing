@@ -83,7 +83,7 @@ public class LanguageProperties {
 		Tag id = new Tag("id");
 		try {
 			id = meta.getDirectChild("id");
-			if (!id.value().isBlank() & !id.value().equals("null")) {
+			if (!id.value().isBlank() && !id.value().equals("null")) {
 				log.info("ID of language is " + id.value());
 				this.setProperty(LanguageProperty.ID, id.value());
 			} else {
@@ -134,8 +134,8 @@ public class LanguageProperties {
 			 * - date edited (will never be equal)
 			 * - version edited (may or may not be equal)
 			 */
-			if (lp.getProperty(LanguageProperty.AUTONYM).equals(strings[0]) & 
-					lp.getProperty(LanguageProperty.ID).equals(strings[1]) & 
+			if (lp.getProperty(LanguageProperty.AUTONYM).equals(strings[0]) && 
+					lp.getProperty(LanguageProperty.ID).equals(strings[1]) && 
 					lp.getProperty(LanguageProperty.NAME).equals(strings[2]) &
 					lp.isReadOnly() == isReadOnly &
 					lp.getCreated().equals(dates[0])) {

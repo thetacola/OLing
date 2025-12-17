@@ -133,7 +133,7 @@ public class Gloss implements XMLDatatype {
 	public boolean equals(Object o) {
 		if (o instanceof Gloss) {
 			Gloss g = (Gloss) o;
-            return g.getAbbreviation().equals(abbreviation) & g.getMeaning().equals(meaning);
+            return g.getAbbreviation().equals(abbreviation) && g.getMeaning().equals(meaning);
 		}
 		return false;
 	}

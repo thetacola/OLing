@@ -125,7 +125,7 @@ public class PhonoCell implements XMLDatatype {
         int startSize = size();
         for (int i = 0; i < size(); i++) {
             String sound = phonemes.get(i).getSound();
-            if (sound.equals("#") | sound.equals("*")) {
+            if (sound.equals("#") || sound.equals("*")) {
                 startSize--;
             }
         }
@@ -136,7 +136,7 @@ public class PhonoCell implements XMLDatatype {
     public boolean equals(Object o) {
         if (o instanceof PhonoCell) {
             PhonoCell pc = (PhonoCell) o;
-            return (pc.getPhonemes().equals(phonemes) & pc.getIndex() == index);
+            return (pc.getPhonemes().equals(phonemes) && pc.getIndex() == index);
         }
         return false;
     }
@@ -162,7 +162,7 @@ public class PhonoCell implements XMLDatatype {
             NodeList nl = e.getChildNodes();
             for (int i = 0; i < nl.getLength(); i++) {
                 Node n = nl.item(i);
-                if (n.getNodeName().equals("sound") & n.getNodeType() == Node.ELEMENT_NODE) {
+                if (n.getNodeName().equals("sound") && n.getNodeType() == Node.ELEMENT_NODE) {
                     Phoneme p = new Phoneme((Element) n);
                     phonemes.add(p);
                 }

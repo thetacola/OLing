@@ -85,8 +85,6 @@ public class PhonoTable {
                         char c = catData.charAt((k * perCell) + l);
                         Phoneme p = new Phoneme(Character.toString(c), l);
                         cell.addSound(p);
-                        //Info.log.debug("Added sound " + p.getSound() + " to cell located at " + j + ", "
-                        //        + k + ", " + l);
                     }
                     cat.addCell(cell);
 				}
@@ -194,7 +192,7 @@ public class PhonoTable {
 	public boolean equals(Object obj) {
 		if (obj instanceof PhonoTable) {
 			PhonoTable p = (PhonoTable) obj;
-			if (p.name.equals(name) & p.columnNames.equals(columnNames) & p.rows.equals(rows) &
+			if (p.name.equals(name) && p.columnNames.equals(columnNames) && p.rows.equals(rows) &
 					p.soundsPerCell == soundsPerCell) {
 				return true;
 			}

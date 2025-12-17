@@ -257,7 +257,7 @@ public class PhonoSystem {
 	public boolean equals(Object obj) {
 		if (obj instanceof PhonoSystem) {
 			PhonoSystem p = (PhonoSystem) obj;			
-			if (p.name.equals(name) & p.tables.equals(tables) &
+			if (p.name.equals(name) && p.tables.equals(tables) &
 					p.diacriticList.equals(diacriticList)) {
 				return true;
 			}

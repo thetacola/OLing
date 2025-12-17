@@ -103,7 +103,7 @@ public class Phoneme implements XMLDatatype {
     public boolean equals(Object o) {
         if (o instanceof  Phoneme) {
             Phoneme p = (Phoneme) o;
-            return p.getSound().equals(sound) & p.getIndex() == index;
+            return p.getSound().equals(sound) && p.getIndex() == index;
         }
         return false;
     }

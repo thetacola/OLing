@@ -12,7 +12,7 @@ import net.oijon.olog.Log;
 import net.oijon.oling.LegacyParser;
 import net.oijon.oling.info.Info;
 
-//last edit: 6/20/24 -N3
+//last edit: 12/16/25 -N3
 
 /**
  * A way to transcribe all sounds allowed in a vocal tract. IPA is specified here as that
@@ -149,14 +149,15 @@ public class PhonoSystem {
 	}
 	
 	/**
-	 * Allows use of an XY coordinate system to get sounds
+	 * Allows use of an XYZ coordinate system to get sounds
 	 * @param i Index of table
 	 * @param x Index of category
-	 * @param y Index of sound
+	 * @param y Index of cell
+     * @param z Index of sound
 	 * @return The sound at both indexes
 	 */
-	public String getSound(int i, int x, int y) {
-		return tables.get(i).getRow(x).getSound(y);
+	public String getSound(int i, int x, int y, int z) {
+		return tables.get(i).getRow(x).getCell(y).getPhonemes().get(z).getSound();
 	}
 	/**
 	 * Sets the diacritic list to a new list
@@ -256,7 +257,7 @@ public class PhonoSystem {
 	public boolean equals(Object obj) {
 		if (obj instanceof PhonoSystem) {
 			PhonoSystem p = (PhonoSystem) obj;			
-			if (p.name.equals(name) & p.tables.equals(tables) &
+			if (p.name.equals(name) && p.tables.equals(tables) &
 					p.diacriticList.equals(diacriticList)) {
 				return true;
 			}

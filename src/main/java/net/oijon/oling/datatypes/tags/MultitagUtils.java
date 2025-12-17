@@ -68,7 +68,7 @@ public class MultitagUtils {
 	public static boolean isMultitagMarker(String line) {
 		String[] splitSpace = line.split(" ");
 		String[] splitColon = line.split(":");
-		if (splitSpace.length == 2 & splitColon.length != 2) {
+		if (splitSpace.length == 2 && splitColon.length != 2) {
 			return true;
 		}
 		return false;

@@ -81,7 +81,7 @@ public class OrthoPair implements Comparable<OrthoPair>, XMLDatatype {
 	public boolean equals(Object o) {
 		if (o instanceof OrthoPair) {
 			OrthoPair op = (OrthoPair) o;
-			if (op.getPhonemes().equals(phonemes) & op.getGraphemes().equals(graphemes)) {
+			if (op.getPhonemes().equals(phonemes) && op.getGraphemes().equals(graphemes)) {
 				return true;
 			}
 		}

@@ -7,8 +7,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 
+import net.oijon.oling.datatypes.phonology.Phoneme;
+import net.oijon.oling.datatypes.phonology.PhonoCategory;
+import net.oijon.oling.datatypes.phonology.PhonoCell;
+import net.oijon.oling.datatypes.phonology.PhonoTable;
 import org.junit.jupiter.api.Test;
 
 import net.oijon.olog.Log;
@@ -37,7 +42,45 @@ public class UnitTests {
 			LegacyParser parser2 = new LegacyParser(new File(System.getProperty("user.home") + "/.oling/testish.language"));
 			Language compareLanguage = parser2.parseLanguage();
 			testLang.setOrtho(compareLanguage.getOrtho()); // ortho not created in testlang, is in comparelang
-			assertEquals(testLang, compareLanguage);
+
+            ArrayList<PhonoTable> testTables = testLang.getPhono().getPhonoSystem().getTables();
+            ArrayList<PhonoTable> compareTables = compareLanguage.getPhono().getPhonoSystem().getTables();
+
+            assertEquals(testTables.size(), compareTables.size());
+            for (int i = 0; i < testTables.size(); i++) {
+                PhonoTable testTable = testTables.get(i);
+                PhonoTable compareTable = compareTables.get(i);
+                assertEquals(testTable.size(), compareTable.size());
+                for (int j = 0; j < testTable.size(); j++) {
+                    PhonoCategory testRow = testTable.getRow(j);
+                    PhonoCategory compareRow = compareTable.getRow(j);
+                    assertEquals(testRow.size(), compareRow.size());
+                    for (int k = 0; k < testRow.size(); k++) {
+                        PhonoCell testCell = testRow.getCell(k);
+                        PhonoCell compareCell = compareRow.getCell(k);
+                        assertEquals(testCell.size(), compareCell.size());
+                        for (int l = 0; l < testCell.size(); l++) {
+                            Phoneme testPhoneme = testCell.getPhonemes().get(l);
+                            Phoneme comparePhoneme = compareCell.getPhonemes().get(l);
+                            assertEquals(testPhoneme, comparePhoneme);
+                        }
+                        assertEquals(testCell, compareCell);
+                    }
+                    assertEquals(testRow, compareRow);
+                }
+                assertEquals(testTable, compareTable);
+            }
+
+            assertEquals(testLang.getPhono().getPhonoSystem().getTables(), compareLanguage.getPhono().getPhonoSystem().getTables());
+
+            assertEquals(testLang.getPhono().getPhonoSystem(), compareLanguage.getPhono().getPhonoSystem());
+
+            assertEquals(testLang.getProperties(), compareLanguage.getProperties());
+            assertEquals(testLang.getOrtho(), compareLanguage.getOrtho());
+            assertEquals(testLang.getLexicon(), compareLanguage.getLexicon());
+            assertEquals(testLang.getPhono(), compareLanguage.getPhono());
+
+            assertEquals(testLang, compareLanguage);
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.err(e.toString());

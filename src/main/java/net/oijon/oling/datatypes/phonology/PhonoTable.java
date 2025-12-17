@@ -8,7 +8,7 @@ import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
 
-//last edit: 6/19/23 -N3
+//last edit: 12/16/25 -N3
 
 /**
  * Like an IPA table, but readable in Java
@@ -79,8 +79,14 @@ public class PhonoTable {
 			// TODO: allow multiple character sounds?
 			try {
 				String catData = tableData.get(j).value();
-				for (int k = 0; k < catData.length(); k++) {
-					cat.addSound(Character.toString(catData.charAt(k)));
+				for (int k = 0; k < catData.length() / perCell; k++) {
+                    PhonoCell cell = new PhonoCell(k);
+                    for (int l = 0; l < perCell; l++) {
+                        char c = catData.charAt((k * perCell) + l);
+                        Phoneme p = new Phoneme(Character.toString(c), l);
+                        cell.addSound(p);
+                    }
+                    cat.addCell(cell);
 				}
 				cats.add(cat);
 			} catch (IndexOutOfBoundsException e) {
@@ -91,7 +97,7 @@ public class PhonoTable {
 		PhonoTable phonoTable = new PhonoTable(name, columns, cats, perCell);
 		return phonoTable;
 	}
-	
+
 	/**
 	 * Converts a PhonoTable to a string
 	 */
@@ -111,7 +117,9 @@ public class PhonoTable {
 		for (int i = 0; i < rows.size(); i++) {
 			returnString += ":";
 			for (int j = 0; j < rows.get(i).size(); j++) {
-				returnString += rows.get(i).getSound(j);
+                for (int k = 0; k < rows.get(i).getCell(j).getPhonemes().size(); k++) {
+                    returnString += rows.get(i).getCell(j).getPhonemes().get(k).getSound();
+                }
 			}
 			returnString += "\n";
 		}
@@ -166,9 +174,15 @@ public class PhonoTable {
 	 */
 	public ArrayList<String> getSoundList() {
 		ArrayList<String> list = new ArrayList<String>();
-		
+
 		for (int i = 0; i < rows.size(); i++) {
-			list.addAll(rows.get(i).getSounds());
+            PhonoCategory row = rows.get(i);
+			for (int j = 0; j < row.size(); j++) {
+                PhonoCell cell = row.getCell(j);
+                for (int k = 0; k < cell.size(); k++) {
+                    list.add(cell.getPhonemes().get(k).getSound());
+                }
+            }
 		}
 		
 		return list;
@@ -178,7 +192,7 @@ public class PhonoTable {
 	public boolean equals(Object obj) {
 		if (obj instanceof PhonoTable) {
 			PhonoTable p = (PhonoTable) obj;
-			if (p.name.equals(name) & p.columnNames.equals(columnNames) & p.rows.equals(rows) &
+			if (p.name.equals(name) && p.columnNames.equals(columnNames) && p.rows.equals(rows) &
 					p.soundsPerCell == soundsPerCell) {
 				return true;
 			}

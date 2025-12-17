@@ -45,7 +45,7 @@ public class Phonology {
 		for (int i = 0; i < array.length; i++) {
 			if (phonoSystem.contains(array[i])) {
 				phonoList.add(array[i]);
-			} else if (!array[i].equals(" ") & !array[i].equals("")) {
+			} else if (!array[i].equals(" ") && !array[i].equals("")) {
 				log.warn(array[i] + " is not in PhonoSystem " + sys.getName());
 			}
 		}
@@ -134,7 +134,7 @@ public class Phonology {
 	public boolean equals(Object obj) {
 		if (obj instanceof Phonology) {
 			Phonology p = (Phonology) obj;
-			if (p.phonoList.equals(phonoList) & p.phonoSystem.equals(phonoSystem)) {
+			if (p.phonoList.equals(phonoList) && p.phonoSystem.equals(phonoSystem)) {
 				return true;
 			}
 		}

@@ -101,7 +101,7 @@ public class Multitag {
 	public boolean equals(Object obj) {
 		if (obj instanceof Multitag) {
 			Multitag tag = (Multitag) obj;
-			if (this.name.equals(tag.getName()) & this.subtags.equals(tag.getSubtags())
+			if (this.name.equals(tag.getName()) && this.subtags.equals(tag.getSubtags())
 					& this.subMultitags.equals(tag.getSubMultitags())) {
 				return true;
 			}

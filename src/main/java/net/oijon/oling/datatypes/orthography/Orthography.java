@@ -181,7 +181,7 @@ public class Orthography implements XMLDatatype {
         if (e.getTagName().equals("orthography")) {
             NodeList nl = e.getChildNodes();
             for (int i = 0; i < nl.getLength(); i++) {
-                if (nl.item(i).getNodeName().equals("pair") & nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                if (nl.item(i).getNodeName().equals("pair") && nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
                     OrthoPair op = new OrthoPair((Element) nl.item(i));
                     orthoList.add(op);
                 }

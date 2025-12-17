@@ -94,7 +94,7 @@ public class GlossList extends ArrayList<Gloss> implements XMLDatatype {
             this.name = e.getAttribute("name");
             NodeList nl = e.getChildNodes();
             for (int i = 0; i < nl.getLength(); i++) {
-                if (nl.item(i).getNodeName().equals("gloss") & nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                if (nl.item(i).getNodeName().equals("gloss") && nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
                     Gloss g = new Gloss((Element) nl.item(i));
                     this.add(g);
                 }

@@ -2,16 +2,25 @@ package net.oijon.oling.datatypes.language;
 
 import java.time.Instant;
 import java.util.Date;
+
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Bundles metadata about a language into one object
  * @author alex
  */
-public class LanguageProperties {
+public class LanguageProperties implements XMLDatatype {
 
 	public static Log log = Info.log;
 	
@@ -103,7 +112,6 @@ public class LanguageProperties {
 	/**
 	 * Checks if the version tag is using a deprecated format
 	 * @param meta The meta tag
-	 * @param ver The version tag
 	 * @throws Exception Thrown if neither utilsVersion nor susquehannaVersion exist
 	 */
 	private void checkVersion(Multitag meta) throws Exception {
@@ -220,5 +228,52 @@ public class LanguageProperties {
 	public void setEdited(Date edited) {
 		this.dates[1] = (Date) edited.clone();
 	}
-	
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("meta");
+
+        Element ver = doc.createElement("version");
+        ver.appendChild(doc.createTextNode(getProperty(LanguageProperty.VERSION_EDITED)));
+        root.appendChild(ver);
+
+        Element name = doc.createElement("name");
+        name.appendChild(doc.createTextNode(getProperty(LanguageProperty.NAME)));
+        root.appendChild(name);
+
+        Element id = doc.createElement("id");
+        id.appendChild(doc.createTextNode(getProperty(LanguageProperty.ID)));
+        root.appendChild(id);
+
+        Element autonym = doc.createElement("autonym");
+        autonym.appendChild(doc.createTextNode(getProperty(LanguageProperty.AUTONYM)));
+        root.appendChild(autonym);
+
+        Element timeCreated = doc.createElement("timeCreated");
+        timeCreated.appendChild(doc.createTextNode(getCreated().toInstant().toEpochMilli() + ""));
+        root.appendChild(timeCreated);
+
+        Element lastEdited = doc.createElement("lastEdited");
+        lastEdited.appendChild(doc.createTextNode(getEdited().toInstant().toEpochMilli() + ""));
+        root.appendChild(lastEdited);
+
+        Element readonly = doc.createElement("readonly");
+        readonly.appendChild(doc.createTextNode(isReadOnly + ""));
+        root.appendChild(readonly);
+
+        // TODO: add parent by language ID
+        Element parent = doc.createElement("parent");
+        parent.appendChild(doc.createTextNode(""));
+        root.appendChild(parent);
+
+
+        return root;
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+
+    }
 }

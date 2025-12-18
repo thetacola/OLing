@@ -341,14 +341,19 @@ public class PhonoSystem implements XMLDatatype {
         }
         root.appendChild(diacritics);
 
-		for (PhonoCell list : lists) {
-			Element listElement = doc.createElement("list");
-
+		for (PhonoList list : lists) {
+			root.appendChild(list.toXML());
 		}
 
         for (PhonoTable pt : tables) {
             root.appendChild(pt.toXML());
         }
+
+        Element anomaliesE = doc.createElement("anomalies");
+        for (PhonoAnomaly pa : anomalies) {
+            anomaliesE.appendChild(pa.toXML());
+        }
+        root.appendChild(anomaliesE);
 
         return root;
     }

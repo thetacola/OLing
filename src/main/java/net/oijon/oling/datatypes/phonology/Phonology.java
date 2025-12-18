@@ -7,11 +7,11 @@ import java.util.List;
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.olog.Log;
-import net.oijon.oling.datatypes.tags.Multitag;
-import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -58,7 +58,16 @@ public class Phonology implements XMLDatatype {
 			}
 		}
 	}
-	
+
+    /**
+     * Creates a phonology from a given XML element
+     * @param e The element to create from
+     * @throws InvalidXMLException thrown if the XML tag is the wrong name or is otherwise invalid
+     */
+    public Phonology(Element e) throws InvalidXMLException {
+        fromXML(e);
+    }
+
 	/**
 	 * Allows the creation of an empty phonology from a file
 	 */
@@ -178,6 +187,29 @@ public class Phonology implements XMLDatatype {
 
     @Override
     public void fromXML(Element e) throws InvalidXMLException {
+        if (e.getTagName().equals("phonology")) {
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                Node n = nl.item(i);
+                switch (n.getNodeName()) {
+                    case "sounds":
+                        NodeList sounds = n.getChildNodes();
+                        for (int j = 0; j < sounds.getLength(); j++) {
+                            Node sound = sounds.item(j);
+                            if (!phonoList.contains(sound.getTextContent())) {
+                                this.phonoList.add(sound.getTextContent());
+                            }
+                        }
+                    case "tables":
+                        if (n.getNodeType() == Node.ELEMENT_NODE) {
+                            phonoSystem = new PhonoSystem((Element) n);
+                        }
+                    default:
 
+                }
+            }
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: phonology; Actual: " + e.getTagName());
+        }
     }
 }

@@ -11,12 +11,14 @@ import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-//last edit: 12/17/25 -N3
+//last edit: 12/18/25 -N3
 
 /**
  * Like an IPA table, but readable in Java
@@ -45,7 +47,16 @@ public class PhonoTable implements XMLDatatype {
 		this.rows = rows;
 		this.soundsPerCell = soundsPerCell;
 	}
-	
+
+	/**
+	 * Parses a PhonoTable from an XML element
+	 * @param e The XML element to use
+	 * @throws InvalidXMLException Thrown if the XML element is the wrong name or is otherwise invalid
+	 */
+	public PhonoTable(Element e) throws InvalidXMLException {
+		fromXML(e);
+	}
+
 	/**
 	 * Copy constructor
 	 * @param pt The PhonoTable to be copied
@@ -234,6 +245,32 @@ public class PhonoTable implements XMLDatatype {
 
     @Override
     public void fromXML(Element e) throws InvalidXMLException {
+	    if (e.getTagName().equals("table")) {
+		    name = e.getAttribute("name");
+		    NodeList nl = e.getChildNodes();
+		    for (int i = 0; i < nl.getLength(); i++) {
+			    Node n = nl.item(i);
+			    switch (n.getNodeName()) {
+				    case "columns":
+						NodeList columns = n.getChildNodes();
+						for (int j = 0; j < columns.getLength(); j++) {
+							Node column = columns.item(j);
+							columnNames.add(column.getTextContent());
+						}
+				    case "rows":
+						NodeList rows = n.getChildNodes();
+						for (int j = 0; j < rows.getLength(); j++) {
+							Node row = rows.item(j);
+							if (row.getNodeType() == Node.ELEMENT_NODE) {
+								this.rows.add(new PhonoCategory((Element) row));
+							}
+						}
+				    default:
 
+			    }
+		    }
+	    } else {
+		    throw new InvalidXMLException("Node name not expected name! Expected: table; Actual: " + e.getTagName());
+	    }
     }
 }

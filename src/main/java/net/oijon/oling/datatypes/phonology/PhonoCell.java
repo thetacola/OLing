@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class PhonoCell implements XMLDatatype {
 
-    private ArrayList<Phoneme> phonemes;
+    protected ArrayList<Phoneme> phonemes;
     private int index;
 
     /**

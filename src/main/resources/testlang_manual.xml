@@ -386,16 +386,16 @@
                 <sound index="8">ɺ</sound>
                 <sound index="9">ɧ</sound>
             </list>
-            <anomolies>
-                <anomoly>
+            <anomalies>
+                <anomaly>
                     <from>g</from>
                     <to>g</to>
-                </anomoly>
-                <anomoly>
+                </anomaly>
+                <anomaly>
                     <from>ɚ</from>
                     <to>ə˞</to>
-                </anomoly>
-            </anomolies>
+                </anomaly>
+            </anomalies>
         </tables>
     </phonology>
     <orthography>

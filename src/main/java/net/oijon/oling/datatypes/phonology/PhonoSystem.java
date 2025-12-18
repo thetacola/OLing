@@ -16,6 +16,8 @@ import net.oijon.oling.LegacyParser;
 import net.oijon.oling.info.Info;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,7 +37,9 @@ public class PhonoSystem implements XMLDatatype {
 	private String name;
 	private ArrayList<PhonoTable> tables = new ArrayList<PhonoTable>();
 	private ArrayList<String> diacriticList = new ArrayList<String>();
-	
+	private ArrayList<PhonoList> lists = new ArrayList<PhonoList>();
+	private ArrayList<PhonoAnomaly> anomalies = new ArrayList<PhonoAnomaly>();
+
 	static Log log = Info.log;
 	
 	/**
@@ -91,7 +95,16 @@ public class PhonoSystem implements XMLDatatype {
 	public PhonoSystem(String name) {
 		this.name = name;
 	}
-	
+
+	/**
+	 * Creates a PhonoSystem from an XML element
+	 * @param e The XML element in question
+	 * @throws InvalidXMLException thrown when the tag name is wrong or the element is invalid for whatever reason
+	 */
+	public PhonoSystem(Element e) throws InvalidXMLException {
+		fromXML(e);
+	}
+
 	/**
 	 * Copy constructor
 	 * @param ps The PhonoSystem to be copied
@@ -105,6 +118,7 @@ public class PhonoSystem implements XMLDatatype {
 	/**
 	 * Loads a PhonoSystem object from a file
 	 * @param file The file to load from
+	 * @deprecated as of 3.0.0, as this uses the old .language format. Instead, parse your file into an XML element, then create a PhonoSystem from the element
 	 */
 	public PhonoSystem(File file) {
 		try {
@@ -236,11 +250,50 @@ public class PhonoSystem implements XMLDatatype {
 				return true;
 			}
 		}
+		for (int i = 0; i < lists.size(); i++) {
+			ArrayList<Phoneme> phonemesInList = lists.get(i).getPhonemes();
+			for (int j = 0; j < phonemesInList.size(); j++) {
+				if (phonemesInList.get(j).getSound().equals(value)) {
+					return true;
+				}
+			}
+		}
+
 		return false;
 	}
-	
+
+	public PhonoList getList(int index) {
+		return lists.get(index);
+	}
+
+	public void addList(PhonoList list) {
+		lists.add(list);
+	}
+
+	public void removeList(int index) {
+		lists.remove(index);
+	}
+
+	public int listsSize() {
+		return lists.size();
+	}
+
+	/**
+	 * Removes encoding anomalies from a given string
+	 * @param input The input to be scrubbed of anomalies
+	 * @return The input with all anomalies replaced with their proper representations
+	 */
+	public String normalize(String input) {
+		String output = input;
+		for (int i = 0; i < anomalies.size(); i++) {
+			output = anomalies.get(i).normalize(output);
+		}
+		return output;
+	}
+
 	/**
 	 * Creates a file of the PhonoSystem.
+	 * @Deprecated since v3.0.0, as this makes a file with the old format. Instead, write the XML element of this to a file.
 	 */
 	public void toFile() {
 		String output = "===PHOSYS Start===\n";
@@ -258,8 +311,6 @@ public class PhonoSystem implements XMLDatatype {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		
 	}
 	
 	@Override
@@ -290,6 +341,11 @@ public class PhonoSystem implements XMLDatatype {
         }
         root.appendChild(diacritics);
 
+		for (PhonoCell list : lists) {
+			Element listElement = doc.createElement("list");
+
+		}
+
         for (PhonoTable pt : tables) {
             root.appendChild(pt.toXML());
         }
@@ -299,6 +355,42 @@ public class PhonoSystem implements XMLDatatype {
 
     @Override
     public void fromXML(Element e) throws InvalidXMLException {
+	    if (e.getTagName().equals("tables")) {
+		    name = e.getAttribute("name");
+		    NodeList nl = e.getChildNodes();
+		    for (int i = 0; i < nl.getLength(); i++) {
+			    Node n = nl.item(i);
+			    switch (n.getNodeName()) {
+				    case "diacritics":
+					    NodeList diacritics = n.getChildNodes();
+					    for (int j = 0; j < diacritics.getLength(); j++) {
+						    Node diacritic = diacritics.item(j);
+						    this.diacriticList.add(diacritic.getTextContent());
+					    }
+				    case "table":
+					    if (n.getNodeType() == Node.ELEMENT_NODE) {
+							tables.add(new PhonoTable((Element) n));
+					    }
+				    case "list":
+						if (n.getNodeType() == Node.ELEMENT_NODE) {
+							lists.add(new PhonoList((Element) n));
+						}
+				    case "anomalies":
+						if (n.getNodeType() == Node.ELEMENT_NODE) {
+							NodeList anomalyNodes = n.getChildNodes();
+							for (int j = 0; j < anomalyNodes.getLength(); j++) {
+								Node a = anomalyNodes.item(j);
+								if (a.getNodeType() == Node.ELEMENT_NODE) {
+									anomalies.add(new PhonoAnomaly((Element) a));
+								}
+							}
+						}
+				    default:
 
+			    }
+		    }
+	    } else {
+		    throw new InvalidXMLException("Node name not expected name! Expected: tables; Actual: " + e.getTagName());
+	    }
     }
 }

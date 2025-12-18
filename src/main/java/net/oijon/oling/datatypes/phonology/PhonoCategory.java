@@ -12,7 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
 
-//last edit: 12/16/25 -N3
+//last edit: 12/18/25 -N3
 
 /**
  * Creates the equivalent of a row on the IPA chart.
@@ -57,7 +57,16 @@ public class PhonoCategory implements XMLDatatype {
 		this.cells = new ArrayList<PhonoCell>();
         this.index = 0;
 	}
-	
+
+	/**
+	 * Creates a phono category from an XML node
+	 * @param e The XML element of the row
+	 * @throws InvalidXMLException when the given XML is invalid
+	 */
+	public PhonoCategory(Element e) throws InvalidXMLException {
+		fromXML(e);
+	}
+
 	/**
 	 * Copy constructor
 	 * @param pc The PhonoCategory to be copied

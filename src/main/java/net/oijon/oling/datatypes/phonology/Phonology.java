@@ -4,19 +4,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.olog.Log;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-//last edit: 6/20/2024 -N3
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+//last edit: 12/17/25 -N3
 
 /**
  * The sounds of a language. Makes a list of sounds based off a PhonoSystem.
  * @author alex
  *
  */
-public class Phonology {
+public class Phonology implements XMLDatatype {
 
 	private List<String> phonoList = new ArrayList<String>(Arrays.asList(" "));
 	private PhonoSystem phonoSystem;
@@ -147,4 +155,29 @@ public class Phonology {
 	public void clear() {
 		phonoList.clear();
 	}
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("phonology");
+
+        Element sounds = doc.createElement("sounds");
+        for (String s : phonoList) {
+            Element sound = doc.createElement("sound");
+            sound.appendChild(doc.createTextNode(s));
+            sound.appendChild(sounds);
+        }
+        root.appendChild(sounds);
+
+        Element phosys = phonoSystem.toXML();
+        root.appendChild(phosys);
+
+        return root;
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+
+    }
 }

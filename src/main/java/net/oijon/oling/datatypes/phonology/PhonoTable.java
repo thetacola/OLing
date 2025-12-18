@@ -3,19 +3,27 @@ package net.oijon.oling.datatypes.phonology;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-//last edit: 12/16/25 -N3
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+//last edit: 12/17/25 -N3
 
 /**
  * Like an IPA table, but readable in Java
  * @author alex
  *
  */
-public class PhonoTable {
+public class PhonoTable implements XMLDatatype {
 
 	private String name;
 	private ArrayList<String> columnNames;
@@ -200,4 +208,32 @@ public class PhonoTable {
 		}
 		return false;
 	}
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("table");
+        root.setAttribute("name", name);
+
+        Element columns = doc.createElement("columns");
+        for (int i = 0; i < columnNames.size(); i++) {
+            Element column = doc.createElement("column");
+            column.setAttribute("index", i + "");
+            column.appendChild(doc.createTextNode(columnNames.get(i)));
+            columns.appendChild(column);
+        }
+        root.appendChild(columns);
+
+        for (PhonoCategory pc : rows) {
+            root.appendChild(pc.toXML());
+        }
+
+        return root;
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+
+    }
 }

@@ -51,7 +51,7 @@
             <sound>ɱ̚</sound>
         </sounds>
         <tables name="IPA">
-            <diacriticList>
+            <diacritics>
                 <diacritic>̬</diacritic>
                 <diacritic>ʰ</diacritic>
                 <diacritic>̹</diacritic>
@@ -102,7 +102,7 @@
                 <diacritic>.</diacritic>
                 <diacritic>‿</diacritic>
                 <diacritic>͡</diacritic>
-            </diacriticList>
+            </diacritics>
             <table name="IPA Consonants">
                 <columns>
                     <column index="0">Bilabial</column>

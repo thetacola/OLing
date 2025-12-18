@@ -8,11 +8,20 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.olog.Log;
 import net.oijon.oling.LegacyParser;
 import net.oijon.oling.info.Info;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-//last edit: 12/16/25 -N3
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+//last edit: 12/17/25 -N3
 
 /**
  * A way to transcribe all sounds allowed in a vocal tract. IPA is specified here as that
@@ -21,7 +30,7 @@ import net.oijon.oling.info.Info;
  * @author alex
  *
  */
-public class PhonoSystem {
+public class PhonoSystem implements XMLDatatype {
 
 	private String name;
 	private ArrayList<PhonoTable> tables = new ArrayList<PhonoTable>();
@@ -265,4 +274,31 @@ public class PhonoSystem {
 		}
 		return false;
 	}
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("tables");
+        root.setAttribute("name", name);
+
+        Element diacritics = doc.createElement("diacritics");
+        for (String s : diacriticList) {
+            Element diacritic = doc.createElement("diacritic");
+            diacritic.appendChild(doc.createTextNode(s));
+            diacritics.appendChild(diacritic);
+        }
+        root.appendChild(diacritics);
+
+        for (PhonoTable pt : tables) {
+            root.appendChild(pt.toXML());
+        }
+
+        return root;
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+
+    }
 }

@@ -179,7 +179,7 @@ public class Phonology implements XMLDatatype {
         }
         root.appendChild(sounds);
 
-        Element phosys = phonoSystem.toXML();
+        Element phosys = (Element) doc.importNode(phonoSystem.toXML(), true);
         root.appendChild(phosys);
 
         return root;

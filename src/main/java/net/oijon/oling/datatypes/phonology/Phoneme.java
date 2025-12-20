@@ -84,7 +84,9 @@ public class Phoneme implements XMLDatatype {
         Document doc = builder.newDocument();
         Element root = doc.createElement("sound");
         root.setAttribute("index", index + "");
-        root.appendChild(builder.newDocument().createTextNode(sound));
+        if (!sound.equals("*") && !sound.equals("#")) {
+            root.appendChild(doc.createTextNode(sound));
+        }
 
         return root;
     }

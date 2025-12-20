@@ -46,6 +46,7 @@ public class PhonoTable implements XMLDatatype {
 		this.columnNames = columnNames;
 		this.rows = rows;
 		this.soundsPerCell = soundsPerCell;
+        fixIndecies();
 	}
 
 	/**
@@ -206,6 +207,14 @@ public class PhonoTable implements XMLDatatype {
 		
 		return list;
 	}
+
+    private void fixIndecies() {
+        for (int i = 0; i < rows.size(); i++) {
+            if (rows.get(i).getIndex() == 0) {
+                rows.get(i).setIndex(i);
+            }
+        }
+    }
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -237,7 +246,7 @@ public class PhonoTable implements XMLDatatype {
         root.appendChild(columns);
 
         for (PhonoCategory pc : rows) {
-            root.appendChild(pc.toXML());
+            root.appendChild(doc.importNode(pc.toXML(), true));
         }
 
         return root;
@@ -271,6 +280,7 @@ public class PhonoTable implements XMLDatatype {
 
 			    }
 		    }
+            fixIndecies();
 	    } else {
 		    throw new InvalidXMLException("Node name not expected name! Expected: table; Actual: " + e.getTagName());
 	    }

@@ -87,7 +87,7 @@ public class PhonoAnomaly implements XMLDatatype {
 	public Element toXML() throws ParserConfigurationException {
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		Document doc = builder.newDocument();
-		Element root = doc.createElement("anomoly");
+		Element root = doc.createElement("anomaly");
 
 		Element fromE = doc.createElement("from");
 		fromE.appendChild(doc.createTextNode(fromStr));
@@ -102,7 +102,7 @@ public class PhonoAnomaly implements XMLDatatype {
 
 	@Override
 	public void fromXML(Element e) throws InvalidXMLException {
-		if (e.getTagName().equals("anomoly")) {
+		if (e.getTagName().equals("anomaly")) {
 			NodeList nl = e.getChildNodes();
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node n = nl.item(i);
@@ -122,7 +122,7 @@ public class PhonoAnomaly implements XMLDatatype {
 				}
 			}
 		} else {
-			throw new InvalidXMLException("Node name not expected name! Expected: anomoly; Actual: " + e.getTagName());
+			throw new InvalidXMLException("Node name not expected name! Expected: anomaly; Actual: " + e.getTagName());
 		}
 	}
 }

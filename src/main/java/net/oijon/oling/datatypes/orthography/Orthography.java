@@ -173,7 +173,7 @@ public class Orthography implements XMLDatatype {
         Element root = doc.createElement("orthography");
 
         for (OrthoPair op : orthoList) {
-            Element pair = op.toXML();
+            Element pair = (Element) doc.importNode(op.toXML(), true);
             root.appendChild(pair);
         }
 

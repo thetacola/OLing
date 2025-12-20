@@ -235,6 +235,8 @@ public class Word implements XMLDatatype {
 
     @Override
     public Element toXML() throws ParserConfigurationException {
+        // FIXME: i somehow mangle word names! eek!
+
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document doc = builder.newDocument();
         Element root = doc.createElement("word");

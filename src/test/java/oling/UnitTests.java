@@ -25,6 +25,10 @@ import net.oijon.oling.datatypes.lexicon.Lexicon;
 import net.oijon.oling.datatypes.lexicon.Word;
 import net.oijon.oling.datatypes.lexicon.WordProperty;
 import net.oijon.oling.datatypes.orthography.Orthography;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 
 public class UnitTests {
 
@@ -391,5 +395,24 @@ public class UnitTests {
 			fail();
 		}
 	}
+
+    @Test
+    void testLegacyToXML() {
+        try {
+            LegacyParser parser = new LegacyParser(Paths.get(UnitTests.class.getClassLoader().getResource("testish.language").toURI()).toFile());
+            Language testLang = parser.parseLanguage();
+            log.info(testLang.toString());
+
+            Element element = testLang.toXML();
+            Document document = element.getOwnerDocument();
+            DOMImplementationLS domImplLS = (DOMImplementationLS) document.getImplementation();
+            LSSerializer serializer = domImplLS.createLSSerializer();
+            log.info(serializer.writeToString(element));
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+
+    }
 	
 }

@@ -211,18 +211,18 @@ public class Language implements XMLDatatype {
         Document doc = builder.newDocument();
         Element root = doc.createElement("language");
 
-        Element meta = properties.toXML();
+        Element meta = (Element) doc.importNode(properties.toXML(), true);
         root.appendChild(meta);
 
-        Element phonoE = phono.toXML();
+        Element phonoE = (Element) doc.importNode(phono.toXML(), true);
         root.appendChild(phonoE);
 
-        Element orthoE = ortho.toXML();
+        Element orthoE = (Element) doc.importNode(ortho.toXML(), true);
         root.appendChild(orthoE);
 
         // TODO: add grammar
 
-        Element lexiconE = lexicon.toXML();
+        Element lexiconE = (Element) doc.importNode(lexicon.toXML(), true);
         root.appendChild(lexiconE);
 
         return root;

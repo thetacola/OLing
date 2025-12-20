@@ -47,7 +47,7 @@ public class PhonoList extends PhonoCell {
 		Element root = doc.createElement("list");
 		root.setAttribute("name", name);
 		for (Phoneme p : phonemes) {
-			Element pe = p.toXML();
+			Element pe = (Element) doc.importNode(p.toXML(), true);
 			root.appendChild(pe);
 		}
 

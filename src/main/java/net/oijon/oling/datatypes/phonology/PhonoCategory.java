@@ -173,7 +173,7 @@ public class PhonoCategory implements XMLDatatype {
             // If this edge case does appear, there is a 99.9% chance the user has done something wrong and has
             // manually edited config files to add a completely useless spacer row.
             if (pc.sizeWithoutSpacers() != 0 || pc.size() == 0) {
-                Element pe = pc.toXML();
+                Element pe = (Element) doc.importNode(pc.toXML(), true);
                 root.appendChild(pe);
             }
         }

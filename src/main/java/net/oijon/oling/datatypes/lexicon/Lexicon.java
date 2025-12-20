@@ -169,7 +169,7 @@ public class Lexicon implements XMLDatatype {
         Element root = doc.createElement("lexicon");
 
         for (Word w : this.wordList) {
-            root.appendChild(w.toXML());
+            root.appendChild(doc.importNode(w.toXML(), true));
         }
 
         return root;

@@ -59,15 +59,17 @@ public class PhonoCell implements XMLDatatype {
      * @param s The sound to be added
      */
     public void addSound(String s) {
-        Phoneme p = new Phoneme(s);
-        int index = 0;
-        for (Phoneme lp : phonemes) {
-            if (lp.getIndex() > index) {
-                index = lp.getIndex() + 1;
+        if (!s.equals("*") && !s.equals("#")) {
+            Phoneme p = new Phoneme(s);
+            int index = 0;
+            for (Phoneme lp : phonemes) {
+                if (lp.getIndex() > index) {
+                    index = lp.getIndex() + 1;
+                }
             }
+            p.setIndex(index);
+            phonemes.add(p);
         }
-        p.setIndex(index);
-        phonemes.add(p);
     }
 
     /**
@@ -148,8 +150,10 @@ public class PhonoCell implements XMLDatatype {
         Element root = doc.createElement("cell");
         root.setAttribute("index", index + "");
         for (Phoneme p : phonemes) {
-            Element pe = p.toXML();
-            root.appendChild(pe);
+            Element pe = (Element) doc.importNode(p.toXML(), true);
+            if (!p.getSound().equals("*") && !p.getSound().equals("#")) {
+                root.appendChild(pe);
+            }
         }
 
         return root;

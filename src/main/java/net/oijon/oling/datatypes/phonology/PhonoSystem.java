@@ -372,14 +372,17 @@ public class PhonoSystem implements XMLDatatype {
 						    Node diacritic = diacritics.item(j);
 						    this.diacriticList.add(diacritic.getTextContent());
 					    }
+                        break;
 				    case "table":
 					    if (n.getNodeType() == Node.ELEMENT_NODE) {
 							tables.add(new PhonoTable((Element) n));
 					    }
+                        break;
 				    case "list":
 						if (n.getNodeType() == Node.ELEMENT_NODE) {
 							lists.add(new PhonoList((Element) n));
 						}
+                        break;
 				    case "anomalies":
 						if (n.getNodeType() == Node.ELEMENT_NODE) {
 							NodeList anomalyNodes = n.getChildNodes();
@@ -390,6 +393,7 @@ public class PhonoSystem implements XMLDatatype {
 								}
 							}
 						}
+                        break;
 				    default:
 
 			    }

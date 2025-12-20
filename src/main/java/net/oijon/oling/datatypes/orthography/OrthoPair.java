@@ -113,8 +113,10 @@ public class OrthoPair implements Comparable<OrthoPair>, XMLDatatype {
                 switch (nl.item(i).getNodeName()) {
                     case "phonemes":
                         this.setPhonemes(nl.item(i).getTextContent());
+                        break;
                     case "graphemes":
                         this.setGraphemes(nl.item(i).getTextContent());
+                        break;
                     default:
 
                 }

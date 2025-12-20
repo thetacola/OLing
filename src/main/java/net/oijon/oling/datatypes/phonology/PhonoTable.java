@@ -257,6 +257,7 @@ public class PhonoTable implements XMLDatatype {
 							Node column = columns.item(j);
 							columnNames.add(column.getTextContent());
 						}
+                        break;
 				    case "rows":
 						NodeList rows = n.getChildNodes();
 						for (int j = 0; j < rows.getLength(); j++) {
@@ -265,6 +266,7 @@ public class PhonoTable implements XMLDatatype {
 								this.rows.add(new PhonoCategory((Element) row));
 							}
 						}
+                        break;
 				    default:
 
 			    }

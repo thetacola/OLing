@@ -300,16 +300,22 @@ public class Word implements XMLDatatype {
                 switch (nl.item(i).getNodeName()) {
                     case "name":
                         this.wp.setProperty(WordProperty.NAME, nl.item(i).getTextContent());
+                        break;
                     case "meaning":
                         this.wp.setProperty(WordProperty.MEANING, nl.item(i).getTextContent());
+                        break;
                     case "pronunciation":
                         this.wp.setProperty(WordProperty.PRONOUNCIATION, nl.item(i).getTextContent());
+                        break;
                     case "etymology":
                         this.wp.setProperty(WordProperty.ETYMOLOGY, nl.item(i).getTextContent());
+                        break;
                     case "timeCreated":
                         this.wp.setCreationDate(new Date(Long.parseLong(nl.item(i).getTextContent())));
+                        break;
                     case "lastEdited":
                         this.wp.setEditDate(new Date(Long.parseLong(nl.item(i).getTextContent())));
+                        break;
                     case "classes":
                         NodeList classList = nl.item(i).getChildNodes();
                         for (int j = 0; j < classList.getLength(); j++) {
@@ -317,6 +323,7 @@ public class Word implements XMLDatatype {
                                 this.classes.add(classList.item(j).getTextContent());
                             }
                         }
+                        break;
                     default:
                         // TODO: add synonyms and homonyms
                 }

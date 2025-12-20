@@ -8,16 +8,24 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Date;
 
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.olog.Log;
 
 import net.oijon.oling.info.Info;
-import net.oijon.oling.LegacyParser;
 import net.oijon.oling.datatypes.lexicon.Lexicon;
 import net.oijon.oling.datatypes.orthography.Orthography;
 import net.oijon.oling.datatypes.phonology.Phonology;
-import net.oijon.oling.datatypes.tags.Multitag;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-//last edit: 1/18/25 -N3
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+//last edit: 12/20/25 -N3
 
 /**
  * Bundles all parts of a language together into one object
@@ -25,7 +33,7 @@ import net.oijon.oling.datatypes.tags.Multitag;
  *
  */
 
-public class Language {
+public class Language implements XMLDatatype {
 
 	public static Log log = Info.log;
 	public static final Language NULL = new Language("null");
@@ -196,5 +204,58 @@ public class Language {
 		}
 		return false;
 	}
-	
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("language");
+
+        Element meta = properties.toXML();
+        root.appendChild(meta);
+
+        Element phonoE = phono.toXML();
+        root.appendChild(phonoE);
+
+        Element orthoE = ortho.toXML();
+        root.appendChild(orthoE);
+
+        // TODO: add grammar
+
+        Element lexiconE = lexicon.toXML();
+        root.appendChild(lexiconE);
+
+        return root;
+
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+        if (e.getTagName().equals("language")) {
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) nl.item(i);
+                    switch (nl.item(i).getNodeName()) {
+                        case "meta":
+                            properties = new LanguageProperties(element);
+                            break;
+                        case "phonology":
+                            phono = new Phonology(element);
+                            break;
+                        case "orthography":
+                            ortho = new Orthography(element);
+                            break;
+                        case "lexicon":
+                            lexicon = new Lexicon(element);
+                            break;
+                        default:
+
+                    }
+                }
+            }
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: language; Actual: " + e.getTagName());
+        }
+    }
 }

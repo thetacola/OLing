@@ -51,7 +51,11 @@ public class Orthography implements XMLDatatype {
 	public Orthography(Phonology ph) {
 		this.ph = ph;
 	}
-	
+
+    public Orthography(Element e) throws InvalidXMLException {
+        fromXML(e);
+    }
+
 	/**
 	 * Copy constructor
 	 * @param o The orthography to copy

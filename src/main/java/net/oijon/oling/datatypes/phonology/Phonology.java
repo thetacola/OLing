@@ -200,10 +200,12 @@ public class Phonology implements XMLDatatype {
                                 this.phonoList.add(sound.getTextContent());
                             }
                         }
+                        break;
                     case "tables":
                         if (n.getNodeType() == Node.ELEMENT_NODE) {
                             phonoSystem = new PhonoSystem((Element) n);
                         }
+                        break;
                     default:
 
                 }

@@ -111,10 +111,12 @@ public class PhonoAnomaly implements XMLDatatype {
 						if (n.getNodeType() == Node.ELEMENT_NODE) {
 							fromStr = n.getTextContent();
 						}
+                        break;
 					case "to":
 						if (n.getNodeType() == Node.ELEMENT_NODE) {
 							toStr = n.getTextContent();
 						}
+                        break;
 					default:
 
 				}

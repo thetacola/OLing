@@ -11,6 +11,7 @@ import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -34,7 +35,11 @@ public class LanguageProperties implements XMLDatatype {
 	public LanguageProperties() {
 		
 	}
-	
+
+    public LanguageProperties(Element e) throws InvalidXMLException {
+        fromXML(e);
+    }
+
 	public LanguageProperties(LanguageProperties lp) {
 		this.isReadOnly = lp.isReadOnly();
 		this.strings[0] = lp.getProperty(LanguageProperty.AUTONYM);
@@ -274,6 +279,38 @@ public class LanguageProperties implements XMLDatatype {
 
     @Override
     public void fromXML(Element e) throws InvalidXMLException {
+        if (e.getTagName().equals("meta")) {
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                switch (nl.item(i).getNodeName()) {
+                    case "version":
+                        this.setProperty(LanguageProperty.VERSION_EDITED, nl.item(i).getTextContent());
+                        break;
+                    case "name":
+                        this.setProperty(LanguageProperty.NAME, nl.item(i).getTextContent());
+                        break;
+                    case "id":
+                        this.setProperty(LanguageProperty.ID, nl.item(i).getTextContent());
+                        break;
+                    case "autonym":
+                        this.setProperty(LanguageProperty.AUTONYM, nl.item(i).getTextContent());
+                        break;
+                    case "timeCreated":
+                        this.setCreated(new Date(Long.parseLong(nl.item(i).getTextContent())));
+                        break;
+                    case "lastEdited":
+                        this.setEdited(new Date(Long.parseLong(nl.item(i).getTextContent())));
+                        break;
+                    case "readonly":
+                        this.setReadOnly(Boolean.parseBoolean(nl.item(i).getTextContent()));
+                        break;
+                    default:
+                        // TODO: add parent by language ID
 
+                }
+            }
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: meta; Actual: " + e.getTagName());
+        }
     }
 }

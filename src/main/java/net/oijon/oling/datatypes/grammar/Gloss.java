@@ -110,8 +110,10 @@ public class Gloss implements XMLDatatype {
                 switch (nl.item(i).getNodeName()) {
                     case "abb":
                         this.setAbbreviation(nl.item(i).getTextContent());
+                        break;
                     case "meaning":
                         this.setMeaning(nl.item(i).getTextContent());
+                        break;
                     default:
 
                 }

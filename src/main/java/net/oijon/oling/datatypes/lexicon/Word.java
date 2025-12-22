@@ -243,23 +243,18 @@ public class Word implements XMLDatatype {
 
         Element name = doc.createElement("name");
         name.appendChild(doc.createTextNode(wp.getProperty(WordProperty.NAME)));
-        root.appendChild(name);
 
         Element meaning = doc.createElement("meaning");
         meaning.appendChild(doc.createTextNode(wp.getProperty(WordProperty.MEANING)));
-        root.appendChild(meaning);
 
         Element pronunciation = doc.createElement("pronunciation");
-        name.appendChild(doc.createTextNode(wp.getProperty(WordProperty.PRONOUNCIATION)));
-        root.appendChild(pronunciation);
+        pronunciation.appendChild(doc.createTextNode(wp.getProperty(WordProperty.PRONOUNCIATION)));
 
         Element etymology = doc.createElement("etymology");
-        meaning.appendChild(doc.createTextNode(wp.getProperty(WordProperty.ETYMOLOGY)));
-        root.appendChild(etymology);
+        etymology.appendChild(doc.createTextNode(wp.getProperty(WordProperty.ETYMOLOGY)));
 
         Element created = doc.createElement("timeCreated");
         created.appendChild(doc.createTextNode(wp.getCreationDate().toInstant().toEpochMilli() + ""));
-        root.appendChild(created);
 
         Element edited = doc.createElement("timeEdited");
         edited.appendChild(doc.createTextNode(wp.getEditDate().toInstant().toEpochMilli() + ""));
@@ -271,7 +266,6 @@ public class Word implements XMLDatatype {
             synonym.appendChild(doc.createTextNode(w.getProperties().getProperty(WordProperty.NAME)));
             synonyms.appendChild(synonym);
         }
-        root.appendChild(synonyms);
 
         Element homonyms = doc.createElement("homonyms");
         for (Word w : this.homonyms) {
@@ -279,7 +273,6 @@ public class Word implements XMLDatatype {
             homonym.appendChild(doc.createTextNode(w.getProperties().getProperty(WordProperty.MEANING)));
             homonyms.appendChild(homonym);
         }
-        root.appendChild(homonyms);
 
         Element classes = doc.createElement("classes");
         for (String s : this.classes) {
@@ -287,6 +280,14 @@ public class Word implements XMLDatatype {
             wordclass.appendChild(doc.createTextNode(s));
             classes.appendChild(wordclass);
         }
+
+        root.appendChild(name);
+        root.appendChild(meaning);
+        root.appendChild(pronunciation);
+        root.appendChild(etymology);
+        root.appendChild(created);
+        root.appendChild(synonyms);
+        root.appendChild(homonyms);
         root.appendChild(classes);
 
         return root;

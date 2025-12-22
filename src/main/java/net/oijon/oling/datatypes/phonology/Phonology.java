@@ -175,7 +175,7 @@ public class Phonology implements XMLDatatype {
         for (String s : phonoList) {
             Element sound = doc.createElement("sound");
             sound.appendChild(doc.createTextNode(s));
-            sound.appendChild(sounds);
+            sounds.appendChild(sound);
         }
         root.appendChild(sounds);
 

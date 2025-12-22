@@ -78,6 +78,10 @@ public class Language implements XMLDatatype {
 	public Language(String name) {
 		this.properties.setProperty(LanguageProperty.NAME, name);
 	}
+
+    public Language(Element e) throws InvalidXMLException {
+        fromXML(e);
+    }
 	
 	/**
 	 * Copy constructor

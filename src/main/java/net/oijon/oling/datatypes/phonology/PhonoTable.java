@@ -28,8 +28,8 @@ import javax.xml.parsers.ParserConfigurationException;
 public class PhonoTable implements XMLDatatype {
 
 	private String name;
-	private ArrayList<String> columnNames;
-	private ArrayList<PhonoCategory> rows;
+	private ArrayList<String> columnNames = new ArrayList<>();
+	private ArrayList<PhonoCategory> rows = new ArrayList<>();
 	private int soundsPerCell;
 	
 	private static Log log = Info.log;
@@ -267,14 +267,10 @@ public class PhonoTable implements XMLDatatype {
 							columnNames.add(column.getTextContent());
 						}
                         break;
-				    case "rows":
-						NodeList rows = n.getChildNodes();
-						for (int j = 0; j < rows.getLength(); j++) {
-							Node row = rows.item(j);
-							if (row.getNodeType() == Node.ELEMENT_NODE) {
-								this.rows.add(new PhonoCategory((Element) row));
-							}
-						}
+				    case "row":
+                        if (n.getNodeType() == Node.ELEMENT_NODE) {
+                            this.rows.add(new PhonoCategory((Element) n));
+                        }
                         break;
 				    default:
 

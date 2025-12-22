@@ -6,9 +6,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
 
 import net.oijon.oling.datatypes.phonology.Phoneme;
 import net.oijon.oling.datatypes.phonology.PhonoCategory;
@@ -29,6 +35,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.InputSource;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 public class UnitTests {
 
@@ -401,18 +411,36 @@ public class UnitTests {
         try {
             LegacyParser parser = new LegacyParser(Paths.get(UnitTests.class.getClassLoader().getResource("testish.language").toURI()).toFile());
             Language testLang = parser.parseLanguage();
-            log.info(testLang.toString());
 
-            Element element = testLang.toXML();
-            Document document = element.getOwnerDocument();
-            DOMImplementationLS domImplLS = (DOMImplementationLS) document.getImplementation();
-            LSSerializer serializer = domImplLS.createLSSerializer();
-            log.info(serializer.writeToString(element));
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+
+            File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
+            Scanner reader = new Scanner(f, StandardCharsets.UTF_8);
+            boolean firstLine = true;
+            String data = "";
+            while (reader.hasNextLine()) {
+                if (firstLine) {
+                    data = reader.nextLine();
+                    String[] splitData = data.split("<\\?xml");
+                    data = "<?xml" + splitData[1];
+                    firstLine = false;
+                } else {
+
+                    data += reader.nextLine() + "\n";
+                }
+            }
+            Document doc = builder.parse(new InputSource(new StringReader(data)));
+            Element element = doc.getDocumentElement();
+            Language newLang = new Language(element);
+
+            assertEquals(testLang, newLang);
+
         } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
 
     }
-	
+
 }

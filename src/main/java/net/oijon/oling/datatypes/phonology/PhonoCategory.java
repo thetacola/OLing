@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class PhonoCategory implements XMLDatatype {
 
 	private String name;
-	private ArrayList<PhonoCell> cells;
+	private ArrayList<PhonoCell> cells = new ArrayList<>();
     private int index;
 
     /**

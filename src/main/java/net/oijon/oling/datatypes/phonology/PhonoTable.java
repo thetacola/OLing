@@ -30,6 +30,7 @@ public class PhonoTable implements XMLDatatype {
 	private String name;
 	private ArrayList<String> columnNames = new ArrayList<>();
 	private ArrayList<PhonoCategory> rows = new ArrayList<>();
+	@Deprecated
 	private int soundsPerCell;
 	
 	private static Log log = Info.log;
@@ -103,10 +104,14 @@ public class PhonoTable implements XMLDatatype {
                     PhonoCell cell = new PhonoCell(k);
                     for (int l = 0; l < perCell; l++) {
                         char c = catData.charAt((k * perCell) + l);
-                        Phoneme p = new Phoneme(Character.toString(c), l);
-                        cell.addSound(p);
+						if (c != '*' && c != '#') {
+							Phoneme p = new Phoneme(Character.toString(c), l);
+							cell.addSound(p);
+						}
                     }
-                    cat.addCell(cell);
+					if (cell.size() > 0) {
+						cat.addCell(cell);
+					}
 				}
 				cats.add(cat);
 			} catch (IndexOutOfBoundsException e) {
@@ -220,8 +225,7 @@ public class PhonoTable implements XMLDatatype {
 	public boolean equals(Object obj) {
 		if (obj instanceof PhonoTable) {
 			PhonoTable p = (PhonoTable) obj;
-			if (p.name.equals(name) && p.columnNames.equals(columnNames) && p.rows.equals(rows) &
-					p.soundsPerCell == soundsPerCell) {
+			if (p.name.equals(name) && p.columnNames.equals(columnNames) && p.rows.equals(rows)) {
 				return true;
 			}
 			

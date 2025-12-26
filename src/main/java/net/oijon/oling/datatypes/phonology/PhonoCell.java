@@ -138,10 +138,15 @@ public class PhonoCell implements XMLDatatype {
     public boolean equals(Object o) {
         if (o instanceof PhonoCell) {
             PhonoCell pc = (PhonoCell) o;
-            return (pc.getPhonemes().equals(phonemes) && pc.getIndex() == index);
+            return (pc.getPhonemes().equals(phonemes));
         }
         return false;
     }
+
+	@Override
+	public String toString() {
+		return "[" + index + ": " + phonemes.toString() + "]";
+	}
 
     @Override
     public Element toXML() throws ParserConfigurationException {

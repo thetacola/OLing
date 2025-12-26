@@ -71,8 +71,6 @@ public class Lexicon implements XMLDatatype {
 	 */
 	public void addWord(Word word) {
 		wordList.add(word);
-		checkSynonyms();
-		checkHomonyms();
 	} 
 	
 	/**
@@ -106,38 +104,6 @@ public class Lexicon implements XMLDatatype {
 	 */
 	public Word getWord(int i) {
 		return wordList.get(i);
-	}
-	
-	/**
-	 * Checks for synonyms inside the lexicon, and marks them as such.
-	 */
-	public void checkSynonyms() {
-		for (int i = 0; i < wordList.size(); i++) {
-			for (int j = 0; j < wordList.size(); j++) {
-				if (i != j) {
-					if (wordList.get(i).getProperties().getProperty(WordProperty.MEANING).equals(
-							wordList.get(j).getProperties().getProperty(WordProperty.MEANING))) {
-						wordList.get(i).addSynonym(wordList.get(j));
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Checks for homonyms inside the lexicon, and marks them as such.
-	 */
-	public void checkHomonyms() {
-		for (int i = 0; i < wordList.size(); i++) {
-			for (int j = 0; j < wordList.size(); j++) {
-				if (i != j) {
-					if (wordList.get(i).getProperties().getProperty(WordProperty.NAME).equals(
-							wordList.get(j).getProperties().getProperty(WordProperty.NAME))) {
-						wordList.get(i).addHomonym(wordList.get(j));
-					}
-				}
-			}
-		}
 	}
 	
 	@Override

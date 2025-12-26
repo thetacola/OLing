@@ -112,9 +112,7 @@ public class Phoneme implements XMLDatatype {
 
     @Override
     public String toString() {
-        String returnString = "[Phoneme]\n";
-        returnString += "Sound == " + sound + "\n";
-        returnString += "Index == " + index + "\n";
+        String returnString = "[" + index + ": " + sound + "]";
         return returnString;
     }
 }

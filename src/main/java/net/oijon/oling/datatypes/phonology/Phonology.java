@@ -26,7 +26,7 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class Phonology implements XMLDatatype {
 
-	private List<String> phonoList = new ArrayList<String>(Arrays.asList(" "));
+	private List<String> phonoList = new ArrayList<String>();
 	private PhonoSystem phonoSystem;
 	static Log log = Info.log;
 	

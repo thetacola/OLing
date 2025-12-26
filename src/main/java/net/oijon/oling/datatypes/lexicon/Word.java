@@ -32,8 +32,6 @@ public class Word implements XMLDatatype {
 	
 	private WordProperties wp = new WordProperties();
 	private ArrayList<String> classes = new ArrayList<String>();
-	private ArrayList<Word> synonyms = new ArrayList<Word>();
-	private ArrayList<Word> homonyms = new ArrayList<Word>();
 	
 	/**
 	 * Creates a word
@@ -60,8 +58,6 @@ public class Word implements XMLDatatype {
 	 */
 	public Word(Word w) {
 		this.wp = new WordProperties(w.getProperties());
-		this.synonyms = new ArrayList<Word>(w.getSynonyms());
-		this.homonyms = new ArrayList<Word>(w.getHomonyms());
 	}
 	
 	/**
@@ -117,82 +113,8 @@ public class Word implements XMLDatatype {
 	public void setProperties(WordProperties wp) {
 		this.wp = new WordProperties(wp);
 	}
-	
-	/**
-	 * Adds a synonym to a word, unless it has already been added
-	 * @param syn The synonym to be added
-	 */
-	public void addSynonym(Word syn) {
-		if (!synonyms.contains(syn)) {
-			synonyms.add(syn);
-		}
-	}
-	
-	/**
-	 * Removes a synonym at index i
-	 * @param i The synonym to be removed
-	 */
-	public void removeSynonym(int i) {
-		synonyms.remove(i);
-	}
-	
-	/**
-	 * Clears all synonyms from a word
-	 */
-	public void clearSynonyms() {
-		synonyms.clear();
-	}
-	
-	/**
-	 * Replaces the synonym list with a new list
-	 * @param synonyms The list replacing the old list
-	 */
-	public void setSynonyms(ArrayList<Word> synonyms) {
-		synonyms = this.synonyms;
-	}
-	
-	/**
-	 * Gets a list of all synonyms
-	 * @return a list of all synonyms
-	 */
-	public ArrayList<Word> getSynonyms() {
-		return synonyms;
-	}
-	
-	/**
-	 * Adds a homonym to a word, unless it has already been added
-	 * @param hom The homonym to be added
-	 */
-	public void addHomonym(Word hom) {
-		if (!homonyms.contains(hom)) {
-			homonyms.add(hom);
-		}
-	}
-	
-	/**
-	 * Removes a homonym at index i
-	 * @param i The homonym to be removed
-	 */
-	public void removeHomonym(int i) {
-		homonyms.remove(i);
-	}
-	
-	/**
-	 * Replaces the homonym list with a new list
-	 * @param homonyms The list replacing the old list
-	 */
-	public void setHomonyms(ArrayList<Word> homonyms) {
-		homonyms = this.homonyms;
-	}
-	
-	/**
-	 * Gets a list of all homonyms
-	 * @return a list of all homonyms
-	 */
-	public ArrayList<Word> getHomonyms() {
-		return homonyms;
-	}
-	
+
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Word) {
@@ -213,18 +135,9 @@ public class Word implements XMLDatatype {
 				"pronounciation:" + wp.getProperty(WordProperty.PRONOUNCIATION) + "\n" +
 				"etymology:" + wp.getProperty(WordProperty.ETYMOLOGY) + "\n" +
 				"creationDate:" + wp.getCreationDate().getTime() + "\n" +
-				"editDate:" + wp.getEditDate().getTime() + "\n" +
-				"===Synonym Start===\n";
-		for (int i = 0; i < synonyms.size(); i++) {
-			returnString += ":" + synonyms.get(i).getProperties().getProperty(WordProperty.NAME) + "\n";
-		}
-		returnString += "===Synonym End===\n" +
-				"===Homonym Start===\n";
-		for (int i = 0; i < homonyms.size(); i++) {
-			returnString += ":" + homonyms.get(i).getProperties().getProperty(WordProperty.MEANING) + "\n";
-		}
-		returnString += "===Homonym End===\n" +
-				"===Classes Start===\n";
+				"editDate:" + wp.getEditDate().getTime() + "\n";
+
+		returnString += "===Classes Start===\n";
 		for (int i = 0; i < classes.size(); i++) {
 			returnString += ":" + classes.get(i) + "\n";
 		}
@@ -235,8 +148,6 @@ public class Word implements XMLDatatype {
 
     @Override
     public Element toXML() throws ParserConfigurationException {
-        // FIXME: i somehow mangle word names! eek!
-
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document doc = builder.newDocument();
         Element root = doc.createElement("word");
@@ -260,20 +171,6 @@ public class Word implements XMLDatatype {
         edited.appendChild(doc.createTextNode(wp.getEditDate().toInstant().toEpochMilli() + ""));
         root.appendChild(edited);
 
-        Element synonyms = doc.createElement("synonyms");
-        for (Word w : this.synonyms) {
-            Element synonym = doc.createElement("synonym");
-            synonym.appendChild(doc.createTextNode(w.getProperties().getProperty(WordProperty.NAME)));
-            synonyms.appendChild(synonym);
-        }
-
-        Element homonyms = doc.createElement("homonyms");
-        for (Word w : this.homonyms) {
-            Element homonym = doc.createElement("homonym");
-            homonym.appendChild(doc.createTextNode(w.getProperties().getProperty(WordProperty.MEANING)));
-            homonyms.appendChild(homonym);
-        }
-
         Element classes = doc.createElement("classes");
         for (String s : this.classes) {
             Element wordclass = doc.createElement("class");
@@ -286,8 +183,6 @@ public class Word implements XMLDatatype {
         root.appendChild(pronunciation);
         root.appendChild(etymology);
         root.appendChild(created);
-        root.appendChild(synonyms);
-        root.appendChild(homonyms);
         root.appendChild(classes);
 
         return root;
@@ -316,7 +211,7 @@ public class Word implements XMLDatatype {
                     case "timeCreated":
                         this.wp.setCreationDate(new Date(Long.parseLong(nl.item(i).getTextContent())));
                         break;
-                    case "lastEdited":
+                    case "timeEdited":
                         this.wp.setEditDate(new Date(Long.parseLong(nl.item(i).getTextContent())));
                         break;
                     case "classes":

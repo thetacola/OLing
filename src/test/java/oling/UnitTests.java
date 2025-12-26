@@ -14,12 +14,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
-import net.oijon.oling.datatypes.phonology.Phoneme;
-import net.oijon.oling.datatypes.phonology.PhonoCategory;
-import net.oijon.oling.datatypes.phonology.PhonoCell;
-import net.oijon.oling.datatypes.phonology.PhonoTable;
+import net.oijon.oling.datatypes.language.LanguageProperties;
+import net.oijon.oling.datatypes.phonology.*;
 import org.junit.jupiter.api.Test;
 
 import net.oijon.olog.Log;
@@ -30,6 +29,7 @@ import net.oijon.oling.datatypes.language.LanguageProperty;
 import net.oijon.oling.datatypes.lexicon.Lexicon;
 import net.oijon.oling.datatypes.lexicon.Word;
 import net.oijon.oling.datatypes.lexicon.WordProperty;
+import net.oijon.oling.datatypes.lexicon.WordProperties;
 import net.oijon.oling.datatypes.orthography.Orthography;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -43,66 +43,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class UnitTests {
 
 	Log log = new Log(System.getProperty("user.home") + "/.oling");
-	
-	@Test
-	void testLegacyLanguage() {
-		log.info("====BEGIN LANGUAGE TEST====");
-		log.info("Parsing testish.language...");
-		try {
-			log.setDebug(true);
-			LegacyParser parser = new LegacyParser(Paths.get(getClass().getClassLoader().getResource("testish.language").toURI()).toFile());
-			Language testLang = parser.parseLanguage();
-			testLang.toFile(new File(System.getProperty("user.home") + "/.oling/testish.language"));
-			LegacyParser parser2 = new LegacyParser(new File(System.getProperty("user.home") + "/.oling/testish.language"));
-			Language compareLanguage = parser2.parseLanguage();
-			testLang.setOrtho(compareLanguage.getOrtho()); // ortho not created in testlang, is in comparelang
 
-            ArrayList<PhonoTable> testTables = testLang.getPhono().getPhonoSystem().getTables();
-            ArrayList<PhonoTable> compareTables = compareLanguage.getPhono().getPhonoSystem().getTables();
-
-            assertEquals(testTables.size(), compareTables.size());
-            for (int i = 0; i < testTables.size(); i++) {
-                PhonoTable testTable = testTables.get(i);
-                PhonoTable compareTable = compareTables.get(i);
-                assertEquals(testTable.size(), compareTable.size());
-                for (int j = 0; j < testTable.size(); j++) {
-                    PhonoCategory testRow = testTable.getRow(j);
-                    PhonoCategory compareRow = compareTable.getRow(j);
-                    assertEquals(testRow.size(), compareRow.size());
-                    for (int k = 0; k < testRow.size(); k++) {
-                        PhonoCell testCell = testRow.getCell(k);
-                        PhonoCell compareCell = compareRow.getCell(k);
-                        assertEquals(testCell.size(), compareCell.size());
-                        for (int l = 0; l < testCell.size(); l++) {
-                            Phoneme testPhoneme = testCell.getPhonemes().get(l);
-                            Phoneme comparePhoneme = compareCell.getPhonemes().get(l);
-                            assertEquals(testPhoneme, comparePhoneme);
-                        }
-                        assertEquals(testCell, compareCell);
-                    }
-                    assertEquals(testRow, compareRow);
-                }
-                assertEquals(testTable, compareTable);
-            }
-
-            assertEquals(testLang.getPhono().getPhonoSystem().getTables(), compareLanguage.getPhono().getPhonoSystem().getTables());
-
-            assertEquals(testLang.getPhono().getPhonoSystem(), compareLanguage.getPhono().getPhonoSystem());
-
-            assertEquals(testLang.getProperties(), compareLanguage.getProperties());
-            assertEquals(testLang.getOrtho(), compareLanguage.getOrtho());
-            assertEquals(testLang.getLexicon(), compareLanguage.getLexicon());
-            assertEquals(testLang.getPhono(), compareLanguage.getPhono());
-
-            assertEquals(testLang, compareLanguage);
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.err(e.toString());
-			fail();
-		}
-		log.info("=====END LANGUAGE TEST=====");
-	}
-	
 	@Test
 	void testLegacyOrthography() {
 		log.info("===BEGIN ORTHOGRAPHY TEST===");
@@ -433,6 +374,86 @@ public class UnitTests {
             Document doc = builder.parse(new InputSource(new StringReader(data)));
             Element element = doc.getDocumentElement();
             Language newLang = new Language(element);
+
+			LanguageProperties oldLP = testLang.getProperties();
+	        LanguageProperties newLP = newLang.getProperties();
+			assertEquals(oldLP, newLP);
+
+			Phonology oldPhono = testLang.getPhono();
+			Phonology newPhono = newLang.getPhono();
+
+			List<String> oldPL = oldPhono.getList();
+			List<String> newPL = newPhono.getList();
+			assertEquals(oldPL, newPL);
+
+			PhonoSystem oldPS = oldPhono.getPhonoSystem();
+			PhonoSystem newPS = newPhono.getPhonoSystem();
+
+			String oldPSName = oldPS.getName();
+			String newPSName = newPS.getName();
+			assertEquals(oldPSName, newPSName);
+
+			ArrayList<PhonoTable> oldPSTables = oldPS.getTables();
+			ArrayList<PhonoTable> newPSTables = newPS.getTables();
+			assertEquals(oldPSTables.size(), newPSTables.size());
+			for (int i = 0; i < oldPSTables.size(); i++) {
+				PhonoTable oldT = oldPSTables.get(i);
+				PhonoTable newT = newPSTables.get(i);
+
+				String oldTName = oldT.getName();
+				String newTName = newT.getName();
+				assertEquals(oldTName, newTName);
+
+				ArrayList<String> oldCNames = oldT.getColumnNames();
+				ArrayList<String> newCNames = newT.getColumnNames();
+				assertEquals(oldCNames, newCNames);
+
+				assertEquals(oldT.size(), newT.size());
+				for (int j = 0; j < oldT.size(); j++) {
+					PhonoCategory oldR = oldT.getRow(j);
+					PhonoCategory newR = newT.getRow(j);
+
+					String oldRName = oldR.getName();
+					String newRName = newR.getName();
+					assertEquals(oldRName, newRName);
+
+					ArrayList<PhonoCell> oldC = oldR.getCells();
+					ArrayList<PhonoCell> newC = newR.getCells();
+					assertEquals(oldC, newC);
+
+					assertEquals(oldR, newR);
+				}
+
+				assertEquals(oldT, newT);
+			}
+			assertEquals(oldPSTables, newPSTables);
+			assertEquals(oldPS, newPS);
+			assertEquals(oldPhono, newPhono);
+
+			Orthography oldO = testLang.getOrtho();
+			Orthography newO = newLang.getOrtho();
+			assertEquals(oldO, newO);
+
+			Lexicon oldL = testLang.getLexicon();
+			Lexicon newL = newLang.getLexicon();
+			assertEquals(oldL.size(), newL.size());
+			for (int i = 0; i < oldL.size(); i++) {
+				Word oldW = oldL.getWord(i);
+				Word newW = newL.getWord(i);
+
+				WordProperties oldWP = oldW.getProperties();
+				WordProperties newWP = newW.getProperties();
+
+				Date oldED = oldWP.getEditDate();
+				Date newED = newWP.getEditDate();
+				assertEquals(oldED, newED);
+
+				assertEquals(oldWP, newWP);
+
+				assertEquals(oldW, newW);
+	        }
+
+			assertEquals(oldL, newL);
 
             assertEquals(testLang, newLang);
 

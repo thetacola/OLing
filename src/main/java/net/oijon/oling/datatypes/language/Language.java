@@ -154,9 +154,7 @@ public class Language implements XMLDatatype {
 	public void toFile(File file) throws IOException {
 		properties.setEdited(Date.from(Instant.now()));
 		properties.setProperty(LanguageProperty.VERSION_EDITED, Info.getVersion());
-		
-		lexicon.checkHomonyms();
-		lexicon.checkSynonyms();
+
 		
 		String data = "===PHOSYS Start===\n" +
 				this.toString() +

@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.9.3</version>
+			<version>6.1.0-M1</version>
 			<scope>test</scope>
 		</dependency>
         <!-- https://mvnrepository.com/artifact/xerces/xercesImpl -->
@@ -53,7 +53,7 @@
 			<plugin>
 				<groupId>org.sonatype.plugins</groupId>
 				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.7</version>
+				<version>1.7.0</version>
 				<extensions>true</extensions>
 				<configuration>
 					<serverId>ossrh</serverId>
@@ -65,7 +65,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>2.9</version>
+				<version>3.15.0</version>
 				<configuration>
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>false</downloadJavadocs>
@@ -85,7 +85,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.2.1</version>
+				<version>3.4.0</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -98,7 +98,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.7.0</version>
+				<version>3.12.0</version>
 				<configuration>
 					<source>11</source>
 					<detectJavaApiLink>false</detectJavaApiLink>
@@ -116,7 +116,7 @@
 			<plugin>
 				<groupId>net.nicoulaj.maven.plugins</groupId>
 				<artifactId>checksum-maven-plugin</artifactId>
-				<version>1.10</version>
+				<version>1.11</version>
 				<executions>
 					<execution>
 						<goals>
@@ -131,7 +131,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
-				<version>3.2.4</version>
+				<version>3.2.8</version>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
@@ -151,7 +151,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>3.2.2</version>
+				<version>3.5.1</version>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<archive>

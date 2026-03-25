@@ -357,6 +357,7 @@ public class UnitTests {
             DocumentBuilder builder = factory.newDocumentBuilder();
 
             File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
+            log.debug("Reading testish.xml from " + f.toString());
             Scanner reader = new Scanner(f, StandardCharsets.UTF_8);
             boolean firstLine = true;
             String data = "";

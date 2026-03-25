@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.oijon</groupId>
 	<artifactId>oling</artifactId>
-	<version>2.0.2</version>
+	<version>3.0.0</version>
 	<name>OLing</name>
 	<description>A library to help model languages.</description>
 	<url>https://oijon.net/oling</url>
@@ -33,6 +33,12 @@
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
             <version>2.12.2</version>
+            <exclusions>
+            	<exclusion>
+            		<groupId>xml-apis</groupId>
+            		<artifactId>xml-apis</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
 	</dependencies>
 	<build>

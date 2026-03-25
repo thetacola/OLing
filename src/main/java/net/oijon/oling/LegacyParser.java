@@ -48,11 +48,13 @@ public class LegacyParser {
 	public LegacyParser(File file) {
 		// check for converted .xml file existing already
 		File parentDir = file.getParentFile();
-		File estimatedConvertedFile = new File(parentDir + file.getName().replace(".language", "-converted.xml"));
+		File estimatedConvertedFile = new File(parentDir + "/" + file.getName().replace(".language", "-converted.xml"));
 		
-		if (estimatedConvertedFile.exists()) {
+		if (estimatedConvertedFile.exists() && !file.equals(estimatedConvertedFile)) {
 			log.warn("You are parsing from a legacy file when a converted file already exists!");
 			log.warn("The converted file can be found at " + estimatedConvertedFile.toString() + ".");
+		} else if (!estimatedConvertedFile.exists()) {
+			log.warn("You are parsing from a legacy file! A converted file will be made at " + estimatedConvertedFile.toString());
 		}
 		
 		// even if there's already a converted file, let's assume that the 
@@ -66,6 +68,9 @@ public class LegacyParser {
 			}
 			scanner.close();
 			initString(wholeFile);
+			if (!estimatedConvertedFile.exists()) {
+				writeXML(estimatedConvertedFile);
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			log.critical("File " + file.toString() + " not found! Cannot parse.");
@@ -73,9 +78,20 @@ public class LegacyParser {
 		
 	}
 	
+	private void writeXML(File xmlFile) {
+		try {
+			Language l = this.parseLanguage();
+			log.debug(l.toString());
+			l.toFile(xmlFile);
+			log.info("Successfully converted file at " + xmlFile.toString());
+		} catch (Exception e) {
+			// not a language, can't turn into file...
+			log.err("Unable to turn legacy file into XML file! Is this a valid .language file? " + e.toString());
+		}
+	}
+	
 	private void initString(String input) {
 		log.warn("You are using the legacy parser for files made before OLing 3!");
-		log.warn("If this is parsing from a file, a converted file will be made.");
 		input.replace("	", "");
 		String[] splitLines = input.split("\n");
 		/**

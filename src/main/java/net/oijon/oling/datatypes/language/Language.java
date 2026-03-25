@@ -1,8 +1,6 @@
 package net.oijon.oling.datatypes.language;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.time.Instant;
@@ -20,10 +18,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 //last edit: 12/20/25 -N3
 
@@ -150,22 +153,23 @@ public class Language implements XMLDatatype {
 	 * Writes a language to a file
 	 * @param file The file to write to
 	 * @throws IOException Should never be thrown, however would not compile without it. If thrown, something has gone horribly wrong...
+	 * @throws TransformerException Thrown when there's an issue with the transformer in particular while writing
+	 * @throws ParserConfigurationException Thrown when something goes seriously wrong when turning itself into XML
 	 */
-	public void toFile(File file) throws IOException {
+	public void toFile(File file) throws IOException, TransformerException, ParserConfigurationException {
 		properties.setEdited(Date.from(Instant.now()));
 		properties.setProperty(LanguageProperty.VERSION_EDITED, Info.getVersion());
 
-		
-		String data = "===PHOSYS Start===\n" +
-				this.toString() +
-				"\n===PHOSYS End===";
-		if (!file.exists()) {
-			file.createNewFile();
-		}
-		FileWriter fw = new FileWriter(file);
-		BufferedWriter bw = new BufferedWriter(fw);
-		bw.write(data);
-		bw.close();
+		Document doc = this.toXML().getOwnerDocument();
+		log.debug(doc.toString());
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(file);
+        transformer.transform(source, result);
 	}
 	
 	/**
@@ -226,6 +230,8 @@ public class Language implements XMLDatatype {
 
         Element lexiconE = (Element) doc.importNode(lexicon.toXML(), true);
         root.appendChild(lexiconE);
+        
+        doc.appendChild(root);
 
         return root;
 

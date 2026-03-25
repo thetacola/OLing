@@ -55,6 +55,7 @@ public class LanguageProperties implements XMLDatatype {
 	 * @param docTag The multitag to parse from
 	 * @return The language properties parsed
 	 * @throws Exception Thrown when properties are mangled or invalid
+	 * @deprecated As of OLing 3.0.0, this requires the legacy file format
 	 */
 	public static LanguageProperties parse(Multitag docTag) throws Exception {
 		LanguageProperties lp = new LanguageProperties();

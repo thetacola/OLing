@@ -74,8 +74,9 @@ public class PhonoTable implements XMLDatatype {
 	 * Parses a PhonoTable from a Multitag. Previously this function was a part 
 	 * of PhonoSystem.parse(), however this allows the program to be maintained more
 	 * easily.
-	 * @param tag The tag to parse the PhonoTable from
+	 * @param tag The tag to parse the PhonoTable from* @deprecated as of OLing v3.0.0, as this uses the old file format.
 	 * @return The PhonoTable stored in the multitag
+	 * @deprecated as of OLing v3.0.0, as this uses the old file format.
 	 * @throws Exception Thrown when any data inside the PhonoTable is invalid, 
 	 * for example if soundsPerCell is a non-integer.
 	 */
@@ -188,6 +189,7 @@ public class PhonoTable implements XMLDatatype {
 	/**
 	 * Gets the amount of data per cell
 	 * @return The amount of sounds per cell
+	 * @deprecated as of OLing v3.0.0, as this is not data used for the new file format.
 	 */
 	public int dataPerCell() {
 		return soundsPerCell;

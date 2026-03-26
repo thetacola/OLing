@@ -4,12 +4,9 @@ import java.util.ArrayList;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
-import net.oijon.oling.datatypes.grammar.Gloss;
 import net.oijon.olog.Log;
 
 import net.oijon.oling.datatypes.phonology.Phonology;
-import net.oijon.oling.datatypes.tags.Multitag;
-import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

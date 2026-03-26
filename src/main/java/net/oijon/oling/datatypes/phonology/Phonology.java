@@ -1,7 +1,6 @@
 package net.oijon.oling.datatypes.phonology;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import net.oijon.oling.datatypes.InvalidXMLException;

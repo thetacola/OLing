@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
-import net.oijon.oling.datatypes.grammar.Gloss;
 import net.oijon.olog.Log;
 
 import net.oijon.oling.info.Info;

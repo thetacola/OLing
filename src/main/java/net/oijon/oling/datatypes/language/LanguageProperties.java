@@ -92,6 +92,7 @@ public class LanguageProperties implements XMLDatatype {
 	
 	/**
 	 * Checks if the ID tag is using an old, unsupported version. Useful for backwards-compatibility.
+	 * @deprecated as of OLing v3.0.0, as this uses the old file format.
 	 * @param meta
 	 */
 	private void checkID(Multitag meta) {
@@ -119,6 +120,7 @@ public class LanguageProperties implements XMLDatatype {
 	 * Checks if the version tag is using a deprecated format
 	 * @param meta The meta tag
 	 * @throws Exception Thrown if neither utilsVersion nor susquehannaVersion exist
+	 * @deprecated as of OLing v3.0.0, as this uses the old file format.
 	 */
 	private void checkVersion(Multitag meta) throws Exception {
 		Tag ver;

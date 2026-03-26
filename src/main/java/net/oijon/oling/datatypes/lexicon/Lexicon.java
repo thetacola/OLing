@@ -50,6 +50,7 @@ public class Lexicon implements XMLDatatype {
     /**
      * Creates a lexicon from an XML element
      * @param e The XML element to use
+     * @throws InvalidXMLException Thrown when the XML element given is malformed
      */
     public Lexicon(Element e) throws InvalidXMLException {
         fromXML(e);

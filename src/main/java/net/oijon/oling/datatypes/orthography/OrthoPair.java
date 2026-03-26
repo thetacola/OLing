@@ -30,6 +30,7 @@ public class OrthoPair implements Comparable<OrthoPair>, XMLDatatype {
     /**
      * Creates a pair of phonemes and graphemes from an XML element
      * @param e The XML element to be used
+     * @throws InvalidXMLException Thrown when the XML element given is malformed
      */
     public OrthoPair(Element e) throws InvalidXMLException {
         fromXML(e);

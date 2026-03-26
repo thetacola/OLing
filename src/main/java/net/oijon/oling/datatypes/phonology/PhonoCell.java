@@ -49,6 +49,7 @@ public class PhonoCell implements XMLDatatype {
     /**
      * Creates a PhonoCell from an XML element
      * @param e The XML element to use
+     * @throws InvalidXMLException Thrown when the XML element given is malformed
      */
     public PhonoCell(Element e) throws InvalidXMLException {
         fromXML(e);
@@ -122,6 +123,7 @@ public class PhonoCell implements XMLDatatype {
      * For the legacy parser, spacers are required. However, spacers
      * really, really should not be in the XML. This gets the size without
      * spacer chars, to see if this really should be added to the XML at all.
+     * @return The size of the cell without spacer characters
      */
     public int sizeWithoutSpacers() {
         int startSize = size();

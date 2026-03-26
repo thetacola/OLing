@@ -41,6 +41,7 @@ public class Phoneme implements XMLDatatype {
     /**
      * Creates a phoneme from an XML element
      * @param e The XML element to use
+     * @throws InvalidXMLException Thrown when the XML element given is malformed
      */
     public Phoneme(Element e) throws InvalidXMLException {
         fromXML(e);

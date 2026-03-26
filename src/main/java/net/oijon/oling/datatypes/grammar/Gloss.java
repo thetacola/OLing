@@ -37,6 +37,7 @@ public class Gloss implements XMLDatatype {
     /**
      * Creates a Gloss from an XML element
      * @param e The element to use
+     * @throws InvalidXMLException Thrown when the XML element given is malformed
      */
     public Gloss(Element e) throws InvalidXMLException {
         this.fromXML(e);

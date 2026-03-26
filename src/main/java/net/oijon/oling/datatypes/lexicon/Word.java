@@ -47,6 +47,7 @@ public class Word implements XMLDatatype {
     /**
      * Creates a word from an XML element.
      * @param e The XML element to use.
+     * @throws InvalidXMLException Thrown when the XML element given is malformed
      */
     public Word(Element e) throws InvalidXMLException {
         this.fromXML(e);
@@ -73,7 +74,7 @@ public class Word implements XMLDatatype {
 	 * If you are using a lexicon, try {@link net.oijon.oling.LegacyParser#parseLexicon()} instead
 	 * @param wordTag The multitag to parse
 	 * @return A word object from the given multitag
-	 * @throws Exception
+	 * @throws Exception Thrown when unable to get expected children
      * @deprecated since 3.0.0, as OLing now uses XML
 	 */
 	public static Word parse(Multitag wordTag) throws Exception {

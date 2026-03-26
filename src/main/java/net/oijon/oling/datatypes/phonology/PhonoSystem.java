@@ -293,7 +293,7 @@ public class PhonoSystem implements XMLDatatype {
 
 	/**
 	 * Creates a file of the PhonoSystem.
-	 * @Deprecated since v3.0.0, as this makes a file with the old format. Instead, write the XML element of this to a file.
+	 * @deprecated since v3.0.0, as this makes a file with the old format. Instead, write the XML element of this to a file.
 	 */
 	public void toFile() {
 		String output = "===PHOSYS Start===\n";

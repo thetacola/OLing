@@ -1,6 +1,16 @@
 package net.oijon.oling.datatypes.grammar;
 
-//last edit: 5/24/23 -N3
+//last edit: 12/15/25 -N3
+
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Attaches a meaning to a gloss abbreviation, allowing users to create their
@@ -9,7 +19,7 @@ package net.oijon.oling.datatypes.grammar;
  * @author alex
  *
  */
-public class Gloss {
+public class Gloss implements XMLDatatype {
 
 	private String abbreviation;
 	private String meaning;
@@ -23,6 +33,15 @@ public class Gloss {
 		this.abbreviation = abbreviation;
 		this.meaning = meaning;
 	}
+
+    /**
+     * Creates a Gloss from an XML element
+     * @param e The element to use
+     * @throws InvalidXMLException Thrown when the XML element given is malformed
+     */
+    public Gloss(Element e) throws InvalidXMLException {
+        this.fromXML(e);
+    }
 	
 	/**
 	 * Copy constructor
@@ -64,13 +83,52 @@ public class Gloss {
 	public void setMeaning(String meaning) {
 		this.meaning = meaning;
 	}
-	
+
+	@Override
+	public Element toXML() throws ParserConfigurationException {
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document doc = builder.newDocument();
+		Element root = doc.createElement("gloss");
+
+		Element abb = doc.createElement("abb");
+		abb.appendChild(doc.createTextNode(this.abbreviation));
+		root.appendChild(abb);
+
+		Element meaning = doc.createElement("meaning");
+		meaning.appendChild(doc.createTextNode(this.meaning));
+		root.appendChild(meaning);
+
+		return root;
+	}
+
+	@Override
+	public void fromXML(Element e) throws InvalidXMLException {
+        if (e.getTagName().equals("gloss")) {
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                // Note that this doesn't throw an exception if it can't find any of the elements.
+                // This is intentional, as they should just be null if that's the case.
+                switch (nl.item(i).getNodeName()) {
+                    case "abb":
+                        this.setAbbreviation(nl.item(i).getTextContent());
+                        break;
+                    case "meaning":
+                        this.setMeaning(nl.item(i).getTextContent());
+                        break;
+                    default:
+
+                }
+            }
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: gloss; Actual: " + e.getTagName());
+        }
+	}
+
 	@Override
 	public String toString() {
-		String returnString = "===Gloss Start===\n";
-		returnString += "abb:" + abbreviation + "\n";
-		returnString += "meaning:" + meaning + "\n";
-		returnString += "===Gloss End===";
+		String returnString = "Gloss\n";
+		returnString += "├─ Abbreviation: " + abbreviation + "\n";
+		returnString += "└─ Meaning: " + meaning + "\n";
 		return returnString;
 	}
 	
@@ -78,9 +136,7 @@ public class Gloss {
 	public boolean equals(Object o) {
 		if (o instanceof Gloss) {
 			Gloss g = (Gloss) o;
-			if (g.getAbbreviation().equals(abbreviation) & g.getMeaning().equals(meaning)) {
-				return true;
-			}
+            return g.getAbbreviation().equals(abbreviation) && g.getMeaning().equals(meaning);
 		}
 		return false;
 	}

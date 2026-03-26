@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * A tag that can have child tags
  * @author alex
- *
+ * @deprecated as of 3.0.0, as it is part of the legacy parser.
  */
 public class Multitag {
 
@@ -101,7 +101,7 @@ public class Multitag {
 	public boolean equals(Object obj) {
 		if (obj instanceof Multitag) {
 			Multitag tag = (Multitag) obj;
-			if (this.name.equals(tag.getName()) & this.subtags.equals(tag.getSubtags())
+			if (this.name.equals(tag.getName()) && this.subtags.equals(tag.getSubtags())
 					& this.subMultitags.equals(tag.getSubMultitags())) {
 				return true;
 			}

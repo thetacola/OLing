@@ -3,26 +3,37 @@ package net.oijon.oling.datatypes.phonology;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import net.oijon.oling.Parser;
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
+import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-//last edit: 6/19/23 -N3
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+//last edit: 12/18/25 -N3
 
 /**
  * Like an IPA table, but readable in Java
  * @author alex
  *
  */
-public class PhonoTable {
+public class PhonoTable implements XMLDatatype {
 
 	private String name;
-	private ArrayList<String> columnNames;
-	private ArrayList<PhonoCategory> rows;
+	private ArrayList<String> columnNames = new ArrayList<>();
+	private ArrayList<PhonoCategory> rows = new ArrayList<>();
+	@Deprecated
 	private int soundsPerCell;
 	
-	private static Log log = Parser.getLog();
+	private static Log log = Info.log;
 	
 	/**
 	 * Creates a PhonoTable
@@ -36,8 +47,18 @@ public class PhonoTable {
 		this.columnNames = columnNames;
 		this.rows = rows;
 		this.soundsPerCell = soundsPerCell;
+        fixIndecies();
 	}
-	
+
+	/**
+	 * Parses a PhonoTable from an XML element
+	 * @param e The XML element to use
+	 * @throws InvalidXMLException Thrown if the XML element is the wrong name or is otherwise invalid
+	 */
+	public PhonoTable(Element e) throws InvalidXMLException {
+		fromXML(e);
+	}
+
 	/**
 	 * Copy constructor
 	 * @param pt The PhonoTable to be copied
@@ -53,8 +74,9 @@ public class PhonoTable {
 	 * Parses a PhonoTable from a Multitag. Previously this function was a part 
 	 * of PhonoSystem.parse(), however this allows the program to be maintained more
 	 * easily.
-	 * @param tag The tag to parse the PhonoTable from
+	 * @param tag The tag to parse the PhonoTable from* @deprecated as of OLing v3.0.0, as this uses the old file format.
 	 * @return The PhonoTable stored in the multitag
+	 * @deprecated as of OLing v3.0.0, as this uses the old file format.
 	 * @throws Exception Thrown when any data inside the PhonoTable is invalid, 
 	 * for example if soundsPerCell is a non-integer.
 	 */
@@ -79,8 +101,18 @@ public class PhonoTable {
 			// TODO: allow multiple character sounds?
 			try {
 				String catData = tableData.get(j).value();
-				for (int k = 0; k < catData.length(); k++) {
-					cat.addSound(Character.toString(catData.charAt(k)));
+				for (int k = 0; k < catData.length() / perCell; k++) {
+                    PhonoCell cell = new PhonoCell(k);
+                    for (int l = 0; l < perCell; l++) {
+                        char c = catData.charAt((k * perCell) + l);
+						if (c != '*' && c != '#') {
+							Phoneme p = new Phoneme(Character.toString(c), l);
+							cell.addSound(p);
+						}
+                    }
+					if (cell.size() > 0) {
+						cat.addCell(cell);
+					}
 				}
 				cats.add(cat);
 			} catch (IndexOutOfBoundsException e) {
@@ -91,7 +123,7 @@ public class PhonoTable {
 		PhonoTable phonoTable = new PhonoTable(name, columns, cats, perCell);
 		return phonoTable;
 	}
-	
+
 	/**
 	 * Converts a PhonoTable to a string
 	 */
@@ -111,7 +143,9 @@ public class PhonoTable {
 		for (int i = 0; i < rows.size(); i++) {
 			returnString += ":";
 			for (int j = 0; j < rows.get(i).size(); j++) {
-				returnString += rows.get(i).getSound(j);
+                for (int k = 0; k < rows.get(i).getCell(j).getPhonemes().size(); k++) {
+                    returnString += rows.get(i).getCell(j).getPhonemes().get(k).getSound();
+                }
 			}
 			returnString += "\n";
 		}
@@ -155,6 +189,7 @@ public class PhonoTable {
 	/**
 	 * Gets the amount of data per cell
 	 * @return The amount of sounds per cell
+	 * @deprecated as of OLing v3.0.0, as this is not data used for the new file format.
 	 */
 	public int dataPerCell() {
 		return soundsPerCell;
@@ -166,24 +201,90 @@ public class PhonoTable {
 	 */
 	public ArrayList<String> getSoundList() {
 		ArrayList<String> list = new ArrayList<String>();
-		
+
 		for (int i = 0; i < rows.size(); i++) {
-			list.addAll(rows.get(i).getSounds());
+            PhonoCategory row = rows.get(i);
+			for (int j = 0; j < row.size(); j++) {
+                PhonoCell cell = row.getCell(j);
+                for (int k = 0; k < cell.size(); k++) {
+                    list.add(cell.getPhonemes().get(k).getSound());
+                }
+            }
 		}
 		
 		return list;
 	}
+
+    private void fixIndecies() {
+        for (int i = 0; i < rows.size(); i++) {
+            if (rows.get(i).getIndex() == 0) {
+                rows.get(i).setIndex(i);
+            }
+        }
+    }
 	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof PhonoTable) {
 			PhonoTable p = (PhonoTable) obj;
-			if (p.name.equals(name) & p.columnNames.equals(columnNames) & p.rows.equals(rows) &
-					p.soundsPerCell == soundsPerCell) {
+			if (p.name.equals(name) && p.columnNames.equals(columnNames) && p.rows.equals(rows)) {
 				return true;
 			}
 			
 		}
 		return false;
 	}
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("table");
+        root.setAttribute("name", name);
+
+        Element columns = doc.createElement("columns");
+        for (int i = 0; i < columnNames.size(); i++) {
+            Element column = doc.createElement("column");
+            column.setAttribute("index", i + "");
+            column.appendChild(doc.createTextNode(columnNames.get(i)));
+            columns.appendChild(column);
+        }
+        root.appendChild(columns);
+
+        for (PhonoCategory pc : rows) {
+            root.appendChild(doc.importNode(pc.toXML(), true));
+        }
+
+        return root;
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+	    if (e.getTagName().equals("table")) {
+		    name = e.getAttribute("name");
+		    NodeList nl = e.getChildNodes();
+		    for (int i = 0; i < nl.getLength(); i++) {
+			    Node n = nl.item(i);
+			    switch (n.getNodeName()) {
+				    case "columns":
+						NodeList columns = n.getChildNodes();
+						for (int j = 0; j < columns.getLength(); j++) {
+							Node column = columns.item(j);
+							columnNames.add(column.getTextContent());
+						}
+                        break;
+				    case "row":
+                        if (n.getNodeType() == Node.ELEMENT_NODE) {
+                            this.rows.add(new PhonoCategory((Element) n));
+                        }
+                        break;
+				    default:
+
+			    }
+		    }
+            fixIndecies();
+	    } else {
+		    throw new InvalidXMLException("Node name not expected name! Expected: table; Actual: " + e.getTagName());
+	    }
+    }
 }

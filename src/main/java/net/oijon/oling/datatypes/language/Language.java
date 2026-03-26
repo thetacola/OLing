@@ -1,23 +1,34 @@
 package net.oijon.oling.datatypes.language;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Date;
 
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.olog.Log;
 
 import net.oijon.oling.info.Info;
-import net.oijon.oling.Parser;
 import net.oijon.oling.datatypes.lexicon.Lexicon;
 import net.oijon.oling.datatypes.orthography.Orthography;
 import net.oijon.oling.datatypes.phonology.Phonology;
-import net.oijon.oling.datatypes.tags.Multitag;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
-//last edit: 6/19/24 -N3
+//last edit: 12/20/25 -N3
 
 /**
  * Bundles all parts of a language together into one object
@@ -25,10 +36,9 @@ import net.oijon.oling.datatypes.tags.Multitag;
  *
  */
 
-// TODO: re-add parent
-public class Language {
+public class Language implements XMLDatatype {
 
-	public static Log log = Parser.getLog();
+	public static Log log = Info.log;
 	public static final Language NULL = new Language("null");
 	
 	private LanguageProperties properties = new LanguageProperties();
@@ -71,6 +81,10 @@ public class Language {
 	public Language(String name) {
 		this.properties.setProperty(LanguageProperty.NAME, name);
 	}
+
+    public Language(Element e) throws InvalidXMLException {
+        fromXML(e);
+    }
 	
 	/**
 	 * Copy constructor
@@ -81,19 +95,6 @@ public class Language {
 		phono = new Phonology(l.phono); 
 		lexicon = new Lexicon(l.lexicon);
 		ortho = new Orthography(l.ortho);
-	}
-	
-	public static Language parse(Multitag docTag) throws Exception {
-		// parse language properties, as a name is required
-		LanguageProperties lp = LanguageProperties.parse(docTag);
-		Language lang = new Language(lp.getProperty(LanguageProperty.NAME));		
-		
-		// parse each property
-		lang.setPhono(Phonology.parse(docTag));
-		lang.setOrtho(Orthography.parse(docTag));
-		lang.setLexicon(Lexicon.parse(docTag));
-		lang.setProperties(lp);
-		return lang;
 	}
 	
 	public LanguageProperties getProperties() {
@@ -152,24 +153,23 @@ public class Language {
 	 * Writes a language to a file
 	 * @param file The file to write to
 	 * @throws IOException Should never be thrown, however would not compile without it. If thrown, something has gone horribly wrong...
+	 * @throws TransformerException Thrown when there's an issue with the transformer in particular while writing
+	 * @throws ParserConfigurationException Thrown when something goes seriously wrong when turning itself into XML
 	 */
-	public void toFile(File file) throws IOException {
+	public void toFile(File file) throws IOException, TransformerException, ParserConfigurationException {
 		properties.setEdited(Date.from(Instant.now()));
 		properties.setProperty(LanguageProperty.VERSION_EDITED, Info.getVersion());
-		
-		lexicon.checkHomonyms();
-		lexicon.checkSynonyms();
-		
-		String data = "===PHOSYS Start===\n" +
-				this.toString() +
-				"\n===PHOSYS End===";
-		if (!file.exists()) {
-			file.createNewFile();
-		}
-		FileWriter fw = new FileWriter(file);
-		BufferedWriter bw = new BufferedWriter(fw);
-		bw.write(data);
-		bw.close();
+
+		Document doc = this.toXML().getOwnerDocument();
+		log.debug(doc.toString());
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(file);
+        transformer.transform(source, result);
 	}
 	
 	/**
@@ -197,7 +197,7 @@ public class Language {
 		if (obj instanceof Language) {
 			Language l = (Language) obj;
 			
-			if (l.properties.equals(properties) & l.phono.equals(phono) &
+			if (l.properties.equals(properties) && l.phono.equals(phono) &
 					l.lexicon.equals(lexicon)) {
 				/*
 				 * Does not check for:
@@ -210,5 +210,60 @@ public class Language {
 		}
 		return false;
 	}
-	
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("language");
+
+        Element meta = (Element) doc.importNode(properties.toXML(), true);
+        root.appendChild(meta);
+
+        Element phonoE = (Element) doc.importNode(phono.toXML(), true);
+        root.appendChild(phonoE);
+
+        Element orthoE = (Element) doc.importNode(ortho.toXML(), true);
+        root.appendChild(orthoE);
+
+        // TODO: add grammar
+
+        Element lexiconE = (Element) doc.importNode(lexicon.toXML(), true);
+        root.appendChild(lexiconE);
+        
+        doc.appendChild(root);
+
+        return root;
+
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+        if (e.getTagName().equals("language")) {
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                if (nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) nl.item(i);
+                    switch (nl.item(i).getNodeName()) {
+                        case "meta":
+                            properties = new LanguageProperties(element);
+                            break;
+                        case "phonology":
+                            phono = new Phonology(element);
+                            break;
+                        case "orthography":
+                            ortho = new Orthography(element);
+                            break;
+                        case "lexicon":
+                            lexicon = new Lexicon(element);
+                            break;
+                        default:
+
+                    }
+                }
+            }
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: language; Actual: " + e.getTagName());
+        }
+    }
 }

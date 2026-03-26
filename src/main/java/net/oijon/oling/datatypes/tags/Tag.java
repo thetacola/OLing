@@ -5,7 +5,7 @@ package net.oijon.oling.datatypes.tags;
 /**
  * Stores a tag in a .language file
  * @author alex
- *
+ * @deprecated as of 3.0.0, as this is part of the legacy parser
  */
 public class Tag {
 	
@@ -116,7 +116,7 @@ public class Tag {
 	public boolean equals(Object obj) {
 		if (obj instanceof Tag) {
 			Tag tag = (Tag) obj;
-			if (this.name.equals(tag.getName()) & this.data.equals(tag.value())) {
+			if (this.name.equals(tag.getName()) && this.data.equals(tag.value())) {
 				return true;
 			}
 		}

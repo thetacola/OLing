@@ -1,8 +1,18 @@
 package net.oijon.oling.datatypes.grammar;
 
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
 
-//last edit: 5/23/23 -N3
+//last edit: 12/15/25 -N3
 
 /**
  * Creates a list of Gloss objects, which can be accessed all at once to create
@@ -10,7 +20,8 @@ import java.util.ArrayList;
  * @author alex
  *
  */
-public class GlossList extends ArrayList<Gloss> {
+
+public class GlossList extends ArrayList<Gloss> implements XMLDatatype {
 
 	private static final long serialVersionUID = 2940848265098898582L;
 	private String name;
@@ -61,5 +72,36 @@ public class GlossList extends ArrayList<Gloss> {
 		returnString += "===GlossList End===";
 		return returnString;
 	}
-	
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("glosses");
+        root.setAttribute("name", this.getName());
+        for (Gloss gloss : this) {
+            Element e = gloss.toXML();
+            root.appendChild(e);
+        }
+
+        return root;
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+
+        if (e.getTagName().equals("glosses")) {
+            this.name = e.getAttribute("name");
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                if (nl.item(i).getNodeName().equals("gloss") && nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    Gloss g = new Gloss((Element) nl.item(i));
+                    this.add(g);
+                }
+            }
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: glosses; Actual: " + e.getTagName());
+        }
+
+    }
 }

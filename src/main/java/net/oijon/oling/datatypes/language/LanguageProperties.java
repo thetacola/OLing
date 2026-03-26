@@ -2,19 +2,28 @@ package net.oijon.oling.datatypes.language;
 
 import java.time.Instant;
 import java.util.Date;
-import net.oijon.oling.Parser;
+
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Bundles metadata about a language into one object
  * @author alex
  */
-public class LanguageProperties {
+public class LanguageProperties implements XMLDatatype {
 
-	public static Log log = Parser.getLog();
+	public static Log log = Info.log;
 	
 	// 0 = autonym, 1 = id, 2 = name, 3 = versionEdited
 	private String[] strings = {"null", "null", "null", Info.getVersion()};	
@@ -26,7 +35,11 @@ public class LanguageProperties {
 	public LanguageProperties() {
 		
 	}
-	
+
+    public LanguageProperties(Element e) throws InvalidXMLException {
+        fromXML(e);
+    }
+
 	public LanguageProperties(LanguageProperties lp) {
 		this.isReadOnly = lp.isReadOnly();
 		this.strings[0] = lp.getProperty(LanguageProperty.AUTONYM);
@@ -42,6 +55,7 @@ public class LanguageProperties {
 	 * @param docTag The multitag to parse from
 	 * @return The language properties parsed
 	 * @throws Exception Thrown when properties are mangled or invalid
+	 * @deprecated As of OLing 3.0.0, this requires the legacy file format
 	 */
 	public static LanguageProperties parse(Multitag docTag) throws Exception {
 		LanguageProperties lp = new LanguageProperties();
@@ -78,13 +92,14 @@ public class LanguageProperties {
 	
 	/**
 	 * Checks if the ID tag is using an old, unsupported version. Useful for backwards-compatibility.
+	 * @deprecated as of OLing v3.0.0, as this uses the old file format.
 	 * @param meta
 	 */
 	private void checkID(Multitag meta) {
 		Tag id = new Tag("id");
 		try {
 			id = meta.getDirectChild("id");
-			if (!id.value().isBlank() & !id.value().equals("null")) {
+			if (!id.value().isBlank() && !id.value().equals("null")) {
 				log.info("ID of language is " + id.value());
 				this.setProperty(LanguageProperty.ID, id.value());
 			} else {
@@ -104,8 +119,8 @@ public class LanguageProperties {
 	/**
 	 * Checks if the version tag is using a deprecated format
 	 * @param meta The meta tag
-	 * @param ver The version tag
 	 * @throws Exception Thrown if neither utilsVersion nor susquehannaVersion exist
+	 * @deprecated as of OLing v3.0.0, as this uses the old file format.
 	 */
 	private void checkVersion(Multitag meta) throws Exception {
 		Tag ver;
@@ -135,8 +150,8 @@ public class LanguageProperties {
 			 * - date edited (will never be equal)
 			 * - version edited (may or may not be equal)
 			 */
-			if (lp.getProperty(LanguageProperty.AUTONYM).equals(strings[0]) & 
-					lp.getProperty(LanguageProperty.ID).equals(strings[1]) & 
+			if (lp.getProperty(LanguageProperty.AUTONYM).equals(strings[0]) && 
+					lp.getProperty(LanguageProperty.ID).equals(strings[1]) && 
 					lp.getProperty(LanguageProperty.NAME).equals(strings[2]) &
 					lp.isReadOnly() == isReadOnly &
 					lp.getCreated().equals(dates[0])) {
@@ -221,5 +236,84 @@ public class LanguageProperties {
 	public void setEdited(Date edited) {
 		this.dates[1] = (Date) edited.clone();
 	}
-	
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("meta");
+
+        Element ver = doc.createElement("version");
+        ver.appendChild(doc.createTextNode(getProperty(LanguageProperty.VERSION_EDITED)));
+        root.appendChild(ver);
+
+        Element name = doc.createElement("name");
+        name.appendChild(doc.createTextNode(getProperty(LanguageProperty.NAME)));
+        root.appendChild(name);
+
+        Element id = doc.createElement("id");
+        id.appendChild(doc.createTextNode(getProperty(LanguageProperty.ID)));
+        root.appendChild(id);
+
+        Element autonym = doc.createElement("autonym");
+        autonym.appendChild(doc.createTextNode(getProperty(LanguageProperty.AUTONYM)));
+        root.appendChild(autonym);
+
+        Element timeCreated = doc.createElement("timeCreated");
+        timeCreated.appendChild(doc.createTextNode(getCreated().toInstant().toEpochMilli() + ""));
+        root.appendChild(timeCreated);
+
+        Element lastEdited = doc.createElement("lastEdited");
+        lastEdited.appendChild(doc.createTextNode(getEdited().toInstant().toEpochMilli() + ""));
+        root.appendChild(lastEdited);
+
+        Element readonly = doc.createElement("readonly");
+        readonly.appendChild(doc.createTextNode(isReadOnly + ""));
+        root.appendChild(readonly);
+
+        // TODO: add parent by language ID
+        Element parent = doc.createElement("parent");
+        parent.appendChild(doc.createTextNode(""));
+        root.appendChild(parent);
+
+
+        return root;
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+        if (e.getTagName().equals("meta")) {
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                switch (nl.item(i).getNodeName()) {
+                    case "version":
+                        this.setProperty(LanguageProperty.VERSION_EDITED, nl.item(i).getTextContent());
+                        break;
+                    case "name":
+                        this.setProperty(LanguageProperty.NAME, nl.item(i).getTextContent());
+                        break;
+                    case "id":
+                        this.setProperty(LanguageProperty.ID, nl.item(i).getTextContent());
+                        break;
+                    case "autonym":
+                        this.setProperty(LanguageProperty.AUTONYM, nl.item(i).getTextContent());
+                        break;
+                    case "timeCreated":
+                        this.setCreated(new Date(Long.parseLong(nl.item(i).getTextContent())));
+                        break;
+                    case "lastEdited":
+                        this.setEdited(new Date(Long.parseLong(nl.item(i).getTextContent())));
+                        break;
+                    case "readonly":
+                        this.setReadOnly(Boolean.parseBoolean(nl.item(i).getTextContent()));
+                        break;
+                    default:
+                        // TODO: add parent by language ID
+
+                }
+            }
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: meta; Actual: " + e.getTagName());
+        }
+    }
 }

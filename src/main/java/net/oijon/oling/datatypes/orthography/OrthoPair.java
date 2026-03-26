@@ -1,8 +1,18 @@
 package net.oijon.oling.datatypes.orthography;
 
-public class OrthoPair implements Comparable<OrthoPair> {
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
-	// Last edit: 11/4/23 ~n3
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+public class OrthoPair implements Comparable<OrthoPair>, XMLDatatype {
+
+	// Last edit: 12/16/25 ~n3
 	
 	private String phonemes;
 	private String graphemes;
@@ -16,6 +26,15 @@ public class OrthoPair implements Comparable<OrthoPair> {
 		this.phonemes = phonemes;
 		this.graphemes = graphemes;
 	}
+
+    /**
+     * Creates a pair of phonemes and graphemes from an XML element
+     * @param e The XML element to be used
+     * @throws InvalidXMLException Thrown when the XML element given is malformed
+     */
+    public OrthoPair(Element e) throws InvalidXMLException {
+        fromXML(e);
+    }
 	
 	/**
 	 * Gets the set of phonemes of this pair
@@ -63,11 +82,48 @@ public class OrthoPair implements Comparable<OrthoPair> {
 	public boolean equals(Object o) {
 		if (o instanceof OrthoPair) {
 			OrthoPair op = (OrthoPair) o;
-			if (op.getPhonemes().equals(phonemes) & op.getGraphemes().equals(graphemes)) {
+			if (op.getPhonemes().equals(phonemes) && op.getGraphemes().equals(graphemes)) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("pair");
+
+        Element phonemes = doc.createElement("phonemes");
+        phonemes.appendChild(doc.createTextNode(this.phonemes));
+        root.appendChild(phonemes);
+
+        Element graphemes = doc.createElement("graphemes");
+        graphemes.appendChild(doc.createTextNode(this.graphemes));
+        root.appendChild(graphemes);
+
+        return root;
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+        if (e.getTagName().equals("pair")) {
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                switch (nl.item(i).getNodeName()) {
+                    case "phonemes":
+                        this.setPhonemes(nl.item(i).getTextContent());
+                        break;
+                    case "graphemes":
+                        this.setGraphemes(nl.item(i).getTextContent());
+                        break;
+                    default:
+
+                }
+            }
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: pair; Actual: " + e.getTagName());
+        }
+    }
 }

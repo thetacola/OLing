@@ -1,26 +1,33 @@
 package net.oijon.oling.datatypes.lexicon;
 
 import java.util.ArrayList;
-import java.util.Date;
 
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.olog.Log;
 
-import net.oijon.oling.Parser;
-import net.oijon.oling.datatypes.tags.Multitag;
-import net.oijon.oling.datatypes.tags.Tag;
+import net.oijon.oling.info.Info;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-//last edit: 6/20/24 -N3
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+//last edit: 12/16/25 -N3
 
 /**
  * The words and meaning of a language
  * @author alex
  *
  */
-public class Lexicon {
+public class Lexicon implements XMLDatatype {
 
 	private ArrayList<Word> wordList = new ArrayList<Word>();
 	
-	static Log log = Parser.getLog();
+	static Log log = Info.log;
 	
 	/**
 	 * Creates an empty lexicon.
@@ -38,7 +45,16 @@ public class Lexicon {
 			this.addWord(words.get(i));
 		}
 	}
-	
+
+    /**
+     * Creates a lexicon from an XML element
+     * @param e The XML element to use
+     * @throws InvalidXMLException Thrown when the XML element given is malformed
+     */
+    public Lexicon(Element e) throws InvalidXMLException {
+        fromXML(e);
+    }
+
 	/**
 	 * Copy constructor
 	 * @param l The lexicon to copy
@@ -55,8 +71,6 @@ public class Lexicon {
 	 */
 	public void addWord(Word word) {
 		wordList.add(word);
-		checkSynonyms();
-		checkHomonyms();
 	} 
 	
 	/**
@@ -92,63 +106,6 @@ public class Lexicon {
 		return wordList.get(i);
 	}
 	
-	/**
-	 * Checks for synonyms inside the lexicon, and marks them as such.
-	 */
-	public void checkSynonyms() {
-		for (int i = 0; i < wordList.size(); i++) {
-			for (int j = 0; j < wordList.size(); j++) {
-				if (i != j) {
-					if (wordList.get(i).getProperties().getProperty(WordProperty.MEANING).equals(
-							wordList.get(j).getProperties().getProperty(WordProperty.MEANING))) {
-						wordList.get(i).addSynonym(wordList.get(j));
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Checks for homonyms inside the lexicon, and marks them as such.
-	 */
-	public void checkHomonyms() {
-		for (int i = 0; i < wordList.size(); i++) {
-			for (int j = 0; j < wordList.size(); j++) {
-				if (i != j) {
-					if (wordList.get(i).getProperties().getProperty(WordProperty.NAME).equals(
-							wordList.get(j).getProperties().getProperty(WordProperty.NAME))) {
-						wordList.get(i).addHomonym(wordList.get(j));
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Parses a Lexicon from a multitag.
-	 * 99% of the time, you want to use {@link net.oijon.oling.Parser#parseLexicon()} instead
-	 * @param docTag The multitag containing the entire .language file
-	 * @return The lexicon contained in the multitag
-	 */
-	public static Lexicon parse(Multitag docTag) {
-		try {
-			Lexicon lexicon = new Lexicon();
-			Multitag lexiconTag = docTag.getMultitag("Lexicon");
-			ArrayList<Multitag> wordList = lexiconTag.getSubMultitags();
-			for (int i = 0; i < wordList.size(); i++) {
-				if (wordList.get(i).getName().equals("Word")) {
-					Multitag wordTag = wordList.get(i);
-					lexicon.addWord(Word.parse(wordTag));
-				}
-			}
-			return lexicon;
-		} catch (Exception e) {
-			log.err("No lexicon found! Has one been created? Returning a blank lexicon...");
-			return new Lexicon();
-		}
-	}
-	
-	
 	@Override
 	public String toString() {
 		String returnString = "===Lexicon Start===\n";
@@ -170,4 +127,32 @@ public class Lexicon {
 		}
 		return false;
 	}
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("lexicon");
+
+        for (Word w : this.wordList) {
+            root.appendChild(doc.importNode(w.toXML(), true));
+        }
+
+        return root;
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+        if (e.getTagName().equals("lexicon")) {
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                if (nl.item(i).getNodeName().equals("word") && nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    Word w = new Word((Element) nl.item(i));
+                    wordList.add(w);
+                }
+            }
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: lexicon; Actual: " + e.getTagName());
+        }
+    }
 }

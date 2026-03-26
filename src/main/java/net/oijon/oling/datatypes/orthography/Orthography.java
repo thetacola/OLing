@@ -2,14 +2,22 @@ package net.oijon.oling.datatypes.orthography;
 
 import java.util.ArrayList;
 
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.olog.Log;
 
-import net.oijon.oling.Parser;
 import net.oijon.oling.datatypes.phonology.Phonology;
-import net.oijon.oling.datatypes.tags.Multitag;
-import net.oijon.oling.datatypes.tags.Tag;
+import net.oijon.oling.info.Info;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-//last edit: 11/4/23 -N3
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+//last edit: 12/16/25 -N3
 
 /**
  * The writing system of a language. Connects phonemes to graphemes, allowing
@@ -17,12 +25,12 @@ import net.oijon.oling.datatypes.tags.Tag;
  * @author alex
  *
  */
-public class Orthography {
+public class Orthography implements XMLDatatype {
 
 	private Phonology ph = new Phonology();
 	private ArrayList<OrthoPair> orthoList = new ArrayList<OrthoPair>();
 	
-	static Log log = Parser.getLog();
+	static Log log = Info.log;
 	
 	// TODO: allow ortho rules to have exceptions
 	
@@ -40,7 +48,11 @@ public class Orthography {
 	public Orthography(Phonology ph) {
 		this.ph = ph;
 	}
-	
+
+    public Orthography(Element e) throws InvalidXMLException {
+        fromXML(e);
+    }
+
 	/**
 	 * Copy constructor
 	 * @param o The orthography to copy
@@ -108,22 +120,6 @@ public class Orthography {
 		orthoList.remove(i);
 	}
 	
-	public static Orthography parse(Multitag docTag) {
-		try {
-			Orthography ortho = new Orthography();
-			Multitag orthoTag = docTag.getMultitag("Orthography");
-			ArrayList<Tag> orthoPairs = orthoTag.getSubtags();
-			for (int i = 0; i < orthoPairs.size(); i++) {
-				Tag op = orthoPairs.get(i);
-				ortho.add(op.getName(), op.value());
-			}
-			return ortho;
-		} catch (Exception e) {
-			log.err("No orthography found! Has one been created? Returning a blank orthography...");
-			return new Orthography();
-		}
-	}
-	
 	public String toString() {
 		sortOrthoList();
 		String returnString = "===Orthography Start===\n";
@@ -166,5 +162,33 @@ public class Orthography {
 		}
 		return false;
 	}
-	
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("orthography");
+
+        for (OrthoPair op : orthoList) {
+            Element pair = (Element) doc.importNode(op.toXML(), true);
+            root.appendChild(pair);
+        }
+
+        return root;
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+        if (e.getTagName().equals("orthography")) {
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                if (nl.item(i).getNodeName().equals("pair") && nl.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                    OrthoPair op = new OrthoPair((Element) nl.item(i));
+                    orthoList.add(op);
+                }
+            }
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: orthography; Actual: " + e.getTagName());
+        }
+    }
 }

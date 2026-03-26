@@ -3,7 +3,7 @@ package net.oijon.oling.datatypes.lexicon;
 import java.time.Instant;
 import java.util.Date;
 
-import net.oijon.oling.Parser;
+import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
 
 /**
@@ -12,7 +12,7 @@ import net.oijon.olog.Log;
  */
 public class WordProperties {
 
-	public Log log = Parser.getLog();
+	public Log log = Info.log;
 	// 0 = name, 1 = meaning, 2 = pronounciation, 3 = etymology
 	private String[] strings = {" ", " ", " ", " "};
 	// 0 = creation date, 1 = edit date
@@ -77,14 +77,18 @@ public class WordProperties {
 	 */
 	public void setProperty(WordProperty wp, String value) {
 		switch(wp) {
-			case NAME: strings[0] = value;
-			break;
-			case MEANING: strings[1] = value;
-			break;
-			case PRONOUNCIATION: strings[2] = value;
-			break;
-			case ETYMOLOGY: strings[3] = value;
-			break;
+			case NAME:
+                strings[0] = value;
+			    break;
+			case MEANING:
+                strings[1] = value;
+			    break;
+			case PRONOUNCIATION:
+                strings[2] = value;
+			    break;
+			case ETYMOLOGY:
+                strings[3] = value;
+			    break;
 		}
 	}
 	

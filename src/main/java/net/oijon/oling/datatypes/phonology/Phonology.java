@@ -1,26 +1,33 @@
 package net.oijon.oling.datatypes.phonology;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.olog.Log;
-import net.oijon.oling.Parser;
-import net.oijon.oling.datatypes.tags.Multitag;
-import net.oijon.oling.datatypes.tags.Tag;
+import net.oijon.oling.info.Info;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
-//last edit: 6/20/2024 -N3
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+//last edit: 12/17/25 -N3
 
 /**
  * The sounds of a language. Makes a list of sounds based off a PhonoSystem.
  * @author alex
  *
  */
-public class Phonology {
+public class Phonology implements XMLDatatype {
 
-	private List<String> phonoList = new ArrayList<String>(Arrays.asList(" "));
+	private List<String> phonoList = new ArrayList<String>();
 	private PhonoSystem phonoSystem;
-	static Log log = Parser.getLog();
+	static Log log = Info.log;
 	
 	/**
 	 * Converts a string array of sounds into a phonology
@@ -45,12 +52,21 @@ public class Phonology {
 		for (int i = 0; i < array.length; i++) {
 			if (phonoSystem.contains(array[i])) {
 				phonoList.add(array[i]);
-			} else if (!array[i].equals(" ") & !array[i].equals("")) {
+			} else if (!array[i].equals(" ") && !array[i].equals("")) {
 				log.warn(array[i] + " is not in PhonoSystem " + sys.getName());
 			}
 		}
 	}
-	
+
+    /**
+     * Creates a phonology from a given XML element
+     * @param e The element to create from
+     * @throws InvalidXMLException thrown if the XML tag is the wrong name or is otherwise invalid
+     */
+    public Phonology(Element e) throws InvalidXMLException {
+        fromXML(e);
+    }
+
 	/**
 	 * Allows the creation of an empty phonology from a file
 	 */
@@ -114,30 +130,6 @@ public class Phonology {
 		}
 	}
 	
-	/**
-	 * Parses a phonology from a given multitag
-	 * 99% of the time, you want to use {@link net.oijon.oling.Parser#parsePhono()} instead
-	 * @param docTag The multitag to parse from
-	 * @return The parsed phonology
-	 * @throws Exception Thrown for various issues, mostly for unsuccessful parsing of subelements
-	 */
-	public static Phonology parse(Multitag docTag) throws Exception {
-		try {
-			PhonoSystem phonoSystem = PhonoSystem.parse(docTag);
-			Multitag phonoTag = docTag.getMultitag("Phonology");
-			Tag soundListTag = phonoTag.getDirectChild("soundlist");
-			String soundData = soundListTag.value();
-			String[] soundList = soundData.split(",");
-			// TODO: parse phonotactics
-			Phonology phono = new Phonology(soundList, phonoSystem);
-			return phono;
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.err(e.toString());
-			throw e;
-		}
-	}
-	
 	@Override
 	public String toString() {
 		String returnString = "===Phonology Start===\n";
@@ -158,7 +150,7 @@ public class Phonology {
 	public boolean equals(Object obj) {
 		if (obj instanceof Phonology) {
 			Phonology p = (Phonology) obj;
-			if (p.phonoList.equals(phonoList) & p.phonoSystem.equals(phonoSystem)) {
+			if (p.phonoList.equals(phonoList) && p.phonoSystem.equals(phonoSystem)) {
 				return true;
 			}
 		}
@@ -171,4 +163,54 @@ public class Phonology {
 	public void clear() {
 		phonoList.clear();
 	}
+
+    @Override
+    public Element toXML() throws ParserConfigurationException {
+        DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("phonology");
+
+        Element sounds = doc.createElement("sounds");
+        for (String s : phonoList) {
+            Element sound = doc.createElement("sound");
+            sound.appendChild(doc.createTextNode(s));
+            sounds.appendChild(sound);
+        }
+        root.appendChild(sounds);
+
+        Element phosys = (Element) doc.importNode(phonoSystem.toXML(), true);
+        root.appendChild(phosys);
+
+        return root;
+    }
+
+    @Override
+    public void fromXML(Element e) throws InvalidXMLException {
+        if (e.getTagName().equals("phonology")) {
+            NodeList nl = e.getChildNodes();
+            for (int i = 0; i < nl.getLength(); i++) {
+                Node n = nl.item(i);
+                switch (n.getNodeName()) {
+                    case "sounds":
+                        NodeList sounds = n.getChildNodes();
+                        for (int j = 0; j < sounds.getLength(); j++) {
+                            Node sound = sounds.item(j);
+                            if (!phonoList.contains(sound.getTextContent())) {
+                                this.phonoList.add(sound.getTextContent());
+                            }
+                        }
+                        break;
+                    case "tables":
+                        if (n.getNodeType() == Node.ELEMENT_NODE) {
+                            phonoSystem = new PhonoSystem((Element) n);
+                        }
+                        break;
+                    default:
+
+                }
+            }
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: phonology; Actual: " + e.getTagName());
+        }
+    }
 }

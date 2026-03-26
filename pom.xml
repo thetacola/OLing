@@ -23,6 +23,11 @@
 			<version>1.0.2</version>
 		</dependency>
 		<dependency>
+			<groupId>net.oijon</groupId>
+			<artifactId>OSCA</artifactId>
+			<version>0.1.1</version>
+		</dependency>
+		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>5.14.3</version>
@@ -75,7 +80,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.14.0</version>
 				<configuration>
 					<!-- best practice is to use ${jdk.version}, ${jdk.version} returns 1.5 (?!) -->
 					<source>11</source>

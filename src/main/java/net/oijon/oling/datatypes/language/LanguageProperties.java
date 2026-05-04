@@ -316,4 +316,16 @@ public class LanguageProperties implements XMLDatatype {
             throw new InvalidXMLException("Node name not expected name! Expected: meta; Actual: " + e.getTagName());
         }
     }
+    
+    @Override
+    public String toString() {
+    	String returnString = "autonym:" + strings[0] + "\n" +
+    			"id:" + strings[1] + "\n" +
+    			"name:" + strings[2] + "\n" +
+    			"versionEdited:" + strings[3] + "\n" +
+    			"created:" + dates[0] + "\n" +
+    			"edited:" + dates[1] + "\n" +
+    			"isReadOnly:" + isReadOnly;
+    	return returnString;
+    }
 }

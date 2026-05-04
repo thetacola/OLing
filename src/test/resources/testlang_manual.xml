@@ -103,7 +103,7 @@
                 <diacritic>‿</diacritic>
                 <diacritic>͡</diacritic>
             </diacritics>
-            <table name="IPA Consonants">
+            <table name="IPA Consonants" part="ONSET_CODA">
                 <columns>
                     <column index="0">Bilabial</column>
                     <column index="1">Labiodental</column>
@@ -277,7 +277,7 @@
                     </row>
                 </rows>
             </table>
-            <table name="IPA Vowels">
+            <table name="IPA Vowels" type="NUCLEUS">
                 <columns>
                     <column index="0">Front</column>
                     <column index="1">Central</column>
@@ -360,21 +360,21 @@
                     </row>
                 </rows>
             </table>
-            <list name="Click">
+            <list name="Click" part="ONSET_CODA">
                 <sound index="0">ʘ</sound>
                 <sound index="1">ǀ</sound>
                 <sound index="2">ǃ</sound>
                 <sound index="3">ǂ</sound>
                 <sound index="4">ǁ</sound>
             </list>
-            <list name="Implosive">
+            <list name="Implosive" part="ONSET_CODA">
                 <sound index="0">ɓ</sound>
                 <sound index="1">ɗ</sound>
                 <sound index="2">ʄ</sound>
                 <sound index="3">ɠ</sound>
                 <sound index="4">ʛ</sound>
             </list>
-            <list name="Other">
+            <list name="Other" part="ONSET_CODA">
                 <sound index="0">ʍ</sound>
                 <sound index="1">w</sound>
                 <sound index="2">ɥ</sound>

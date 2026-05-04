@@ -18,7 +18,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-//last edit: 12/18/25 -N3
+//last edit: 5/3/26 -N3
 
 /**
  * Like an IPA table, but readable in Java
@@ -30,6 +30,7 @@ public class PhonoTable implements XMLDatatype {
 	private String name;
 	private ArrayList<String> columnNames = new ArrayList<>();
 	private ArrayList<PhonoCategory> rows = new ArrayList<>();
+	private SyllablePart part;
 	@Deprecated
 	private int soundsPerCell;
 	
@@ -41,13 +42,29 @@ public class PhonoTable implements XMLDatatype {
 	 * @param columnNames The names of the columns
 	 * @param rows An ArrayList of all the rows to be added
 	 * @param soundsPerCell How many sounds should be in a cell
+	 * @param part The part of the syllable this elements of this table should go in
 	 */
-	public PhonoTable(String name, ArrayList<String> columnNames, ArrayList<PhonoCategory> rows, int soundsPerCell) {
+	public PhonoTable(String name, ArrayList<String> columnNames,
+			ArrayList<PhonoCategory> rows, int soundsPerCell, SyllablePart part) {
+		this(name, columnNames, rows, soundsPerCell);
+		this.part = part;
+	}
+	
+	/**
+	 * Creates a PhonoTable
+	 * @param name The name of the PhonoTable (Consonants, Vowels, etc.)
+	 * @param columnNames The names of the columns
+	 * @param rows An ArrayList of all the rows to be added
+	 * @param soundsPerCell How many sounds should be in a cell
+	 */
+	public PhonoTable(String name, ArrayList<String> columnNames,
+			ArrayList<PhonoCategory> rows, int soundsPerCell) {
 		this.name = name;
 		this.columnNames = columnNames;
 		this.rows = rows;
 		this.soundsPerCell = soundsPerCell;
         fixIndecies();
+        this.part = SyllablePart.ANY;
 	}
 
 	/**
@@ -124,10 +141,22 @@ public class PhonoTable implements XMLDatatype {
 		return phonoTable;
 	}
 
+	public String toString() {
+		String returnString = "tableName: " + name + "\n" +
+				"columnNames:" + columnNames.toString() + "\n";
+		for (int i = 0; i < rows.size(); i++) {
+			returnString += rows.get(i) + "\n";
+		}
+		returnString += "part:" + part.name() + "\n" +
+				"soundsPerCell:" + soundsPerCell;
+		return returnString;
+	}
+	
 	/**
 	 * Converts a PhonoTable to a string
+	 * @deprecated Since v3.1.0, as it is only for the legacy parser.
 	 */
-	public String toString() {
+	public String toLegacyString() {
 		String returnString = "===PhonoTable Start===\ntableName:" + name + "\ncolumnNames:";
 		for (int i = 0; i < columnNames.size(); i++) {
 			returnString += columnNames.get(i) + ",";
@@ -241,6 +270,7 @@ public class PhonoTable implements XMLDatatype {
         Document doc = builder.newDocument();
         Element root = doc.createElement("table");
         root.setAttribute("name", name);
+        root.setAttribute("part", part.name());
 
         Element columns = doc.createElement("columns");
         for (int i = 0; i < columnNames.size(); i++) {
@@ -262,6 +292,17 @@ public class PhonoTable implements XMLDatatype {
     public void fromXML(Element e) throws InvalidXMLException {
 	    if (e.getTagName().equals("table")) {
 		    name = e.getAttribute("name");
+		    try {
+		    	part = SyllablePart.valueOf(e.getAttribute("part"));
+		    } catch (NullPointerException e1) {
+		    	log.warn("No syllable part specified for phono table " + name +
+		    			". Defaulting to any.");
+		    	part = SyllablePart.ANY;
+		    } catch (IllegalArgumentException e1) {
+		    	log.err("Given syllable part on table " + name + " not valid! Got: \"" 
+		    			+ e.getAttribute("part") + "\". Defaulting to any.");
+		    	part = SyllablePart.ANY;
+		    }
 		    NodeList nl = e.getChildNodes();
 		    for (int i = 0; i < nl.getLength(); i++) {
 			    Node n = nl.item(i);

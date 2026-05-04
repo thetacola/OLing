@@ -3,8 +3,11 @@ package net.oijon.oling.datatypes.language;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Scanner;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
@@ -18,6 +21,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,7 +34,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-//last edit: 12/20/25 -N3
+//last edit: 5/4/2026 -N3
 
 /**
  * Bundles all parts of a language together into one object
@@ -72,6 +78,31 @@ public class Language implements XMLDatatype {
             files = null;
         }
 		return files;
+	}
+	
+	public static Language parse(File f) throws ParserConfigurationException, IOException, SAXException, InvalidXMLException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+		
+        Scanner reader = new Scanner(f, StandardCharsets.UTF_8);
+        boolean firstLine = true;
+        String data = "";
+        while (reader.hasNextLine()) {
+            if (firstLine) {
+                data = reader.nextLine();
+                String[] splitData = data.split("<\\?xml");
+                data = "<?xml" + splitData[1];
+                firstLine = false;
+            } else {
+
+                data += reader.nextLine() + "\n";
+            }
+        }
+        reader.close();
+        Document doc = builder.parse(new InputSource(new StringReader(data)));
+        Element element = doc.getDocumentElement();
+        return new Language(element);
+        
 	}
 		
 	/**
@@ -172,10 +203,18 @@ public class Language implements XMLDatatype {
         transformer.transform(source, result);
 	}
 	
+	@Override
+	public String toString() {
+		String returnString = properties.toString() + "\n" + phono.toString() +
+				"\n" + lexicon.toString() + "\n" + ortho.toString();
+		return returnString;
+	}
+	
 	/**
 	 * Converts a language into a string
+	 * @deprecated Since v3.1.0, as it is only for the legacy parser.
 	 */
-	public String toString() {
+	public String toLegacyString() {
 		String returnString = "===Meta Start===\n";
 		returnString += "utilsVersion:" + properties.getProperty(LanguageProperty.VERSION_EDITED) + "\n" +
 				"name:" + properties.getProperty(LanguageProperty.NAME) + "\n" +

@@ -198,4 +198,14 @@ public class PhonoCategory implements XMLDatatype {
             throw new InvalidXMLException("Node name not expected name! Expected: row; Actual: " + e.getTagName());
         }
     }
+    
+    @Override
+    public String toString() {
+    	String returnString = "categoryName:" + name + "\n";
+    	for (int i = 0; i < cells.size(); i++) {
+    		returnString += cells.get(i) + "\n";
+    	}
+    	returnString += "index:" + index;
+    	return returnString;
+    }
 }

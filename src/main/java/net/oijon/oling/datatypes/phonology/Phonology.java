@@ -16,7 +16,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-//last edit: 12/17/25 -N3
+//last edit: 5/4/2026 -N3
 
 /**
  * The sounds of a language. Makes a list of sounds based off a PhonoSystem.
@@ -132,6 +132,17 @@ public class Phonology implements XMLDatatype {
 	
 	@Override
 	public String toString() {
+		String returnString = "phonoList:" + phonoList.toString() + "\n" +
+				phonoSystem.toString();
+		return returnString;
+	}
+	
+	/**
+	 * Converts a phonology into a string
+	 * @deprecated Since v3.1.0, as it is only for the legacy parser.
+	 * @return
+	 */
+	public String toLegacyString() {
 		String returnString = "===Phonology Start===\n";
 		returnString += "soundlist:";
 		for (int i = 0; i < phonoList.size(); i++) {

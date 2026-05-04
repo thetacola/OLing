@@ -23,7 +23,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-//last edit: 12/17/25 -N3
+//last edit: 5/4/2026 -N3
 
 /**
  * A way to transcribe all sounds allowed in a vocal tract. IPA is specified here as that
@@ -213,10 +213,24 @@ public class PhonoSystem implements XMLDatatype {
     	}
 	}
 	
+	public String toString() {
+		String returnString = "sysName:" + name + "\n";
+		for (int i = 0; i < tables.size(); i++) {
+			returnString += tables.get(i) + "\n";
+		}
+		returnString += "diacritics:" + diacriticList.toString() + "\n";
+		for (int i = 0; i < lists.size(); i++) {
+			returnString += lists.get(i) + "\n";
+		}
+		returnString += "anomalies:" + anomalies.toString();
+		return returnString;
+	}
+	
 	/**
 	 * Converts a PhonoSystem object to a string
+	 * @deprecated Since v3.1.0, as it is only for the legacy parser.
 	 */
-	public String toString() {
+	public String toLegacyString() {
 		String output = "===Tablelist Start===\n";
 		output += "tablelistName:" + name + "\n";
 		output += "diacriticList:";

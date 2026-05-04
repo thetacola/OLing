@@ -4,14 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
-import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
-
 import net.oijon.oling.datatypes.language.LanguageProperties;
 import net.oijon.oling.datatypes.phonology.*;
 import org.junit.jupiter.api.Test;
@@ -24,47 +20,39 @@ import net.oijon.oling.datatypes.lexicon.Lexicon;
 import net.oijon.oling.datatypes.lexicon.Word;
 import net.oijon.oling.datatypes.lexicon.WordProperties;
 import net.oijon.oling.datatypes.orthography.Orthography;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.InputSource;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 public class UnitTests {
 
 	Log log = new Log(System.getProperty("user.home") + "/.oling");
 
+	@Test
+	void readWriteEquivalency() {
+		try {
+			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
+			Language oldL = Language.parse(f);
+			
+			File newFile = File.createTempFile("testish", "xml");
+			oldL.toFile(newFile);
+			
+			Language newL = Language.parse(newFile);
+			
+			assertEquals(oldL, newL);
+			
+		} catch (Exception e) {
+			
+		}
+	}
+	
 	@SuppressWarnings("deprecation")
     @Test
     void testLegacyToXML() {
         try {
             LegacyParser parser = new LegacyParser(Paths.get(UnitTests.class.getClassLoader().getResource("testish.language").toURI()).toFile());
             Language testLang = parser.parseLanguage();
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-
+            
             File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
             log.debug("Reading testish.xml from " + f.toString());
-            Scanner reader = new Scanner(f, StandardCharsets.UTF_8);
-            boolean firstLine = true;
-            String data = "";
-            while (reader.hasNextLine()) {
-                if (firstLine) {
-                    data = reader.nextLine();
-                    String[] splitData = data.split("<\\?xml");
-                    data = "<?xml" + splitData[1];
-                    firstLine = false;
-                } else {
-
-                    data += reader.nextLine() + "\n";
-                }
-            }
-            reader.close();
-            Document doc = builder.parse(new InputSource(new StringReader(data)));
-            Element element = doc.getDocumentElement();
-            Language newLang = new Language(element);
+            Language newLang = Language.parse(f);
 
 			LanguageProperties oldLP = testLang.getProperties();
 	        LanguageProperties newLP = newLang.getProperties();

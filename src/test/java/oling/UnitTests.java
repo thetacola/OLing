@@ -27,11 +27,13 @@ public class UnitTests {
 
 	@Test
 	void readWriteEquivalency() {
+		log.info("Testing read-write equivalancy...");
 		try {
 			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
 			Language oldL = Language.parse(f);
 			
 			File newFile = File.createTempFile("testish", "xml");
+			log.debug("Writing to " + newFile + ", then reading from same file");
 			oldL.toFile(newFile);
 			
 			Language newL = Language.parse(newFile);
@@ -46,12 +48,14 @@ public class UnitTests {
 	@SuppressWarnings("deprecation")
     @Test
     void testLegacyToXML() {
+		log.info("Testing legacy file parsing...");
         try {
             LegacyParser parser = new LegacyParser(Paths.get(UnitTests.class.getClassLoader().getResource("testish.language").toURI()).toFile());
             Language testLang = parser.parseLanguage();
+            File f = File.createTempFile("testlang", "xml");
+            testLang.toFile(f);
             
-            File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
-            log.debug("Reading testish.xml from " + f.toString());
+            log.debug("Reading testlang.xml from " + f.toString());
             Language newLang = Language.parse(f);
 
 			LanguageProperties oldLP = testLang.getProperties();

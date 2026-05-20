@@ -91,11 +91,14 @@ public class Language implements XMLDatatype {
             if (firstLine) {
                 data = reader.nextLine();
                 String[] splitData = data.split("<\\?xml");
-                data = "<?xml" + splitData[1];
+                if (splitData.length > 1) {
+                	data = "<?xml" + splitData[1];
+                } else {
+                	data = splitData[0];
+                }
                 firstLine = false;
             } else {
-
-                data += reader.nextLine() + "\n";
+                data += reader.nextLine().strip();
             }
         }
         reader.close();

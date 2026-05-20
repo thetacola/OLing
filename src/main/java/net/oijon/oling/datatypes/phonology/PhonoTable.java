@@ -281,9 +281,11 @@ public class PhonoTable implements XMLDatatype {
         }
         root.appendChild(columns);
 
+        Element rowsE = doc.createElement("rows");        
         for (PhonoCategory pc : rows) {
-            root.appendChild(doc.importNode(pc.toXML(), true));
+            rowsE.appendChild(doc.importNode(pc.toXML(), true));
         }
+        root.appendChild(rowsE);
 
         return root;
     }
@@ -314,10 +316,12 @@ public class PhonoTable implements XMLDatatype {
 							columnNames.add(column.getTextContent());
 						}
                         break;
-				    case "row":
-                        if (n.getNodeType() == Node.ELEMENT_NODE) {
-                            this.rows.add(new PhonoCategory((Element) n));
-                        }
+				    case "rows":
+				    	NodeList rowList = n.getChildNodes();
+				    	for (int j = 0; j < rowList.getLength(); j++) {
+							Node row = rowList.item(j);
+							this.rows.add(new PhonoCategory((Element) row));
+						}
                         break;
 				    default:
 

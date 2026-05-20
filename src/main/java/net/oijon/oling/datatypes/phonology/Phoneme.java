@@ -2,8 +2,14 @@ package net.oijon.oling.datatypes.phonology;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
+import net.oijon.oling.datatypes.phonology.feature.Feature;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import java.util.ArrayList;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,6 +21,7 @@ public class Phoneme implements XMLDatatype {
 
     private int index;
     private String sound;
+    private ArrayList<Feature> features = new ArrayList<Feature>();
 
     /**
      * Creates a phoneme with a given sound in a string. Note that if this is to be used in a PhonoTable, it needs
@@ -77,6 +84,46 @@ public class Phoneme implements XMLDatatype {
         this.sound = sound;
     }
 
+    public void addFeature(Feature f) {
+    	boolean found = false;
+    	for (int i = 0; i < features.size(); i++) {
+    		if (features.get(i).getName().equals(f.getName())) {
+    			found = true;
+    			break;
+    		}
+    	}
+    	if (!found) {
+    		features.add(f);
+    	}
+    }
+    
+    public void removeFeature(String name) {
+    	for (int i = 0; i < features.size(); i++) {
+    		if (features.get(i).getName().equals(name)) {
+    			features.remove(i);
+    			break;
+    		}
+    	}
+    }
+    
+    public void setFeature(String name, boolean value) {
+    	boolean found = false;
+    	for (int i = 0; i < features.size(); i++) {
+    		if (features.get(i).getName().equals(name)) {
+    			features.get(i).setValue(value);
+    			found = true;
+    			break;
+    		}
+    	}
+    	if (!found) {
+    		this.addFeature(new Feature(name, value));
+    	}
+    }
+    
+    public ArrayList<Feature> getFeatures() {
+    	return new ArrayList<Feature>(features);
+    }
+    
     @Override
     public Element toXML() throws ParserConfigurationException {
         DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -84,7 +131,16 @@ public class Phoneme implements XMLDatatype {
         Element root = doc.createElement("sound");
         root.setAttribute("index", index + "");
         if (!sound.equals("*") && !sound.equals("#")) {
-            root.appendChild(doc.createTextNode(sound));
+            Element charElement = doc.createElement("char");
+            charElement.appendChild(doc.createTextNode(sound));
+            root.appendChild(charElement);
+            for (int i = 0; i < features.size(); i++) {
+            	if (features.get(i).getValue()) {
+            		Element featureElement = doc.createElement("feature");
+            		featureElement.setTextContent(features.get(i).getName());
+            		root.appendChild(featureElement);
+            	}
+            }
         }
 
         return root;
@@ -94,7 +150,27 @@ public class Phoneme implements XMLDatatype {
     public void fromXML(Element e) throws InvalidXMLException {
         if (e.getTagName().equals("sound")) {
             index = Integer.parseInt(e.getAttribute("index"));
-            sound = e.getTextContent();
+            
+            boolean complex = false;
+            for (int i = 0; i < e.getChildNodes().getLength(); i++) {
+            	Node child = e.getChildNodes().item(i);
+            	if (child.getNodeType() == Node.ELEMENT_NODE) {
+            		// technically considered complex at this point, though the marker
+            		// is moved into the name check to prevent null sounds
+            		Element childE = (Element) child;
+            		if (childE.getTagName().equals("char")) {
+            			complex = true;
+            			sound = childE.getTextContent();
+            		} else if (childE.getTagName().equals("feature")) {
+            			String textContent = childE.getTextContent();
+            			Feature f = new Feature(textContent, true);
+            			this.addFeature(f);
+            		}
+            	}
+            }
+            if (!complex) {
+            	sound = e.getTextContent();
+            }
         } else {
             throw new InvalidXMLException("Node name not expected name! Expected: sound; Actual: " + e.getTagName());
         }
@@ -102,9 +178,28 @@ public class Phoneme implements XMLDatatype {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof  Phoneme) {
+    	boolean partOne = false;
+        if (o instanceof Phoneme) {
             Phoneme p = (Phoneme) o;
-            return p.getSound().equals(sound) && p.getIndex() == index;
+            partOne = p.getSound().equals(sound) && p.getIndex() == index;
+            boolean partTwo = true;
+            if (p.getFeatures().size() == features.size()) {
+            	for (int i = 0; i < features.size(); i++) {
+            		boolean found = false;
+            		for (int j = 0; j < p.getFeatures().size(); j++) {
+            			if (features.get(i).equals(p.getFeatures().get(j))) {
+            				found = true;
+            				break;
+            			}
+            		}
+            		if (!found) {
+            			partTwo = false;
+            			break;
+            		}
+            	}
+            }
+            
+            return partOne && partTwo;
         }
         return false;
     }

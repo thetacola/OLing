@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes.phonology;
+package net.oijon.oling.datatypes.phonology.table;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
+import net.oijon.oling.datatypes.phonology.PhonoAnomaly;
 import net.oijon.olog.Log;
 import net.oijon.oling.LegacyParser;
 import net.oijon.oling.info.Info;

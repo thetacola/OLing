@@ -10,6 +10,11 @@ import java.util.Date;
 import java.util.List;
 import net.oijon.oling.datatypes.language.LanguageProperties;
 import net.oijon.oling.datatypes.phonology.*;
+import net.oijon.oling.datatypes.phonology.table.PhonoCategory;
+import net.oijon.oling.datatypes.phonology.table.PhonoCell;
+import net.oijon.oling.datatypes.phonology.table.PhonoSystem;
+import net.oijon.oling.datatypes.phonology.table.PhonoTable;
+
 import org.junit.jupiter.api.Test;
 
 import net.oijon.olog.Log;

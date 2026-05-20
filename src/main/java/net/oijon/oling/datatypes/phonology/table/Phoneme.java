@@ -1,7 +1,7 @@
-package net.oijon.oling.datatypes.phonology;
+package net.oijon.oling.datatypes.phonology.table;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
-import net.oijon.oling.datatypes.XMLDatatype;
+import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
 
@@ -18,11 +18,10 @@ import javax.xml.parsers.ParserConfigurationException;
 /**
  * Creates the equivalent of an individual phoneme on the IPA chart
  */
-public class Phoneme implements XMLDatatype {
+public class Phoneme extends FeaturalXMLDatatype {
 
     private int index;
     private String sound;
-    private ArrayList<Feature> features = new ArrayList<Feature>();
 
     /**
      * Creates a phoneme with a given sound in a string. Note that if this is to be used in a PhonoTable, it needs
@@ -30,6 +29,7 @@ public class Phoneme implements XMLDatatype {
      * @param sound The sound this phoneme represents
      */
     public Phoneme(String sound) {
+    	initFeatures();
         this.sound = sound;
         index = 0;
     }
@@ -40,6 +40,7 @@ public class Phoneme implements XMLDatatype {
      * @param index The index of this sound inside its PhonoCell
      */
     public Phoneme(String sound, int index) {
+    	initFeatures();
         this.sound = sound;
         this.index = index;
     }
@@ -150,6 +151,7 @@ public class Phoneme implements XMLDatatype {
 
     @Override
     public void fromXML(Element e) throws InvalidXMLException {
+    	initFeatures();
         if (e.getTagName().equals("sound")) {
             index = Integer.parseInt(e.getAttribute("index"));
             
@@ -211,4 +213,9 @@ public class Phoneme implements XMLDatatype {
         String returnString = "[" + index + ": " + sound + "]";
         return returnString;
     }
+
+	@Override
+	protected void initFeatures() {
+		super.level = FeatureLevel.SOUND;
+	}
 }

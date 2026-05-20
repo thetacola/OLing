@@ -1,7 +1,7 @@
-package net.oijon.oling.datatypes.phonology;
+package net.oijon.oling.datatypes.phonology.table;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
-import net.oijon.oling.datatypes.XMLDatatype;
+import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
 
@@ -15,18 +15,16 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
 
-//last edit: 12/18/25 -N3
+//last edit: 5/20/26 -N3
 
 /**
  * Creates the equivalent of a row on the IPA chart.
  * @author alex
  *
  */
-public class PhonoCategory implements XMLDatatype {
+public class PhonoCategory extends FeaturalXMLDatatype {
 
 	private String name;
-	private ArrayList<PhonoCell> cells = new ArrayList<>();
-	private ArrayList<Feature> features = new ArrayList<>();
     private int index;
 
     /**
@@ -36,8 +34,11 @@ public class PhonoCategory implements XMLDatatype {
      * @param index the index of the row in reference to the table it is a part of
      */
     public PhonoCategory(String name, ArrayList<PhonoCell> cells, int index) {
+    	initFeatures();
         this.name = name;
-        this.cells = cells;
+        for (PhonoCell pc : cells) {
+        	super.lowerObj.add(pc);
+        }
         this.index = index;
     }
 
@@ -47,8 +48,11 @@ public class PhonoCategory implements XMLDatatype {
 	 * @param cells a pre-existing ArrayList of each cell
 	 */
 	public PhonoCategory(String name, ArrayList<PhonoCell> cells) {
+		initFeatures();
 		this.name = name;
-		this.cells = cells;
+		for (PhonoCell c : cells) {
+			super.lowerObj.add(c);
+		}
         this.index = 0;
 	}
 	
@@ -57,8 +61,8 @@ public class PhonoCategory implements XMLDatatype {
 	 * @param name the name of the category
 	 */
 	public PhonoCategory(String name) {
+		initFeatures();
 		this.name = name;
-		this.cells = new ArrayList<PhonoCell>();
         this.index = 0;
 	}
 
@@ -76,9 +80,10 @@ public class PhonoCategory implements XMLDatatype {
 	 * @param pc The PhonoCategory to be copied
 	 */
 	public PhonoCategory(PhonoCategory pc) {
+		initFeatures();
 		this.name = pc.name;
-		this.cells = new ArrayList<PhonoCell>(pc.cells);
         this.index = pc.index;
+        super.lowerObj = pc.lowerObj;
 	}
 	
 	/**
@@ -86,6 +91,15 @@ public class PhonoCategory implements XMLDatatype {
 	 * @return all cells in category
 	 */
 	public ArrayList<PhonoCell> getCells() {
+		ArrayList<PhonoCell> cells = new ArrayList<>();
+		
+		for (FeaturalXMLDatatype fxd : super.lowerObj) {
+			if (fxd instanceof PhonoCell) {
+				PhonoCell c = (PhonoCell) fxd;
+				cells.add(c);
+			}
+		}
+		
 		return cells;
 	}
 	
@@ -103,7 +117,13 @@ public class PhonoCategory implements XMLDatatype {
 	 * @return cell
 	 */
 	public PhonoCell getCell(int i) {
-		return cells.get(i);
+		FeaturalXMLDatatype fxd = super.lowerObj.get(i);
+		if (fxd instanceof PhonoCell) {
+			return (PhonoCell) fxd;
+		} else {
+			// This should never happen, but just in case...
+			return null;
+		}
 	}
 	
 	/**
@@ -111,7 +131,7 @@ public class PhonoCategory implements XMLDatatype {
 	 * @param i index of cell to be deleted
 	 */
 	public void removeCell(int i) {
-		cells.remove(i);
+		super.lowerObj.remove(i);
 	}
 	
 	/**
@@ -119,13 +139,17 @@ public class PhonoCategory implements XMLDatatype {
 	 * @param phonoCell the cell to be added
 	 */
 	public void addCell(PhonoCell phonoCell) {
-        for (int i = 0; i < cells.size(); i++) {
-            if (phonoCell.getIndex() == cells.get(i).getIndex()) {
-                phonoCell.setIndex(phonoCell.getIndex() + 1);
-                i = 0;
-            }
+        for (int i = 0; i < super.lowerObj.size(); i++) {
+        	FeaturalXMLDatatype fxd = super.lowerObj.get(i);
+        	if (fxd instanceof PhonoCell) {
+        		PhonoCell pc = (PhonoCell) fxd;
+	            if (phonoCell.getIndex() == pc.getIndex()) {
+	                phonoCell.setIndex(phonoCell.getIndex() + 1);
+	                i = 0;
+	            }
+        	}
         }
-        cells.add(phonoCell);
+        super.lowerObj.add(phonoCell);
 	}
 
     /**
@@ -149,96 +173,14 @@ public class PhonoCategory implements XMLDatatype {
 	 * @return The amount of cells
 	 */
 	public int size() {
-		return cells.size();
+		return super.lowerObj.size();
 	}
-	
-	public void addFeature(Feature f) {
-    	boolean found = false;
-    	for (int i = 0; i < features.size(); i++) {
-    		if (features.get(i).getName().equals(f.getName())) {
-    			found = true;
-    			break;
-    		}
-    	}
-    	if (!found) {
-    		features.add(f);
-    	}
-    	
-    	applyFeatures();
-    }
-    
-    public void removeFeature(String name) {
-    	for (int i = 0; i < features.size(); i++) {
-    		if (features.get(i).getName().equals(name)) {
-    			features.remove(i);
-    			break;
-    		}
-    	}
-    	
-    	for (int i = 0; i < cells.size(); i++) {
-    		cells.get(i).removeFeature(name);
-    	}
-    	
-    	applyFeatures();
-    }
-    
-    public void setFeature(String name, boolean value, FeatureLevel level) {
-    	boolean found = false;
-    	for (int i = 0; i < features.size(); i++) {
-    		if (features.get(i).getName().equals(name)) {
-    			features.get(i).setValue(value);
-    			found = true;
-    			break;
-    		}
-    	}
-    	if (!found) {
-    		this.addFeature(new Feature(name, value, level));
-    	}
-    	
-    	applyFeatures();
-    }
-    
-    public ArrayList<Feature> getFeatures() {
-    	return new ArrayList<Feature>(features);
-    }
-
-    private void applyFeatures() {
-    	// get features from all other phonemes, only apply those that are true to all
-    	ArrayList<Feature> allFeatures = new ArrayList<Feature>(features);
-    	for (int i = 0; i < cells.size(); i++) {
-    		ArrayList<Feature> cellFeatures = cells.get(i).getFeatures();
-    		for (int j = 0; j < cellFeatures.size(); j++) {
-    			boolean found = false;
-    	    	for (int k = 0; k < allFeatures.size(); k++) {
-    	    		if (allFeatures.get(k).getName().equals(cellFeatures.get(j).getName())) {
-    	    			found = true;
-    	    			break;
-    	    		}
-    	    	}
-    	    	if (!found) {
-    	    		Feature f = new Feature(cellFeatures.get(j).getName(), false, FeatureLevel.ROW);
-    	    		allFeatures.add(f);
-    	    	}
-    		}
-    	}
-    	
-    	for (int i = 0; i < allFeatures.size(); i++) {
-    		Feature f = allFeatures.get(i);
-    		for (int j = 0; j < cells.size(); j++) {
-    			if (f.getValue()) {
-    				cells.get(j).setFeature(f.getName(), f.getValue(), FeatureLevel.ROW);
-    			} else {
-    				cells.get(j).addFeature(f);
-    			}
-    		}
-    	}
-    }
 	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof PhonoCategory) {
 			PhonoCategory p = (PhonoCategory) obj;
-            return p.name.equals(name) && p.cells.equals(cells);
+            return p.name.equals(name) && p.lowerObj.equals(lowerObj);
 		}
 		return false;
 	}
@@ -260,7 +202,7 @@ public class PhonoCategory implements XMLDatatype {
         	}
         }
         
-        for (PhonoCell pc : cells) {
+        for (FeaturalXMLDatatype fxd : super.lowerObj) {
             // Assuming here that there's no row of *all* spacers, because why in the world would you do that
             // Of course, this is not a guarantee, so this may make unneeded rows if that truly is the case.
             // This is such an edge case with such a trivial result that I *really* don't feel like fixing this
@@ -268,10 +210,13 @@ public class PhonoCategory implements XMLDatatype {
             // unintuitive with zero benefit (unless you count a few extra millis when parsing a benefit?!).
             // If this edge case does appear, there is a 99.9% chance the user has done something wrong and has
             // manually edited config files to add a completely useless spacer row.
-            if (pc.sizeWithoutSpacers() != 0 || pc.size() == 0) {
-                Element pe = (Element) doc.importNode(pc.toXML(), true);
-                root.appendChild(pe);
-            }
+        	if (fxd instanceof PhonoCell) {
+        		PhonoCell pc = (PhonoCell) fxd;
+	            if (pc.sizeWithoutSpacers() != 0 || pc.size() == 0) {
+	                Element pe = (Element) doc.importNode(pc.toXML(), true);
+	                root.appendChild(pe);
+	            }
+        	}
         }
 
         return root;
@@ -279,6 +224,7 @@ public class PhonoCategory implements XMLDatatype {
 
     @Override
     public void fromXML(Element e) throws InvalidXMLException {
+    	initFeatures();
         if (e.getTagName().equals("row")) {
             index = Integer.parseInt(e.getAttribute("index"));
             name = e.getAttribute("name");
@@ -287,7 +233,7 @@ public class PhonoCategory implements XMLDatatype {
                 Node n = nl.item(i);
                 if (n.getNodeName().equals("cell") && n.getNodeType() == Node.ELEMENT_NODE) {
                     PhonoCell pc = new PhonoCell((Element) n);
-                    cells.add(pc);
+                    super.lowerObj.add(pc);
                 } else if (n.getNodeName().equals("feature") && n.getNodeType() == Node.ELEMENT_NODE) {
                 	String textContent = ((Element) n).getTextContent();
         			Feature f = new Feature(textContent, true, FeatureLevel.ROW);
@@ -304,10 +250,15 @@ public class PhonoCategory implements XMLDatatype {
     @Override
     public String toString() {
     	String returnString = "categoryName:" + name + "\n";
-    	for (int i = 0; i < cells.size(); i++) {
-    		returnString += cells.get(i) + "\n";
+    	for (int i = 0; i < super.lowerObj.size(); i++) {
+    		returnString += super.lowerObj.get(i) + "\n";
     	}
     	returnString += "index:" + index;
     	return returnString;
     }
+
+	@Override
+	protected void initFeatures() {
+		super.level = FeatureLevel.ROW;
+	}
 }

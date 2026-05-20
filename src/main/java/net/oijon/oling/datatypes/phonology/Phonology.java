@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
+import net.oijon.oling.datatypes.phonology.table.PhonoSystem;
 import net.oijon.olog.Log;
 import net.oijon.oling.info.Info;
 import org.w3c.dom.Document;

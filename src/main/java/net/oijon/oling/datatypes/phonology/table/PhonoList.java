@@ -1,6 +1,8 @@
-package net.oijon.oling.datatypes.phonology;
+package net.oijon.oling.datatypes.phonology.table;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.phonology.SyllablePart;
+import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
 import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
 
@@ -58,9 +60,12 @@ public class PhonoList extends PhonoCell {
 		Element root = doc.createElement("list");
 		root.setAttribute("name", name);
 		root.setAttribute("part", part.name());
-		for (Phoneme p : phonemes) {
-			Element pe = (Element) doc.importNode(p.toXML(), true);
-			root.appendChild(pe);
+		for (FeaturalXMLDatatype fxd : super.lowerObj) {
+			if (fxd instanceof Phoneme) {
+				Phoneme p = (Phoneme) fxd;
+				Element pe = (Element) doc.importNode(p.toXML(), true);
+				root.appendChild(pe);
+			}
 		}
 
 		return root;
@@ -86,7 +91,7 @@ public class PhonoList extends PhonoCell {
 				Node n = nl.item(i);
 				if (n.getNodeName().equals("sound") && n.getNodeType() == Node.ELEMENT_NODE) {
 					Phoneme p = new Phoneme((Element) n);
-					phonemes.add(p);
+					super.lowerObj.add(p);
 				}
 			}
 		} else {

@@ -29,7 +29,8 @@ import javax.xml.parsers.ParserConfigurationException;
 public class PhonoTable implements XMLDatatype {
 
 	private String name;
-	private ArrayList<String> columnNames = new ArrayList<>();
+	private ArrayList<PhonoColumn> columns = new ArrayList<>();
+	//private ArrayList<String> columnNames = new ArrayList<>();
 	private ArrayList<PhonoCategory> rows = new ArrayList<>();
 	private SyllablePart part;
 	@Deprecated
@@ -61,7 +62,9 @@ public class PhonoTable implements XMLDatatype {
 	public PhonoTable(String name, ArrayList<String> columnNames,
 			ArrayList<PhonoCategory> rows, int soundsPerCell) {
 		this.name = name;
-		this.columnNames = columnNames;
+		for (int i = 0; i < columnNames.size(); i++) {
+			columns.add(new PhonoColumn(columnNames.get(i), i));
+		}
 		this.rows = rows;
 		this.soundsPerCell = soundsPerCell;
         fixIndecies();
@@ -83,7 +86,7 @@ public class PhonoTable implements XMLDatatype {
 	 */
 	public PhonoTable(PhonoTable pt) {
 		this.name = pt.name;
-		this.columnNames = new ArrayList<String>(pt.columnNames);
+		this.columns = new ArrayList<PhonoColumn>(pt.columns);
 		this.rows = new ArrayList<PhonoCategory>(pt.rows);
 		this.soundsPerCell = pt.soundsPerCell;
 	}
@@ -144,7 +147,7 @@ public class PhonoTable implements XMLDatatype {
 
 	public String toString() {
 		String returnString = "tableName: " + name + "\n" +
-				"columnNames:" + columnNames.toString() + "\n";
+				"columns:" + columns.toString() + "\n";
 		for (int i = 0; i < rows.size(); i++) {
 			returnString += rows.get(i) + "\n";
 		}
@@ -159,8 +162,8 @@ public class PhonoTable implements XMLDatatype {
 	 */
 	public String toLegacyString() {
 		String returnString = "===PhonoTable Start===\ntableName:" + name + "\ncolumnNames:";
-		for (int i = 0; i < columnNames.size(); i++) {
-			returnString += columnNames.get(i) + ",";
+		for (int i = 0; i < columns.size(); i++) {
+			returnString += columns.get(i).getName() + ",";
 		}
 		returnString = returnString.substring(0, returnString.length() - 1); // removes last comma
 		returnString += "\nsoundsPerCell:" + soundsPerCell;
@@ -213,7 +216,11 @@ public class PhonoTable implements XMLDatatype {
 	 * @return The column names
 	 */
 	public ArrayList<String> getColumnNames() {
-		return columnNames;
+		ArrayList<String> names = new ArrayList<String>();
+		for (PhonoColumn pc : columns) { 
+			names.add(pc.getName());
+		}
+		return names;
 	}
 	
 	/**
@@ -257,7 +264,7 @@ public class PhonoTable implements XMLDatatype {
 	public boolean equals(Object obj) {
 		if (obj instanceof PhonoTable) {
 			PhonoTable p = (PhonoTable) obj;
-			if (p.name.equals(name) && p.columnNames.equals(columnNames) && p.rows.equals(rows)) {
+			if (p.name.equals(name) && p.columns.equals(columns) && p.rows.equals(rows)) {
 				return true;
 			}
 			
@@ -273,14 +280,11 @@ public class PhonoTable implements XMLDatatype {
         root.setAttribute("name", name);
         root.setAttribute("part", part.name());
 
-        Element columns = doc.createElement("columns");
-        for (int i = 0; i < columnNames.size(); i++) {
-            Element column = doc.createElement("column");
-            column.setAttribute("index", i + "");
-            column.appendChild(doc.createTextNode(columnNames.get(i)));
-            columns.appendChild(column);
+        Element columnsE = doc.createElement("columns");
+        for (PhonoColumn pc : columns) {
+        	columnsE.appendChild(doc.importNode(pc.toXML(), true));
         }
-        root.appendChild(columns);
+        root.appendChild(columnsE);
 
         Element rowsE = doc.createElement("rows");        
         for (PhonoCategory pc : rows) {
@@ -314,7 +318,7 @@ public class PhonoTable implements XMLDatatype {
 						NodeList columns = n.getChildNodes();
 						for (int j = 0; j < columns.getLength(); j++) {
 							Node column = columns.item(j);
-							columnNames.add(column.getTextContent());
+							this.columns.add(new PhonoColumn((Element) column));
 						}
                         break;
 				    case "rows":

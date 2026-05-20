@@ -50,6 +50,7 @@ public class PhonoSystem implements XMLDatatype {
 	public static final PhonoSystem IPA = loadIPA();
 	
 	private static PhonoSystem loadIPA() {
+		// FIXME: Loads IPA from PHOSYS (EEK!)
 		PhonoSystem IPA = new PhonoSystem("Blank");
 		try {
 			InputStream IPAStream = PhonoSystem.class.getResourceAsStream("/IPA.phosys");

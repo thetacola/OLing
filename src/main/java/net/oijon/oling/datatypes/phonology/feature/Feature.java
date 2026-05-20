@@ -55,4 +55,11 @@ public class Feature {
 		return false;
 	}
 	
+	@Override
+	public String toString() {
+		String returnString = "[" + name + ", " + value + ", " +
+				this.getLevel().toString() + "]";
+		return returnString;
+	}
+	
 }

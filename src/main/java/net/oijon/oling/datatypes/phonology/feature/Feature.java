@@ -4,10 +4,12 @@ public class Feature {
 
 	private String name;
 	private boolean value;
+	private FeatureLevel level;
 	
-	public Feature(String name, boolean value) {
+	public Feature(String name, boolean value, FeatureLevel level) {
 		this.name = name;
 		this.value = value;
+		this.level = level;
 	}
 	
 	/**
@@ -32,6 +34,14 @@ public class Feature {
 	 */
 	public void setValue(boolean value) {
 		this.value = value;
+	}
+	
+	public FeatureLevel getLevel() {
+		return level;
+	}
+	
+	public void setLevel(FeatureLevel level) {
+		this.level = level;
 	}
 	
 	@Override

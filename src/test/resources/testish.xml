@@ -1,1 +1,1174 @@
-<language><meta><version>Manual Input for OLing v3.1.0</version><name>testlang</name><id>TESTLANG124022334721972</id><autonym>testish</autonym><timeCreated>1685105632845</timeCreated><lastEdited>1765847668000</lastEdited><readonly>false</readonly><parent></parent></meta><phonology><sounds><sound>p</sound><sound>b</sound><sound>t</sound><sound>d</sound><sound>k</sound><sound>g</sound><sound>m</sound><sound>n</sound><sound>ŋ</sound><sound>f</sound><sound>v</sound><sound>θ</sound><sound>ð</sound><sound>s</sound><sound>z</sound><sound>ʃ</sound><sound>ʒ</sound><sound>pʰ</sound><sound>tʰ</sound><sound>kʰ</sound><sound>ɡ</sound><sound>j</sound><sound>l</sound><sound>i</sound><sound>ɪ</sound><sound>e</sound><sound>ɛ</sound><sound>æ</sound><sound>a</sound><sound>ə</sound><sound>ɑ</sound><sound>u</sound><sound>ʊ</sound><sound>o</sound><sound>w</sound><sound>ɹ</sound><sound>ɱ</sound><sound>ɱ̚</sound></sounds><tables name="IPA"><diacritics><diacritic><char>̥</char></diacritic><diacritic><char>̬</char><feature>voice</feature></diacritic><diacritic>ʰ</diacritic><diacritic>̹</diacritic><diacritic>̜</diacritic><diacritic>̟</diacritic><diacritic>̠</diacritic><diacritic>̈</diacritic><diacritic>̽</diacritic><diacritic><char>̩</char><feature>syllabic</feature></diacritic><diacritic><char>̯</char></diacritic><diacritic>˞</diacritic><diacritic>̤</diacritic><diacritic>̰</diacritic><diacritic>̼</diacritic><diacritic>ʷ</diacritic><diacritic>ʲ</diacritic><diacritic>ˠ</diacritic><diacritic>ˤ</diacritic><diacritic>̴</diacritic><diacritic>̝</diacritic><diacritic>̞</diacritic><diacritic>̘</diacritic><diacritic>̙</diacritic><diacritic>̪</diacritic><diacritic>̺</diacritic><diacritic>̻</diacritic><diacritic>̃</diacritic><diacritic>ⁿ</diacritic><diacritic>ˡ</diacritic><diacritic>̚</diacritic><diacritic>̋</diacritic><diacritic>́</diacritic><diacritic>̄</diacritic><diacritic>̀</diacritic><diacritic>̏</diacritic><diacritic>̌</diacritic><diacritic>̂</diacritic><diacritic>᷄</diacritic><diacritic>᷅</diacritic><diacritic>᷈</diacritic><diacritic>ˈ</diacritic><diacritic>ˌ</diacritic><diacritic>ː</diacritic><diacritic>ˑ</diacritic><diacritic>̆</diacritic><diacritic>|</diacritic><diacritic>‖</diacritic><diacritic>.</diacritic><diacritic>‿</diacritic><diacritic>͡</diacritic></diacritics><table name="IPA Consonants" part="ONSET_CODA"><columns><column index="0"><name>Bilabial</name><feature type="place">LABIAL</feature><feature>round</feature></column><column index="1"><name>Labiodental</name><feature type="place">LABIAL</feature></column><column index="2"><name>Dental</name><feature type="place">CORONAL</feature><feature>anterior</feature><feature>distributed</feature></column><column index="3"><name>Alveolar</name><feature type="place">CORONAL</feature></column><column index="4"><name>Postalveolar</name><feature type="place">CORONAL</feature><feature>distributed</feature></column><column index="5"><name>Retroflex</name><feature type="place">CORONAL</feature></column><column index="6"><name>Palatal</name><feature type="place">DORSAL</feature><feature>high</feature></column><column index="7"><name>Velar</name><feature type="place">DORSAL</feature><feature>high</feature><feature>back</feature></column><column index="8"><name>Uvular</name><feature type="place">DORSAL</feature><feature>high</feature><feature>back</feature></column><column index="9"><name>Pharyngeal</name><feature type="place">RADICAL</feature><feature>rtr</feature></column><column index="10"><name>Glottal</name><feature type="place">GLOTTAL</feature></column></columns><rows><row name="Plosive" index="0"><cell index="0"><sound index="0"><char>p</char></sound><sound index="1"><char>b</char><feature>voice</feature></sound></cell><cell index="3"><sound index="0"><char>t</char></sound><sound index="1"><char>d</char><feature>voice</feature></sound></cell><cell index="5"><sound index="0"><char>ʈ</char></sound><sound index="1"><char>ɖ</char><feature>voice</feature></sound></cell><cell index="6"><sound index="0"><char>c</char></sound><sound index="1"><char>ɟ</char><feature>voice</feature></sound></cell><cell index="7"><sound index="0"><char>k</char></sound><sound index="1"><char>g</char><feature>voice</feature></sound></cell><cell index="8"><sound index="0"><char>q</char></sound><sound index="1"><char>ɢ</char><feature>voice</feature></sound></cell><cell index="10"><sound index="0"><char>ʔ</char></sound></cell></row><row name="Nasal" index="1"><feature>nasal</feature><feature>sonorant</feature><cell index="0"><sound index="1"><char>m</char><feature>voice</feature></sound></cell><cell index="1"><sound index="1"><char>ɱ</char><feature>voice</feature></sound></cell><cell index="3"><sound index="1"><char>n</char><feature>voice</feature></sound></cell><cell index="5"><sound index="1"><char>ɳ</char><feature>voice</feature></sound></cell><cell index="6"><sound index="1"><char>ɲ</char><feature>voice</feature></sound></cell><cell index="7"><sound index="1"><char>ŋ</char><feature>voice</feature></sound></cell><cell index="8"><sound index="1"><char>ɴ</char><feature>voice</feature></sound></cell></row><row name="Trill" index="2"><feature>continuant</feature><cell index="0"><sound index="1"><char>ʙ</char><feature>voice</feature></sound></cell><cell index="3"><sound index="1"><char>r</char><feature>voice</feature></sound></cell><cell index="8"><sound index="1"><char>ʀ</char><feature>voice</feature></sound></cell></row><row name="Tap or Flap" index="3"><cell index="1"><sound index="1"><char>ⱱ</char><feature>voice</feature></sound></cell><cell index="3"><sound index="1"><char>ɾ</char><feature>voice</feature></sound></cell><cell index="5"><sound index="1"><char>ɽ</char><feature>voice</feature></sound></cell></row><row name="Fricative" index="4"><feature>continuant</feature><cell index="0"><sound index="0"><char>ɸ</char></sound><sound index="1"><char>β</char><feature>voice</feature></sound></cell><cell index="1"><sound index="0"><char>f</char></sound><sound index="1"><char>v</char><feature>voice</feature></sound></cell><cell index="2"><sound index="0"><char>θ</char></sound><sound index="1"><char>ð</char><feature>voice</feature></sound></cell><cell index="3"><feature>sibilant</feature><sound index="0"><char>s</char></sound><sound index="1"><char>z</char><feature>voice</feature></sound></cell><cell index="4"><feature>sibilant</feature><sound index="0"><char>ʃ</char></sound><sound index="1"><char>ʒ</char><feature>voice</feature></sound></cell><cell index="5"><feature>sibilant</feature><sound index="0"><char>ʂ</char></sound><sound index="1"><char>ʐ</char><feature>voice</feature></sound></cell><cell index="6"><sound index="0"><char>ç</char></sound><sound index="1"><char>ʝ</char><feature>voice</feature></sound></cell><cell index="7"><sound index="0"><char>x</char></sound><sound index="1"><char>ɣ</char><feature>voice</feature></sound></cell><cell index="8"><sound index="0"><char>χ</char></sound><sound index="1"><char>ʁ</char><feature>voice</feature></sound></cell><cell index="9"><sound index="0"><char>ħ</char></sound><sound index="1"><char>ʕ</char><feature>voice</feature></sound></cell><cell index="10"><sound index="0"><char>h</char></sound><sound index="1"><char>ɦ</char><feature>voice</feature></sound></cell></row><row name="Lateral Fricative" index="5"><feature>continuant</feature><feature>lateral</feature><cell index="3"><sound index="0"><char>ɬ</char></sound><sound index="1"><char>ɮ</char><feature>voice</feature></sound></cell></row><row name="Approximant" index="6"><feature>continuant</feature><feature>sonorant</feature><cell index="1"><sound index="1"><char>ʋ</char><feature>voice</feature></sound></cell><cell index="3"><sound index="1"><char>ɹ</char><feature>voice</feature></sound></cell><cell index="5"><sound index="1"><char>ɻ</char><feature>voice</feature></sound></cell><cell index="6"><sound index="1"><char>j</char><feature>voice</feature></sound></cell><cell index="7"><sound index="1"><char>ɰ</char><feature>voice</feature></sound></cell></row><row name="Lateral Approximant" index="7"><feature>continuant</feature><feature>sonorant</feature><feature>lateral</feature><cell index="3"><sound index="1"><char>l</char><feature>voice</feature></sound></cell><cell index="5"><sound index="1"><char>ɭ</char><feature>voice</feature></sound></cell><cell index="6"><sound index="1"><char>ʎ</char><feature>voice</feature></sound></cell><cell index="7"><sound index="1"><char>ʟ</char><feature>voice</feature></sound></cell></row></rows></table><table name="IPA Vowels" part="NUCLEUS"><feature>syllabic</feature><feature>voice</feature><feature type="place">DORSAL</feature><columns><column index="0"><name>Front</name></column><column index="1"><name>Central</name></column><column index="2"><name>Back</name><feature>back</feature></column></columns><rows><row name="Close" index="0"><feature>high</feature><feature>atr</feature><cell index="0"><sound index="0"><char>i</char></sound><sound index="1"><char>y</char><feature>round</feature></sound></cell><cell index="1"><sound index="0"><char>ɨ</char></sound><sound index="1"><char>ʉ</char><feature>round</feature></sound></cell><cell index="2"><sound index="0"><char>ɯ</char></sound><sound index="1"><char>u</char><feature>round</feature></sound></cell></row><row name="Near Close" index="1"><feature>high</feature><cell index="0"><sound index="0"><char>ɪ</char></sound><sound index="1"><char>ʏ</char><feature>round</feature></sound></cell><cell index="2"><sound index="1"><char>ʊ</char><feature>round</feature></sound></cell></row><row name="Close Mid" index="2"><feature>atr</feature><cell index="0"><sound index="0"><char>e</char></sound><sound index="1"><char>ø</char><feature>round</feature></sound></cell><cell index="1"><sound index="0"><char>ɘ</char></sound><sound index="1"><char>ɵ</char><feature>round</feature></sound></cell><cell index="2"><sound index="0"><char>ɤ</char></sound><sound index="1"><char>o</char><feature>round</feature></sound></cell></row><row name="Mid" index="3"><cell index="1"><sound index="0"><char>ə</char></sound></cell></row><row name="Open Mid" index="4"><cell index="0"><sound index="0"><char>ɛ</char></sound><sound index="1"><char>œ</char><feature>round</feature></sound></cell><cell index="1"><sound index="0"><char>ɜ</char></sound><sound index="1"><char>ɞ</char><feature>round</feature></sound></cell><cell index="2"><sound index="0"><char>ʌ</char></sound><sound index="1"><char>ɔ</char><feature>round</feature></sound></cell></row><row name="Close Open" index="5"><feature>low</feature><cell index="0"><sound index="0"><char>æ</char></sound></cell><cell index="1"><sound index="0"><char>ɐ</char></sound></cell></row><row name="Open" index="6"><feature>low</feature><feature>atr</feature><cell index="0"><sound index="0"><char>a</char></sound><sound index="1"><char>ɶ</char><feature>round</feature></sound></cell><cell index="2"><sound index="0"><char>ɑ</char></sound><sound index="1"><char>ɒ</char><feature>round</feature></sound></cell></row></rows></table><list name="Click" part="ONSET"><sound index="0"><char>ʘ</char><feature type="place">LABIAL</feature><feature>round</feature></sound><sound index="1"><char>ǀ</char><feature type="place">CORONAL</feature><feature>anterior</feature><feature>distributed</feature></sound><sound index="2"><char>ǃ</char><feature type="place">CORONAL</feature></sound><sound index="3"><char>ǂ</char><feature type="place">DORSAL</feature><feature>high</feature></sound><sound index="4"><char>ǁ</char><feature type="place">CORONAL</feature><feature>lateral</feature></sound></list><list name="Implosive" part="ONSET_CODA"><feature>voice</feature><sound index="0"><char>ɓ</char><feature type="place">LABIAL</feature><feature>round</feature></sound><sound index="1"><char>ɗ</char><feature type="place">CORONAL</feature></sound><sound index="2"><char>ʄ</char><feature type="place">DORSAL</feature><feature>high</feature></sound><sound index="3"><char>ɠ</char><feature type="place">DORSAL</feature><feature>high</feature><feature>back</feature></sound><sound index="4"><char>ʛ</char><feature type="place">DORSAL</feature><feature>high</feature><feature>back</feature></sound></list><list name="Other" part="ONSET_CODA"><sound index="0"><char>ʍ</char><feature type="place">DORSAL</feature><feature>high</feature><feature>back</feature><feature>continuant</feature><feature>sonorant</feature></sound><sound index="1"><char>w</char><feature type="place">DORSAL</feature><feature>high</feature><feature>back</feature><feature>continuant</feature><feature>sonorant</feature><feature>voice</feature></sound><sound index="2"><char>ɥ</char><feature type="place">DORSAL</feature><feature>high</feature><feature>continuant</feature><feature>sonorant</feature><feature>voice</feature></sound><sound index="3"><char>ʜ</char><feature type="place">RADICAL</feature><feature>rtr</feature><feature>continuant</feature></sound><sound index="4"><char>ʢ</char><feature type="place">RADICAL</feature><feature>rtr</feature><feature>continuant</feature><feature>voice</feature></sound><sound index="5"><char>ʡ</char><feature type="place">RADICAL</feature><feature>rtr</feature></sound><sound index="6"><char>ɕ</char><feature type="place">DORSAL</feature><feature>high</feature><feature>continuant</feature><feature>sibilant</feature></sound><sound index="7"><char>ʑ</char><feature type="place">DORSAL</feature><feature>high</feature><feature>continuant</feature><feature>sibilant</feature><feature>voice</feature></sound><sound index="8"><char>ɺ</char><feature type="place">CORONAL</feature><feature>lateral</feature><feature>voice</feature></sound><sound index="9"><char>ɧ</char><feature>continuant</feature></sound></list><anomalies><anomaly><from>g</from><to>g</to></anomaly><anomaly><from>ɚ</from><to>ə˞</to></anomaly></anomalies></tables></phonology><orthography></orthography><grammar><glosses name="Leipzig"><gloss><abb>1</abb><meaning>first person</meaning></gloss><gloss><abb>2</abb><meaning>second person</meaning></gloss><gloss><abb>3</abb><meaning>third person</meaning></gloss><gloss><abb>A</abb><meaning>agent-like argument of canonical transitive verb</meaning></gloss><gloss><abb>ABL</abb><meaning>ablative</meaning></gloss><gloss><abb>ABS</abb><meaning>absolutive</meaning></gloss><gloss><abb>ACC</abb><meaning>accusative</meaning></gloss><gloss><abb>ADJ</abb><meaning>adjective</meaning></gloss><gloss><abb>ADV</abb><meaning>adverb(ial)</meaning></gloss><gloss><abb>AGR</abb><meaning>agreement</meaning></gloss><gloss><abb>ALL</abb><meaning>allative</meaning></gloss><gloss><abb>ANTIP</abb><meaning>antipassive</meaning></gloss><gloss><abb>APPL</abb><meaning>applicative</meaning></gloss><gloss><abb>ART</abb><meaning>article</meaning></gloss><gloss><abb>AUX</abb><meaning>auxiliary</meaning></gloss><gloss><abb>BEN</abb><meaning>benefactive</meaning></gloss><gloss><abb>CAUS</abb><meaning>causative</meaning></gloss><gloss><abb>CLF</abb><meaning>classifier</meaning></gloss><gloss><abb>COM</abb><meaning>comitative</meaning></gloss><gloss><abb>COMP</abb><meaning>complementizer</meaning></gloss><gloss><abb>COMPL</abb><meaning>complementive</meaning></gloss><gloss><abb>COND</abb><meaning>conditional</meaning></gloss><gloss><abb>COP</abb><meaning>copula</meaning></gloss><gloss><abb>CVB</abb><meaning>converb</meaning></gloss><gloss><abb>DAT</abb><meaning>dative</meaning></gloss><gloss><abb>DECL</abb><meaning>declarative</meaning></gloss><gloss><abb>DEF</abb><meaning>definite</meaning></gloss><gloss><abb>DEM</abb><meaning>demonstrative</meaning></gloss><gloss><abb>DET</abb><meaning>determiner</meaning></gloss><gloss><abb>DIST</abb><meaning>distal</meaning></gloss><gloss><abb>DISTR</abb><meaning>distributive</meaning></gloss><gloss><abb>DU</abb><meaning>dual</meaning></gloss><gloss><abb>DUR</abb><meaning>durative</meaning></gloss><gloss><abb>ERG</abb><meaning>ergative</meaning></gloss><gloss><abb>EXCL</abb><meaning>exclusive</meaning></gloss><gloss><abb>F</abb><meaning>feminine</meaning></gloss><gloss><abb>FOC</abb><meaning>focus</meaning></gloss><gloss><abb>FUT</abb><meaning>future</meaning></gloss><gloss><abb>GEN</abb><meaning>genitive</meaning></gloss><gloss><abb>IMP</abb><meaning>imperative</meaning></gloss><gloss><abb>INCL</abb><meaning>inclusive</meaning></gloss><gloss><abb>IND</abb><meaning>indicative</meaning></gloss><gloss><abb>INDF</abb><meaning>indefinite</meaning></gloss><gloss><abb>INF</abb><meaning>infinitive</meaning></gloss><gloss><abb>INS</abb><meaning>instrumental</meaning></gloss><gloss><abb>INTR</abb><meaning>intransitive</meaning></gloss><gloss><abb>IPFV</abb><meaning>imperfective</meaning></gloss><gloss><abb>IRR</abb><meaning>irrealis</meaning></gloss><gloss><abb>LOC</abb><meaning>locative</meaning></gloss><gloss><abb>M</abb><meaning>masculine</meaning></gloss><gloss><abb>N</abb><meaning>neuter</meaning></gloss><gloss><abb>NEG</abb><meaning>negation, negative</meaning></gloss><gloss><abb>NMLZ</abb><meaning>nominalizer/nominalization</meaning></gloss><gloss><abb>NOM</abb><meaning>nominative</meaning></gloss><gloss><abb>OBJ</abb><meaning>object</meaning></gloss><gloss><abb>OBL</abb><meaning>oblique</meaning></gloss><gloss><abb>P</abb><meaning>patient-like argument of canonical transitive verb</meaning></gloss><gloss><abb>PASS</abb><meaning>passive</meaning></gloss><gloss><abb>PFV</abb><meaning>perfective</meaning></gloss><gloss><abb>PL</abb><meaning>plural</meaning></gloss><gloss><abb>POSS</abb><meaning>possessive</meaning></gloss><gloss><abb>PRED</abb><meaning>predicative</meaning></gloss><gloss><abb>PRF</abb><meaning>perfect</meaning></gloss><gloss><abb>PRS</abb><meaning>present</meaning></gloss><gloss><abb>PROG</abb><meaning>progressive</meaning></gloss><gloss><abb>PROH</abb><meaning>prohibitive</meaning></gloss><gloss><abb>PROX</abb><meaning>proximal/proximate</meaning></gloss><gloss><abb>PST</abb><meaning>past</meaning></gloss><gloss><abb>PTCP</abb><meaning>participle</meaning></gloss><gloss><abb>PURP</abb><meaning>purposive</meaning></gloss><gloss><abb>Q</abb><meaning>question particle/marker</meaning></gloss><gloss><abb>QUOT</abb><meaning>quotative</meaning></gloss><gloss><abb>RECP</abb><meaning>reciprocal</meaning></gloss><gloss><abb>REFL</abb><meaning>reflexive</meaning></gloss><gloss><abb>REL</abb><meaning>relative</meaning></gloss><gloss><abb>RES</abb><meaning>resultative</meaning></gloss><gloss><abb>S</abb><meaning>single argument of canonical intransitive verb</meaning></gloss><gloss><abb>SBJ</abb><meaning>subject</meaning></gloss><gloss><abb>SBJV</abb><meaning>subjunctive</meaning></gloss><gloss><abb>SG</abb><meaning>singular</meaning></gloss><gloss><abb>TOP</abb><meaning>topic</meaning></gloss><gloss><abb>TR</abb><meaning>transitive</meaning></gloss><gloss><abb>VOC</abb><meaning>vocative</meaning></gloss></glosses></grammar><lexicon><word><name>test</name><meaning>test</meaning><pronunciation></pronunciation><etymology></etymology><timeCreated>1704181031713</timeCreated><lastEdited>1704181031713</lastEdited><synonyms></synonyms><homonyms></homonyms><classes></classes></word><word><name>hi</name><meaning>hello</meaning><pronunciation>hi</pronunciation><etymology></etymology><timeCreated>1757020250451</timeCreated><lastEdited>1757020250451</lastEdited><synonyms></synonyms><homonyms></homonyms><classes></classes></word></lexicon></language>
+<language>
+	<meta>
+		<version>Manual Input for OLing v3.1.0</version>
+		<name>testlang</name>
+		<id>TESTLANG124022334721972</id>
+		<autonym>testish</autonym>
+		<timeCreated>1685105632845</timeCreated>
+		<lastEdited>1765847668000</lastEdited>
+		<readonly>false</readonly>
+		<parent></parent>
+	</meta>
+	<phonology>
+		<sounds>
+			<sound>p</sound>
+			<sound>b</sound>
+			<sound>t</sound>
+			<sound>d</sound>
+			<sound>k</sound>
+			<sound>g</sound>
+			<sound>m</sound>
+			<sound>n</sound>
+			<sound>ŋ</sound>
+			<sound>f</sound>
+			<sound>v</sound>
+			<sound>θ</sound>
+			<sound>ð</sound>
+			<sound>s</sound>
+			<sound>z</sound>
+			<sound>ʃ</sound>
+			<sound>ʒ</sound>
+			<sound>pʰ</sound>
+			<sound>tʰ</sound>
+			<sound>kʰ</sound>
+			<sound>ɡ</sound>
+			<sound>j</sound>
+			<sound>l</sound>
+			<sound>i</sound>
+			<sound>ɪ</sound>
+			<sound>e</sound>
+			<sound>ɛ</sound>
+			<sound>æ</sound>
+			<sound>a</sound>
+			<sound>ə</sound>
+			<sound>ɑ</sound>
+			<sound>u</sound>
+			<sound>ʊ</sound>
+			<sound>o</sound>
+			<sound>w</sound>
+			<sound>ɹ</sound>
+			<sound>ɱ</sound>
+			<sound>ɱ̚</sound>
+		</sounds>
+		<tables name="IPA">
+			<diacritics>
+				<diacritic>
+					<char>̥</char>
+				</diacritic>
+				<diacritic>
+					<char>̬</char>
+					<feature>voice</feature>
+				</diacritic>
+				<diacritic>ʰ</diacritic>
+				<diacritic>̹</diacritic>
+				<diacritic>̜</diacritic>
+				<diacritic>̟</diacritic>
+				<diacritic>̠</diacritic>
+				<diacritic>̈</diacritic>
+				<diacritic>̽</diacritic>
+				<diacritic>
+					<char>̩</char>
+					<feature>syllabic</feature>
+				</diacritic>
+				<diacritic>
+					<char>̯</char>
+				</diacritic>
+				<diacritic>˞</diacritic>
+				<diacritic>̤</diacritic>
+				<diacritic>̰</diacritic>
+				<diacritic>̼</diacritic>
+				<diacritic>ʷ</diacritic>
+				<diacritic>ʲ</diacritic>
+				<diacritic>ˠ</diacritic>
+				<diacritic>ˤ</diacritic>
+				<diacritic>̴</diacritic>
+				<diacritic>̝</diacritic>
+				<diacritic>̞</diacritic>
+				<diacritic>̘</diacritic>
+				<diacritic>̙</diacritic>
+				<diacritic>̪</diacritic>
+				<diacritic>̺</diacritic>
+				<diacritic>̻</diacritic>
+				<diacritic>̃</diacritic>
+				<diacritic>ⁿ</diacritic>
+				<diacritic>ˡ</diacritic>
+				<diacritic>̚</diacritic>
+				<diacritic>̋</diacritic>
+				<diacritic>́</diacritic>
+				<diacritic>̄</diacritic>
+				<diacritic>̀</diacritic>
+				<diacritic>̏</diacritic>
+				<diacritic>̌</diacritic>
+				<diacritic>̂</diacritic>
+				<diacritic>᷄</diacritic>
+				<diacritic>᷅</diacritic>
+				<diacritic>᷈</diacritic>
+				<diacritic>ˈ</diacritic>
+				<diacritic>ˌ</diacritic>
+				<diacritic>ː</diacritic>
+				<diacritic>ˑ</diacritic>
+				<diacritic>̆</diacritic>
+				<diacritic>|</diacritic>
+				<diacritic>‖</diacritic>
+				<diacritic>.</diacritic>
+				<diacritic>‿</diacritic>
+				<diacritic>͡</diacritic>
+			</diacritics>
+			<table name="IPA Consonants" part="ONSET_CODA">
+				<columns>
+					<column index="0">
+						<name>Bilabial</name>
+						<feature type="place">LABIAL</feature>
+						<feature>round</feature>
+					</column>
+					<column index="1">
+						<name>Labiodental</name>
+						<feature type="place">LABIAL</feature>
+					</column>
+					<column index="2">
+						<name>Dental</name>
+						<feature type="place">CORONAL</feature>
+						<feature>anterior</feature>
+						<feature>distributed</feature>
+					</column>
+					<column index="3">
+						<name>Alveolar</name>
+						<feature type="place">CORONAL</feature>
+					</column>
+					<column index="4">
+						<name>Postalveolar</name>
+						<feature type="place">CORONAL</feature>
+						<feature>distributed</feature>
+					</column>
+					<column index="5">
+						<name>Retroflex</name>
+						<feature type="place">CORONAL</feature>
+					</column>
+					<column index="6">
+						<name>Palatal</name>
+						<feature type="place">DORSAL</feature>
+						<feature>high</feature>
+					</column>
+					<column index="7">
+						<name>Velar</name>
+						<feature type="place">DORSAL</feature>
+						<feature>high</feature>
+						<feature>back</feature>
+					</column>
+					<column index="8">
+						<name>Uvular</name>
+						<feature type="place">DORSAL</feature>
+						<feature>high</feature>
+						<feature>back</feature>
+					</column>
+					<column index="9">
+						<name>Pharyngeal</name>
+						<feature type="place">RADICAL</feature>
+						<feature>rtr</feature>
+					</column>
+					<column index="10">
+						<name>Glottal</name>
+						<feature type="place">GLOTTAL</feature>
+					</column>
+				</columns>
+				<rows>
+					<row name="Plosive" index="0">
+						<cell index="0">
+							<sound index="0">
+								<char>p</char>
+							</sound>
+							<sound index="1">
+								<char>b</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="3">
+							<sound index="0">
+								<char>t</char>
+							</sound>
+							<sound index="1">
+								<char>d</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="5">
+							<sound index="0">
+								<char>ʈ</char>
+							</sound>
+							<sound index="1">
+								<char>ɖ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="6">
+							<sound index="0">
+								<char>c</char>
+							</sound>
+							<sound index="1">
+								<char>ɟ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="7">
+							<sound index="0">
+								<char>k</char>
+							</sound>
+							<sound index="1">
+								<char>g</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="8">
+							<sound index="0">
+								<char>q</char>
+							</sound>
+							<sound index="1">
+								<char>ɢ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="10">
+							<sound index="0">
+								<char>ʔ</char>
+							</sound>
+						</cell>
+					</row>
+					<row name="Nasal" index="1">
+						<feature>nasal</feature>
+						<feature>sonorant</feature>
+						<cell index="0">
+							<sound index="1">
+								<char>m</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="1">
+							<sound index="1">
+								<char>ɱ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="3">
+							<sound index="1">
+								<char>n</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="5">
+							<sound index="1">
+								<char>ɳ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="6">
+							<sound index="1">
+								<char>ɲ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="7">
+							<sound index="1">
+								<char>ŋ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="8">
+							<sound index="1">
+								<char>ɴ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+					</row>
+					<row name="Trill" index="2">
+						<feature>continuant</feature>
+						<cell index="0">
+							<sound index="1">
+								<char>ʙ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="3">
+							<sound index="1">
+								<char>r</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="8">
+							<sound index="1">
+								<char>ʀ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+					</row>
+					<row name="Tap or Flap" index="3">
+						<cell index="1">
+							<sound index="1">
+								<char>ⱱ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="3">
+							<sound index="1">
+								<char>ɾ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="5">
+							<sound index="1">
+								<char>ɽ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+					</row>
+					<row name="Fricative" index="4">
+						<feature>continuant</feature>
+						<cell index="0">
+							<sound index="0">
+								<char>ɸ</char>
+							</sound>
+							<sound index="1">
+								<char>β</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="1">
+							<sound index="0">
+								<char>f</char>
+							</sound>
+							<sound index="1">
+								<char>v</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="2">
+							<sound index="0">
+								<char>θ</char>
+							</sound>
+							<sound index="1">
+								<char>ð</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="3">
+							<feature>sibilant</feature>
+							<sound index="0">
+								<char>s</char>
+							</sound>
+							<sound index="1">
+								<char>z</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="4">
+							<feature>sibilant</feature>
+							<sound index="0">
+								<char>ʃ</char>
+							</sound>
+							<sound index="1">
+								<char>ʒ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="5">
+							<feature>sibilant</feature>
+							<sound index="0">
+								<char>ʂ</char>
+							</sound>
+							<sound index="1">
+								<char>ʐ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="6">
+							<sound index="0">
+								<char>ç</char>
+							</sound>
+							<sound index="1">
+								<char>ʝ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="7">
+							<sound index="0">
+								<char>x</char>
+							</sound>
+							<sound index="1">
+								<char>ɣ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="8">
+							<sound index="0">
+								<char>χ</char>
+							</sound>
+							<sound index="1">
+								<char>ʁ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="9">
+							<sound index="0">
+								<char>ħ</char>
+							</sound>
+							<sound index="1">
+								<char>ʕ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="10">
+							<sound index="0">
+								<char>h</char>
+							</sound>
+							<sound index="1">
+								<char>ɦ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+					</row>
+					<row name="Lateral Fricative" index="5">
+						<feature>continuant</feature>
+						<feature>lateral</feature>
+						<cell index="3">
+							<sound index="0">
+								<char>ɬ</char>
+							</sound>
+							<sound index="1">
+								<char>ɮ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+					</row>
+					<row name="Approximant" index="6">
+						<feature>continuant</feature>
+						<feature>sonorant</feature>
+						<cell index="1">
+							<sound index="1">
+								<char>ʋ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="3">
+							<sound index="1">
+								<char>ɹ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="5">
+							<sound index="1">
+								<char>ɻ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="6">
+							<sound index="1">
+								<char>j</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="7">
+							<sound index="1">
+								<char>ɰ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+					</row>
+					<row name="Lateral Approximant" index="7">
+						<feature>continuant</feature>
+						<feature>sonorant</feature>
+						<feature>lateral</feature>
+						<cell index="3">
+							<sound index="1">
+								<char>l</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="5">
+							<sound index="1">
+								<char>ɭ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="6">
+							<sound index="1">
+								<char>ʎ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+						<cell index="7">
+							<sound index="1">
+								<char>ʟ</char>
+								<feature>voice</feature>
+							</sound>
+						</cell>
+					</row>
+				</rows>
+			</table>
+			<table name="IPA Vowels" part="NUCLEUS">
+				<feature>syllabic</feature>
+				<feature>voice</feature>
+				<feature type="place">DORSAL</feature>
+				<columns>
+					<column index="0">
+						<name>Front</name>
+					</column>
+					<column index="1">
+						<name>Central</name>
+					</column>
+					<column index="2">
+						<name>Back</name>
+						<feature>back</feature>
+					</column>
+				</columns>
+				<rows>
+					<row name="Close" index="0">
+						<feature>high</feature>
+						<feature>atr</feature>
+						<cell index="0">
+							<sound index="0">
+								<char>i</char>
+							</sound>
+							<sound index="1">
+								<char>y</char>
+								<feature>round</feature>
+							</sound>
+						</cell>
+						<cell index="1">
+							<sound index="0">
+								<char>ɨ</char>
+							</sound>
+							<sound index="1">
+								<char>ʉ</char>
+								<feature>round</feature>
+							</sound>
+						</cell>
+						<cell index="2">
+							<sound index="0">
+								<char>ɯ</char>
+							</sound>
+							<sound index="1">
+								<char>u</char>
+								<feature>round</feature>
+							</sound>
+						</cell>
+					</row>
+					<row name="Near Close" index="1">
+						<feature>high</feature>
+						<cell index="0">
+							<sound index="0">
+								<char>ɪ</char>
+							</sound>
+							<sound index="1">
+								<char>ʏ</char>
+								<feature>round</feature>
+							</sound>
+						</cell>
+						<cell index="2">
+							<sound index="1">
+								<char>ʊ</char>
+								<feature>round</feature>
+							</sound>
+						</cell>
+					</row>
+					<row name="Close Mid" index="2">
+						<feature>atr</feature>
+						<cell index="0">
+							<sound index="0">
+								<char>e</char>
+							</sound>
+							<sound index="1">
+								<char>ø</char>
+								<feature>round</feature>
+							</sound>
+						</cell>
+						<cell index="1">
+							<sound index="0">
+								<char>ɘ</char>
+							</sound>
+							<sound index="1">
+								<char>ɵ</char>
+								<feature>round</feature>
+							</sound>
+						</cell>
+						<cell index="2">
+							<sound index="0">
+								<char>ɤ</char>
+							</sound>
+							<sound index="1">
+								<char>o</char>
+								<feature>round</feature>
+							</sound>
+						</cell>
+					</row>
+					<row name="Mid" index="3">
+						<cell index="1">
+							<sound index="0">
+								<char>ə</char>
+							</sound>
+						</cell>
+					</row>
+					<row name="Open Mid" index="4">
+						<cell index="0">
+							<sound index="0">
+								<char>ɛ</char>
+							</sound>
+							<sound index="1">
+								<char>œ</char>
+								<feature>round</feature>
+							</sound>
+						</cell>
+						<cell index="1">
+							<sound index="0">
+								<char>ɜ</char>
+							</sound>
+							<sound index="1">
+								<char>ɞ</char>
+								<feature>round</feature>
+							</sound>
+						</cell>
+						<cell index="2">
+							<sound index="0">
+								<char>ʌ</char>
+							</sound>
+							<sound index="1">
+								<char>ɔ</char>
+								<feature>round</feature>
+							</sound>
+						</cell>
+					</row>
+					<row name="Close Open" index="5">
+						<feature>low</feature>
+						<cell index="0">
+							<sound index="0">
+								<char>æ</char>
+							</sound>
+						</cell>
+						<cell index="1">
+							<sound index="0">
+								<char>ɐ</char>
+							</sound>
+						</cell>
+					</row>
+					<row name="Open" index="6">
+						<feature>low</feature>
+						<feature>atr</feature>
+						<cell index="0">
+							<sound index="0">
+								<char>a</char>
+							</sound>
+							<sound index="1">
+								<char>ɶ</char>
+								<feature>round</feature>
+							</sound>
+						</cell>
+						<cell index="2">
+							<sound index="0">
+								<char>ɑ</char>
+							</sound>
+							<sound index="1">
+								<char>ɒ</char>
+								<feature>round</feature>
+							</sound>
+						</cell>
+					</row>
+				</rows>
+			</table>
+			<list name="Click" part="ONSET">
+				<sound index="0">
+					<char>ʘ</char>
+					<feature type="place">LABIAL</feature>
+					<feature>round</feature>
+				</sound>
+				<sound index="1">
+					<char>ǀ</char>
+					<feature type="place">CORONAL</feature>
+					<feature>anterior</feature>
+					<feature>distributed</feature>
+				</sound>
+				<sound index="2">
+					<char>ǃ</char>
+					<feature type="place">CORONAL</feature>
+				</sound>
+				<sound index="3">
+					<char>ǂ</char>
+					<feature type="place">DORSAL</feature>
+					<feature>high</feature>
+				</sound>
+				<sound index="4">
+					<char>ǁ</char>
+					<feature type="place">CORONAL</feature>
+					<feature>lateral</feature>
+				</sound>
+			</list>
+			<list name="Implosive" part="ONSET_CODA">
+				<feature>voice</feature>
+				<sound index="0">
+					<char>ɓ</char>
+					<feature type="place">LABIAL</feature>
+					<feature>round</feature>
+				</sound>
+				<sound index="1">
+					<char>ɗ</char>
+					<feature type="place">CORONAL</feature>
+				</sound>
+				<sound index="2">
+					<char>ʄ</char>
+					<feature type="place">DORSAL</feature>
+					<feature>high</feature>
+				</sound>
+				<sound index="3">
+					<char>ɠ</char>
+					<feature type="place">DORSAL</feature>
+					<feature>high</feature>
+					<feature>back</feature>
+				</sound>
+				<sound index="4">
+					<char>ʛ</char>
+					<feature type="place">DORSAL</feature>
+					<feature>high</feature>
+					<feature>back</feature>
+				</sound>
+			</list>
+			<list name="Other" part="ONSET_CODA">
+				<sound index="0">
+					<char>ʍ</char>
+					<feature type="place">DORSAL</feature>
+					<feature>high</feature>
+					<feature>back</feature>
+					<feature>continuant</feature>
+					<feature>sonorant</feature>
+				</sound>
+				<sound index="1">
+					<char>w</char>
+					<feature type="place">DORSAL</feature>
+					<feature>high</feature>
+					<feature>back</feature>
+					<feature>continuant</feature>
+					<feature>sonorant</feature>
+					<feature>voice</feature>
+				</sound>
+				<sound index="2">
+					<char>ɥ</char>
+					<feature type="place">DORSAL</feature>
+					<feature>high</feature>
+					<feature>continuant</feature>
+					<feature>sonorant</feature>
+					<feature>voice</feature>
+				</sound>
+				<sound index="3">
+					<char>ʜ</char>
+					<feature type="place">RADICAL</feature>
+					<feature>rtr</feature>
+					<feature>continuant</feature>
+				</sound>
+				<sound index="4">
+					<char>ʢ</char>
+					<feature type="place">RADICAL</feature>
+					<feature>rtr</feature>
+					<feature>continuant</feature>
+					<feature>voice</feature>
+				</sound>
+				<sound index="5">
+					<char>ʡ</char>
+					<feature type="place">RADICAL</feature>
+					<feature>rtr</feature>
+				</sound>
+				<sound index="6">
+					<char>ɕ</char>
+					<feature type="place">DORSAL</feature>
+					<feature>high</feature>
+					<feature>continuant</feature>
+					<feature>sibilant</feature>
+				</sound>
+				<sound index="7">
+					<char>ʑ</char>
+					<feature type="place">DORSAL</feature>
+					<feature>high</feature>
+					<feature>continuant</feature>
+					<feature>sibilant</feature>
+					<feature>voice</feature>
+				</sound>
+				<sound index="8">
+					<char>ɺ</char>
+					<feature type="place">CORONAL</feature>
+					<feature>lateral</feature>
+					<feature>voice</feature>
+				</sound>
+				<sound index="9">
+					<char>ɧ</char>
+					<feature>continuant</feature>
+				</sound>
+			</list>
+			<anomalies>
+				<anomaly>
+					<from>g</from>
+					<to>g</to>
+				</anomaly>
+				<anomaly>
+					<from>ɚ</from>
+					<to>ə˞</to>
+				</anomaly>
+			</anomalies>
+		</tables>
+	</phonology>
+	<orthography></orthography>
+	<grammar>
+		<glosses name="Leipzig">
+			<gloss>
+				<abb>1</abb>
+				<meaning>first person</meaning>
+			</gloss>
+			<gloss>
+				<abb>2</abb>
+				<meaning>second person</meaning>
+			</gloss>
+			<gloss>
+				<abb>3</abb>
+				<meaning>third person</meaning>
+			</gloss>
+			<gloss>
+				<abb>A</abb>
+				<meaning>agent-like argument of canonical transitive verb</meaning>
+			</gloss>
+			<gloss>
+				<abb>ABL</abb>
+				<meaning>ablative</meaning>
+			</gloss>
+			<gloss>
+				<abb>ABS</abb>
+				<meaning>absolutive</meaning>
+			</gloss>
+			<gloss>
+				<abb>ACC</abb>
+				<meaning>accusative</meaning>
+			</gloss>
+			<gloss>
+				<abb>ADJ</abb>
+				<meaning>adjective</meaning>
+			</gloss>
+			<gloss>
+				<abb>ADV</abb>
+				<meaning>adverb(ial)</meaning>
+			</gloss>
+			<gloss>
+				<abb>AGR</abb>
+				<meaning>agreement</meaning>
+			</gloss>
+			<gloss>
+				<abb>ALL</abb>
+				<meaning>allative</meaning>
+			</gloss>
+			<gloss>
+				<abb>ANTIP</abb>
+				<meaning>antipassive</meaning>
+			</gloss>
+			<gloss>
+				<abb>APPL</abb>
+				<meaning>applicative</meaning>
+			</gloss>
+			<gloss>
+				<abb>ART</abb>
+				<meaning>article</meaning>
+			</gloss>
+			<gloss>
+				<abb>AUX</abb>
+				<meaning>auxiliary</meaning>
+			</gloss>
+			<gloss>
+				<abb>BEN</abb>
+				<meaning>benefactive</meaning>
+			</gloss>
+			<gloss>
+				<abb>CAUS</abb>
+				<meaning>causative</meaning>
+			</gloss>
+			<gloss>
+				<abb>CLF</abb>
+				<meaning>classifier</meaning>
+			</gloss>
+			<gloss>
+				<abb>COM</abb>
+				<meaning>comitative</meaning>
+			</gloss>
+			<gloss>
+				<abb>COMP</abb>
+				<meaning>complementizer</meaning>
+			</gloss>
+			<gloss>
+				<abb>COMPL</abb>
+				<meaning>complementive</meaning>
+			</gloss>
+			<gloss>
+				<abb>COND</abb>
+				<meaning>conditional</meaning>
+			</gloss>
+			<gloss>
+				<abb>COP</abb>
+				<meaning>copula</meaning>
+			</gloss>
+			<gloss>
+				<abb>CVB</abb>
+				<meaning>converb</meaning>
+			</gloss>
+			<gloss>
+				<abb>DAT</abb>
+				<meaning>dative</meaning>
+			</gloss>
+			<gloss>
+				<abb>DECL</abb>
+				<meaning>declarative</meaning>
+			</gloss>
+			<gloss>
+				<abb>DEF</abb>
+				<meaning>definite</meaning>
+			</gloss>
+			<gloss>
+				<abb>DEM</abb>
+				<meaning>demonstrative</meaning>
+			</gloss>
+			<gloss>
+				<abb>DET</abb>
+				<meaning>determiner</meaning>
+			</gloss>
+			<gloss>
+				<abb>DIST</abb>
+				<meaning>distal</meaning>
+			</gloss>
+			<gloss>
+				<abb>DISTR</abb>
+				<meaning>distributive</meaning>
+			</gloss>
+			<gloss>
+				<abb>DU</abb>
+				<meaning>dual</meaning>
+			</gloss>
+			<gloss>
+				<abb>DUR</abb>
+				<meaning>durative</meaning>
+			</gloss>
+			<gloss>
+				<abb>ERG</abb>
+				<meaning>ergative</meaning>
+			</gloss>
+			<gloss>
+				<abb>EXCL</abb>
+				<meaning>exclusive</meaning>
+			</gloss>
+			<gloss>
+				<abb>F</abb>
+				<meaning>feminine</meaning>
+			</gloss>
+			<gloss>
+				<abb>FOC</abb>
+				<meaning>focus</meaning>
+			</gloss>
+			<gloss>
+				<abb>FUT</abb>
+				<meaning>future</meaning>
+			</gloss>
+			<gloss>
+				<abb>GEN</abb>
+				<meaning>genitive</meaning>
+			</gloss>
+			<gloss>
+				<abb>IMP</abb>
+				<meaning>imperative</meaning>
+			</gloss>
+			<gloss>
+				<abb>INCL</abb>
+				<meaning>inclusive</meaning>
+			</gloss>
+			<gloss>
+				<abb>IND</abb>
+				<meaning>indicative</meaning>
+			</gloss>
+			<gloss>
+				<abb>INDF</abb>
+				<meaning>indefinite</meaning>
+			</gloss>
+			<gloss>
+				<abb>INF</abb>
+				<meaning>infinitive</meaning>
+			</gloss>
+			<gloss>
+				<abb>INS</abb>
+				<meaning>instrumental</meaning>
+			</gloss>
+			<gloss>
+				<abb>INTR</abb>
+				<meaning>intransitive</meaning>
+			</gloss>
+			<gloss>
+				<abb>IPFV</abb>
+				<meaning>imperfective</meaning>
+			</gloss>
+			<gloss>
+				<abb>IRR</abb>
+				<meaning>irrealis</meaning>
+			</gloss>
+			<gloss>
+				<abb>LOC</abb>
+				<meaning>locative</meaning>
+			</gloss>
+			<gloss>
+				<abb>M</abb>
+				<meaning>masculine</meaning>
+			</gloss>
+			<gloss>
+				<abb>N</abb>
+				<meaning>neuter</meaning>
+			</gloss>
+			<gloss>
+				<abb>NEG</abb>
+				<meaning>negation, negative</meaning>
+			</gloss>
+			<gloss>
+				<abb>NMLZ</abb>
+				<meaning>nominalizer/nominalization</meaning>
+			</gloss>
+			<gloss>
+				<abb>NOM</abb>
+				<meaning>nominative</meaning>
+			</gloss>
+			<gloss>
+				<abb>OBJ</abb>
+				<meaning>object</meaning>
+			</gloss>
+			<gloss>
+				<abb>OBL</abb>
+				<meaning>oblique</meaning>
+			</gloss>
+			<gloss>
+				<abb>P</abb>
+				<meaning>patient-like argument of canonical transitive verb</meaning>
+			</gloss>
+			<gloss>
+				<abb>PASS</abb>
+				<meaning>passive</meaning>
+			</gloss>
+			<gloss>
+				<abb>PFV</abb>
+				<meaning>perfective</meaning>
+			</gloss>
+			<gloss>
+				<abb>PL</abb>
+				<meaning>plural</meaning>
+			</gloss>
+			<gloss>
+				<abb>POSS</abb>
+				<meaning>possessive</meaning>
+			</gloss>
+			<gloss>
+				<abb>PRED</abb>
+				<meaning>predicative</meaning>
+			</gloss>
+			<gloss>
+				<abb>PRF</abb>
+				<meaning>perfect</meaning>
+			</gloss>
+			<gloss>
+				<abb>PRS</abb>
+				<meaning>present</meaning>
+			</gloss>
+			<gloss>
+				<abb>PROG</abb>
+				<meaning>progressive</meaning>
+			</gloss>
+			<gloss>
+				<abb>PROH</abb>
+				<meaning>prohibitive</meaning>
+			</gloss>
+			<gloss>
+				<abb>PROX</abb>
+				<meaning>proximal/proximate</meaning>
+			</gloss>
+			<gloss>
+				<abb>PST</abb>
+				<meaning>past</meaning>
+			</gloss>
+			<gloss>
+				<abb>PTCP</abb>
+				<meaning>participle</meaning>
+			</gloss>
+			<gloss>
+				<abb>PURP</abb>
+				<meaning>purposive</meaning>
+			</gloss>
+			<gloss>
+				<abb>Q</abb>
+				<meaning>question particle/marker</meaning>
+			</gloss>
+			<gloss>
+				<abb>QUOT</abb>
+				<meaning>quotative</meaning>
+			</gloss>
+			<gloss>
+				<abb>RECP</abb>
+				<meaning>reciprocal</meaning>
+			</gloss>
+			<gloss>
+				<abb>REFL</abb>
+				<meaning>reflexive</meaning>
+			</gloss>
+			<gloss>
+				<abb>REL</abb>
+				<meaning>relative</meaning>
+			</gloss>
+			<gloss>
+				<abb>RES</abb>
+				<meaning>resultative</meaning>
+			</gloss>
+			<gloss>
+				<abb>S</abb>
+				<meaning>single argument of canonical intransitive verb</meaning>
+			</gloss>
+			<gloss>
+				<abb>SBJ</abb>
+				<meaning>subject</meaning>
+			</gloss>
+			<gloss>
+				<abb>SBJV</abb>
+				<meaning>subjunctive</meaning>
+			</gloss>
+			<gloss>
+				<abb>SG</abb>
+				<meaning>singular</meaning>
+			</gloss>
+			<gloss>
+				<abb>TOP</abb>
+				<meaning>topic</meaning>
+			</gloss>
+			<gloss>
+				<abb>TR</abb>
+				<meaning>transitive</meaning>
+			</gloss>
+			<gloss>
+				<abb>VOC</abb>
+				<meaning>vocative</meaning>
+			</gloss>
+		</glosses>
+	</grammar>
+	<lexicon>
+		<word>
+			<name>test</name>
+			<meaning>test</meaning>
+			<pronunciation></pronunciation>
+			<etymology></etymology>
+			<timeCreated>1704181031713</timeCreated>
+			<lastEdited>1704181031713</lastEdited>
+			<synonyms></synonyms>
+			<homonyms></homonyms>
+			<classes></classes>
+		</word>
+		<word>
+			<name>hi</name>
+			<meaning>hello</meaning>
+			<pronunciation>hi</pronunciation>
+			<etymology></etymology>
+			<timeCreated>1757020250451</timeCreated>
+			<lastEdited>1757020250451</lastEdited>
+			<synonyms></synonyms>
+			<homonyms></homonyms>
+			<classes></classes>
+		</word>
+	</lexicon>
+</language>

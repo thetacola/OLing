@@ -3,6 +3,7 @@ package net.oijon.oling.datatypes.phonology;
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
+import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -106,7 +107,7 @@ public class Phoneme implements XMLDatatype {
     	}
     }
     
-    public void setFeature(String name, boolean value) {
+    public void setFeature(String name, boolean value, FeatureLevel level) {
     	boolean found = false;
     	for (int i = 0; i < features.size(); i++) {
     		if (features.get(i).getName().equals(name)) {
@@ -116,7 +117,7 @@ public class Phoneme implements XMLDatatype {
     		}
     	}
     	if (!found) {
-    		this.addFeature(new Feature(name, value));
+    		this.addFeature(new Feature(name, value, level));
     	}
     }
     
@@ -135,7 +136,8 @@ public class Phoneme implements XMLDatatype {
             charElement.appendChild(doc.createTextNode(sound));
             root.appendChild(charElement);
             for (int i = 0; i < features.size(); i++) {
-            	if (features.get(i).getValue()) {
+            	Feature f = features.get(i);
+            	if (f.getValue() && f.getLevel() == FeatureLevel.SOUND) {
             		Element featureElement = doc.createElement("feature");
             		featureElement.setTextContent(features.get(i).getName());
             		root.appendChild(featureElement);
@@ -163,7 +165,7 @@ public class Phoneme implements XMLDatatype {
             			sound = childE.getTextContent();
             		} else if (childE.getTagName().equals("feature")) {
             			String textContent = childE.getTextContent();
-            			Feature f = new Feature(textContent, true);
+            			Feature f = new Feature(textContent, true, FeatureLevel.SOUND);
             			this.addFeature(f);
             		}
             	}

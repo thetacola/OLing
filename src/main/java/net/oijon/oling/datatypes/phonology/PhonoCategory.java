@@ -2,6 +2,9 @@ package net.oijon.oling.datatypes.phonology;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
+import net.oijon.oling.datatypes.phonology.feature.Feature;
+import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -23,6 +26,7 @@ public class PhonoCategory implements XMLDatatype {
 
 	private String name;
 	private ArrayList<PhonoCell> cells = new ArrayList<>();
+	private ArrayList<Feature> features = new ArrayList<>();
     private int index;
 
     /**
@@ -148,6 +152,88 @@ public class PhonoCategory implements XMLDatatype {
 		return cells.size();
 	}
 	
+	public void addFeature(Feature f) {
+    	boolean found = false;
+    	for (int i = 0; i < features.size(); i++) {
+    		if (features.get(i).getName().equals(f.getName())) {
+    			found = true;
+    			break;
+    		}
+    	}
+    	if (!found) {
+    		features.add(f);
+    	}
+    	
+    	applyFeatures();
+    }
+    
+    public void removeFeature(String name) {
+    	for (int i = 0; i < features.size(); i++) {
+    		if (features.get(i).getName().equals(name)) {
+    			features.remove(i);
+    			break;
+    		}
+    	}
+    	
+    	for (int i = 0; i < cells.size(); i++) {
+    		cells.get(i).removeFeature(name);
+    	}
+    	
+    	applyFeatures();
+    }
+    
+    public void setFeature(String name, boolean value, FeatureLevel level) {
+    	boolean found = false;
+    	for (int i = 0; i < features.size(); i++) {
+    		if (features.get(i).getName().equals(name)) {
+    			features.get(i).setValue(value);
+    			found = true;
+    			break;
+    		}
+    	}
+    	if (!found) {
+    		this.addFeature(new Feature(name, value, level));
+    	}
+    	
+    	applyFeatures();
+    }
+    
+    public ArrayList<Feature> getFeatures() {
+    	return new ArrayList<Feature>(features);
+    }
+
+    private void applyFeatures() {
+    	// get features from all other phonemes, only apply those that are true to all
+    	ArrayList<Feature> allFeatures = new ArrayList<Feature>(features);
+    	for (int i = 0; i < cells.size(); i++) {
+    		ArrayList<Feature> cellFeatures = cells.get(i).getFeatures();
+    		for (int j = 0; j < cellFeatures.size(); j++) {
+    			boolean found = false;
+    	    	for (int k = 0; k < allFeatures.size(); k++) {
+    	    		if (allFeatures.get(k).getName().equals(cellFeatures.get(j).getName())) {
+    	    			found = true;
+    	    			break;
+    	    		}
+    	    	}
+    	    	if (!found) {
+    	    		Feature f = new Feature(cellFeatures.get(j).getName(), false, FeatureLevel.ROW);
+    	    		allFeatures.add(f);
+    	    	}
+    		}
+    	}
+    	
+    	for (int i = 0; i < allFeatures.size(); i++) {
+    		Feature f = allFeatures.get(i);
+    		for (int j = 0; j < cells.size(); j++) {
+    			if (f.getValue()) {
+    				cells.get(j).setFeature(f.getName(), f.getValue(), FeatureLevel.ROW);
+    			} else {
+    				cells.get(j).addFeature(f);
+    			}
+    		}
+    	}
+    }
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof PhonoCategory) {
@@ -164,6 +250,16 @@ public class PhonoCategory implements XMLDatatype {
         Element root = doc.createElement("row");
         root.setAttribute("name", name);
         root.setAttribute("index", index + "");
+        
+        for (int i = 0; i < features.size(); i++) {
+        	Feature f = features.get(i);
+        	if (f.getValue() && f.getLevel() == FeatureLevel.ROW) {
+        		Element featureElement = doc.createElement("feature");
+        		featureElement.setTextContent(features.get(i).getName());
+        		root.appendChild(featureElement);
+        	}
+        }
+        
         for (PhonoCell pc : cells) {
             // Assuming here that there's no row of *all* spacers, because why in the world would you do that
             // Of course, this is not a guarantee, so this may make unneeded rows if that truly is the case.
@@ -192,11 +288,17 @@ public class PhonoCategory implements XMLDatatype {
                 if (n.getNodeName().equals("cell") && n.getNodeType() == Node.ELEMENT_NODE) {
                     PhonoCell pc = new PhonoCell((Element) n);
                     cells.add(pc);
+                } else if (n.getNodeName().equals("feature") && n.getNodeType() == Node.ELEMENT_NODE) {
+                	String textContent = ((Element) n).getTextContent();
+        			Feature f = new Feature(textContent, true, FeatureLevel.ROW);
+        			this.addFeature(f);
                 }
             }
         } else {
             throw new InvalidXMLException("Node name not expected name! Expected: row; Actual: " + e.getTagName());
         }
+        
+        applyFeatures();
     }
     
     @Override

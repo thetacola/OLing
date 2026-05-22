@@ -10,8 +10,11 @@ import java.util.Date;
 import java.util.List;
 import net.oijon.oling.datatypes.language.LanguageProperties;
 import net.oijon.oling.datatypes.phonology.*;
+import net.oijon.oling.datatypes.phonology.feature.Feature;
+import net.oijon.oling.datatypes.phonology.table.Phoneme;
 import net.oijon.oling.datatypes.phonology.table.PhonoCategory;
 import net.oijon.oling.datatypes.phonology.table.PhonoCell;
+import net.oijon.oling.datatypes.phonology.table.PhonoColumn;
 import net.oijon.oling.datatypes.phonology.table.PhonoSystem;
 import net.oijon.oling.datatypes.phonology.table.PhonoTable;
 
@@ -29,7 +32,7 @@ import net.oijon.oling.datatypes.orthography.Orthography;
 public class UnitTests {
 
 	Log log = new Log(System.getProperty("user.home") + "/.oling");
-
+	
 	@Test
 	void readWriteEquivalency() {
 		log.info("Testing read-write equivalancy...");
@@ -42,11 +45,86 @@ public class UnitTests {
 			oldL.toFile(newFile);
 			
 			Language newL = Language.parse(newFile);
+			// fun line to make the language appear in the debugger
+			//newL.setLexicon(new Lexicon());
 			
 			assertEquals(oldL, newL);
 			
 		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
+	@Test
+	void testFeatures() {
+		log.info("Testing featural phonology...");
+		try {
+			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
+			Language l = Language.parse(f);
+			// should be /m/
+			//Phoneme p = l.getPhono().getPhonoSystem().getTables().get(0).getRow(1).getCell(0).getPhonemes().get(0);
+			//log.info(p.getSound() + " - " + p.getFeatures().toString());
+			ArrayList<Feature> features = new ArrayList<Feature>();
+			Phonology phono = l.getPhono();
+			PhonoSystem ps = phono.getPhonoSystem();
+			//features.addAll(ps.getFeatures());
+			PhonoTable table = ps.getTables().get(0);
+			features.addAll(table.getFeatures());
+			PhonoCategory row = table.getRow(1);
+			features.addAll(row.getFeatures());
+			PhonoCell cell = row.getCell(0);
+			features.addAll(cell.getFeatures());
+			PhonoColumn column = table.getColumn(cell.getIndex());
+			features.addAll(column.getFeatures());
+			Phoneme p = cell.getPhonemes().get(0);
+			features.addAll(p.getFeatures());
+			ArrayList<Feature> phonemeFeatures = p.getFeatures();
+			// remove duplicates, helpful for logging
 			
+			for (int i = 0; i < features.size(); i++) {
+				for (int j = 0; j < features.size(); j++) {
+					if (i != j) {
+						if (features.get(i).equals(features.get(j))) {
+							features.remove(j);
+							i = 0;
+							j = 0;
+						}
+					}
+				}
+			}
+			
+			log.info("Phoneme is reporting " + phonemeFeatures.size() + " features.");
+			log.info("Manual count of features is reporting " + features.size() + " features.");
+			if (phonemeFeatures.size() == 0 || features.size() == 0) {
+				log.err("No features found in table or in phoneme!");
+				log.err("Test failed!");
+				fail();
+			}
+			int count = 0;
+			int total = features.size();
+			
+			for (int i = 0; i < features.size(); i++) {
+				boolean found = false;
+				for (int j = 0; j < phonemeFeatures.size(); j++) {
+					if (features.get(i).equals(phonemeFeatures.get(j))) {
+						count++;
+						log.info("Found feature " + count + "/" + total +
+								" " + features.get(i).toString());
+						found = true;
+					}
+				}
+				if (!found) {
+					log.err("Could not find feature " + features.get(i) + " in phoneme!");
+					log.err("Test failed!");
+					fail();
+				}
+			}
+			log.info("Found all expected features in phoneme!");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
 		}
 	}
 	

@@ -22,6 +22,9 @@ public abstract class FeaturalXMLDatatype implements XMLDatatype {
     	}
     	if (!found) {
     		features.add(f);
+    		for (int i = 0; i < lowerObj.size(); i++) {
+    			lowerObj.get(i).addFeature(f);
+    		}
     	}
     	
     	applyFeatures();
@@ -47,6 +50,9 @@ public abstract class FeaturalXMLDatatype implements XMLDatatype {
     	for (int i = 0; i < features.size(); i++) {
     		if (features.get(i).getName().equals(name)) {
     			features.get(i).setValue(value);
+    			for (int j = 0; j < lowerObj.size(); j++) {
+    				lowerObj.get(j).setFeature(name, value, level);
+    			}
     			found = true;
     			break;
     		}
@@ -62,11 +68,10 @@ public abstract class FeaturalXMLDatatype implements XMLDatatype {
     	return new ArrayList<Feature>(features);
     }
 
-    protected void applyFeatures() {
-    	// get features from all other phonemes, only apply those that are true to all
+    protected ArrayList<Feature> getAllFeatures(ArrayList<? extends FeaturalXMLDatatype> afxd) {
     	ArrayList<Feature> allFeatures = new ArrayList<Feature>(features);
-    	for (int i = 0; i < lowerObj.size(); i++) {
-    		ArrayList<Feature> lowerFeatures = lowerObj.get(i).getFeatures();
+    	for (int i = 0; i < afxd.size(); i++) {
+    		ArrayList<Feature> lowerFeatures = afxd.get(i).getFeatures();
     		for (int j = 0; j < lowerFeatures.size(); j++) {
     			boolean found = false;
     	    	for (int k = 0; k < allFeatures.size(); k++) {
@@ -81,6 +86,12 @@ public abstract class FeaturalXMLDatatype implements XMLDatatype {
     	    	}
     		}
     	}
+    	return allFeatures;
+    }
+    
+    protected void applyFeatures() {
+    	// get features from all other phonemes, only apply those that are true to all
+    	ArrayList<Feature> allFeatures = getAllFeatures(this.lowerObj);
     	
     	for (int i = 0; i < allFeatures.size(); i++) {
     		Feature f = allFeatures.get(i);

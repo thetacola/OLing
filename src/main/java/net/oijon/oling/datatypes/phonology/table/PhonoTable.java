@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
-import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.oling.datatypes.phonology.SyllablePart;
+import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
+import net.oijon.oling.datatypes.phonology.feature.Feature;
+import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;
@@ -19,19 +21,19 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-//last edit: 5/3/26 -N3
+//last edit: 5/22/26 -N3
 
 /**
  * Like an IPA table, but readable in Java
  * @author alex
  *
  */
-public class PhonoTable implements XMLDatatype {
+public class PhonoTable extends FeaturalXMLDatatype {
 
 	private String name;
 	private ArrayList<PhonoColumn> columns = new ArrayList<>();
 	//private ArrayList<String> columnNames = new ArrayList<>();
-	private ArrayList<PhonoCategory> rows = new ArrayList<>();
+	//private ArrayList<PhonoCategory> rows = new ArrayList<>();
 	private SyllablePart part;
 	@Deprecated
 	private int soundsPerCell;
@@ -61,14 +63,18 @@ public class PhonoTable implements XMLDatatype {
 	 */
 	public PhonoTable(String name, ArrayList<String> columnNames,
 			ArrayList<PhonoCategory> rows, int soundsPerCell) {
+		initFeatures();
 		this.name = name;
 		for (int i = 0; i < columnNames.size(); i++) {
 			columns.add(new PhonoColumn(columnNames.get(i), i));
 		}
-		this.rows = rows;
+		for (PhonoCategory pc : rows) {
+			super.lowerObj.add(pc);
+		}
 		this.soundsPerCell = soundsPerCell;
         fixIndecies();
         this.part = SyllablePart.ANY;
+        applyFeatures();
 	}
 
 	/**
@@ -85,10 +91,12 @@ public class PhonoTable implements XMLDatatype {
 	 * @param pt The PhonoTable to be copied
 	 */
 	public PhonoTable(PhonoTable pt) {
+		initFeatures();
 		this.name = pt.name;
 		this.columns = new ArrayList<PhonoColumn>(pt.columns);
-		this.rows = new ArrayList<PhonoCategory>(pt.rows);
+		super.lowerObj = new ArrayList<FeaturalXMLDatatype>(pt.lowerObj);
 		this.soundsPerCell = pt.soundsPerCell;
+		applyFeatures();
 	}
 	
 	/**
@@ -148,8 +156,8 @@ public class PhonoTable implements XMLDatatype {
 	public String toString() {
 		String returnString = "tableName: " + name + "\n" +
 				"columns:" + columns.toString() + "\n";
-		for (int i = 0; i < rows.size(); i++) {
-			returnString += rows.get(i) + "\n";
+		for (int i = 0; i < super.lowerObj.size(); i++) {
+			returnString += super.lowerObj.get(i) + "\n";
 		}
 		returnString += "part:" + part.name() + "\n" +
 				"soundsPerCell:" + soundsPerCell;
@@ -168,17 +176,23 @@ public class PhonoTable implements XMLDatatype {
 		returnString = returnString.substring(0, returnString.length() - 1); // removes last comma
 		returnString += "\nsoundsPerCell:" + soundsPerCell;
 		returnString += "\nrowNames:";
-		for (int i = 0; i < rows.size(); i++) {
-			returnString +=rows.get(i).getName() + ",";
+		for (int i = 0; i < super.lowerObj.size(); i++) {
+			if (super.lowerObj.get(i) instanceof PhonoCategory) {
+				PhonoCategory row = (PhonoCategory) super.lowerObj.get(i);
+				returnString += row.getName() + ",";
+			}
 		}
 		returnString = returnString.substring(0, returnString.length() - 1); // removes last comma
 		returnString += "\n";
-		for (int i = 0; i < rows.size(); i++) {
+		for (int i = 0; i < super.lowerObj.size(); i++) {
 			returnString += ":";
-			for (int j = 0; j < rows.get(i).size(); j++) {
-                for (int k = 0; k < rows.get(i).getCell(j).getPhonemes().size(); k++) {
-                    returnString += rows.get(i).getCell(j).getPhonemes().get(k).getSound();
-                }
+			if (super.lowerObj.get(i) instanceof PhonoCategory) {
+				PhonoCategory pc = (PhonoCategory) super.lowerObj.get(i);
+				for (int j = 0; j < pc.size(); j++) {
+	                for (int k = 0; k < pc.getCell(j).getPhonemes().size(); k++) {
+	                    returnString += pc.getCell(j).getPhonemes().get(k).getSound();
+	                }
+				}
 			}
 			returnString += "\n";
 		}
@@ -199,7 +213,7 @@ public class PhonoTable implements XMLDatatype {
 	 * @return The amount of rows in a PhonoTable
 	 */
 	public int size() {
-		return rows.size();
+		return super.lowerObj.size();
 	}
 	
 	/**
@@ -208,7 +222,8 @@ public class PhonoTable implements XMLDatatype {
 	 * @return The row at index i
 	 */
 	public PhonoCategory getRow(int i) {
-		return rows.get(i);
+		// shouldn't break, despite it looking spooky
+		return (PhonoCategory) super.lowerObj.get(i);
 	}
 	
 	/**
@@ -221,6 +236,21 @@ public class PhonoTable implements XMLDatatype {
 			names.add(pc.getName());
 		}
 		return names;
+	}
+	
+	public ArrayList<PhonoColumn> getColumns() {
+		return columns;
+	}
+	
+	public PhonoColumn getColumn(int index) {
+		PhonoColumn c = null;
+		for (int i = 0; i < columns.size(); i++) {
+			if (columns.get(i).getIndex() == index) {
+				c = columns.get(i);
+				break;
+			}
+		}
+		return c;
 	}
 	
 	/**
@@ -239,8 +269,8 @@ public class PhonoTable implements XMLDatatype {
 	public ArrayList<String> getSoundList() {
 		ArrayList<String> list = new ArrayList<String>();
 
-		for (int i = 0; i < rows.size(); i++) {
-            PhonoCategory row = rows.get(i);
+		for (int i = 0; i < super.lowerObj.size(); i++) {
+            PhonoCategory row = (PhonoCategory) super.lowerObj.get(i);
 			for (int j = 0; j < row.size(); j++) {
                 PhonoCell cell = row.getCell(j);
                 for (int k = 0; k < cell.size(); k++) {
@@ -253,9 +283,10 @@ public class PhonoTable implements XMLDatatype {
 	}
 
     private void fixIndecies() {
-        for (int i = 0; i < rows.size(); i++) {
-            if (rows.get(i).getIndex() == 0) {
-                rows.get(i).setIndex(i);
+        for (int i = 0; i < super.lowerObj.size(); i++) {
+        	PhonoCategory pc = (PhonoCategory) super.lowerObj.get(i);
+            if (pc.getIndex() == 0) {
+                pc.setIndex(i);
             }
         }
     }
@@ -264,7 +295,7 @@ public class PhonoTable implements XMLDatatype {
 	public boolean equals(Object obj) {
 		if (obj instanceof PhonoTable) {
 			PhonoTable p = (PhonoTable) obj;
-			if (p.name.equals(name) && p.columns.equals(columns) && p.rows.equals(rows)) {
+			if (p.name.equals(name) && p.columns.equals(columns) && p.lowerObj.equals(super.lowerObj)) {
 				return true;
 			}
 			
@@ -287,8 +318,11 @@ public class PhonoTable implements XMLDatatype {
         root.appendChild(columnsE);
 
         Element rowsE = doc.createElement("rows");        
-        for (PhonoCategory pc : rows) {
-            rowsE.appendChild(doc.importNode(pc.toXML(), true));
+        for (FeaturalXMLDatatype fxd : super.lowerObj) {
+        	if (fxd instanceof PhonoCategory) {
+        		PhonoCategory pc = (PhonoCategory) fxd;
+        		rowsE.appendChild(doc.importNode(pc.toXML(), true));
+        	}
         }
         root.appendChild(rowsE);
 
@@ -297,6 +331,7 @@ public class PhonoTable implements XMLDatatype {
 
     @Override
     public void fromXML(Element e) throws InvalidXMLException {
+    	initFeatures();
 	    if (e.getTagName().equals("table")) {
 		    name = e.getAttribute("name");
 		    try {
@@ -325,7 +360,8 @@ public class PhonoTable implements XMLDatatype {
 				    	NodeList rowList = n.getChildNodes();
 				    	for (int j = 0; j < rowList.getLength(); j++) {
 							Node row = rowList.item(j);
-							this.rows.add(new PhonoCategory((Element) row));
+							Element rowE = (Element) row;
+							super.lowerObj.add(new PhonoCategory(rowE));
 						}
                         break;
 				    default:
@@ -336,5 +372,49 @@ public class PhonoTable implements XMLDatatype {
 	    } else {
 		    throw new InvalidXMLException("Node name not expected name! Expected: table; Actual: " + e.getTagName());
 	    }
+	    this.applyFeatures();
     }
+
+	@Override
+	protected void initFeatures() {
+		super.level = FeatureLevel.TABLE;
+	}
+	
+	@Override
+	protected void applyFeatures() {
+		super.applyFeatures();		
+		// we can assume that the cells have already had any cell/row level features applied above,
+		// so there's no need to check for them
+		for (int i = 0; i < columns.size(); i++) {
+			ArrayList<PhonoCell> cells = getCellsInColumn(columns.get(i).getIndex());
+			ArrayList<Feature> features = columns.get(i).getFeatures();
+			features.addAll(getAllFeatures(cells));
+			for (int j = 0; j < features.size(); j++) {
+				Feature f = features.get(j);
+				for (int k = 0; k < cells.size(); k++) {
+					if (f.getValue()) {
+						cells.get(k).setFeature(f.getName(), f.getValue(), FeatureLevel.COLUMN);
+					} else {
+						cells.get(k).addFeature(f);
+					}
+				}
+			}
+		}
+	}
+	
+	private ArrayList<PhonoCell> getCellsInColumn(int index) {
+		ArrayList<PhonoCell> c = new ArrayList<>();
+		
+		for (FeaturalXMLDatatype fxd : super.lowerObj) {
+			PhonoCategory pc = (PhonoCategory) fxd;
+			for (int i = 0; i < pc.size(); i++) {
+				PhonoCell cell = pc.getCell(i);
+				if (cell.getIndex() == index) {
+					c.add(cell);
+				}
+			}
+		}
+		
+		return c;
+	}
 }

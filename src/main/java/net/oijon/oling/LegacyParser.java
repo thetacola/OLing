@@ -254,7 +254,7 @@ public class LegacyParser {
 				if (tablelist.getSubMultitags().get(i).getName().equals("PhonoTable")) {
 					Multitag phonoTableTag = tablelist.getSubMultitags().get(i);
 					PhonoTable phonoTable = PhonoTable.parse(phonoTableTag);
-					phonoSystem.getTables().add(phonoTable);
+					phonoSystem.addTable(phonoTable);
 				}
 			}
 			return phonoSystem;

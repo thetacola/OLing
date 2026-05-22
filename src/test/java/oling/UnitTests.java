@@ -68,7 +68,7 @@ public class UnitTests {
 			ArrayList<Feature> features = new ArrayList<Feature>();
 			Phonology phono = l.getPhono();
 			PhonoSystem ps = phono.getPhonoSystem();
-			//features.addAll(ps.getFeatures());
+			features.addAll(ps.getFeatures());
 			PhonoTable table = ps.getTables().get(0);
 			features.addAll(table.getFeatures());
 			PhonoCategory row = table.getRow(1);

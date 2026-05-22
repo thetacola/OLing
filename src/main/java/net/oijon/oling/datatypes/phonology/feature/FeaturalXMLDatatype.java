@@ -7,7 +7,7 @@ import net.oijon.oling.datatypes.XMLDatatype;
 public abstract class FeaturalXMLDatatype implements XMLDatatype {
 
 	protected ArrayList<FeaturalXMLDatatype> lowerObj = new ArrayList<>();
-	protected ArrayList<Feature> features = new ArrayList<>();
+	protected ArrayList<Feature> features = new ArrayList<Feature>();
 	protected FeatureLevel level;
 	
 	protected abstract void initFeatures();
@@ -81,7 +81,7 @@ public abstract class FeaturalXMLDatatype implements XMLDatatype {
     	    		}
     	    	}
     	    	if (!found) {
-    	    		Feature f = new Feature(lowerFeatures.get(j).getName(), false, this.level);
+    	    		Feature f = new Feature(lowerFeatures.get(j).getName(), false, lowerFeatures.get(j).getLevel());
     	    		allFeatures.add(f);
     	    	}
     		}
@@ -89,15 +89,29 @@ public abstract class FeaturalXMLDatatype implements XMLDatatype {
     	return allFeatures;
     }
     
-    protected void applyFeatures() {
+    protected void applyFeatures() {    	
     	// get features from all other phonemes, only apply those that are true to all
-    	ArrayList<Feature> allFeatures = getAllFeatures(this.lowerObj);
+    	ArrayList<Feature> allFeatures = new ArrayList<Feature>();
+    	allFeatures.addAll(getAllFeatures(this.lowerObj));
+    	
+    	for (int i = 0; i < this.lowerObj.size(); i++) {
+    		this.lowerObj.get(i).applyFeatures();
+    	}
     	
     	for (int i = 0; i < allFeatures.size(); i++) {
     		Feature f = allFeatures.get(i);
+    		Feature newF = new Feature(f.getName(), false, f.getLevel());
+    		for (int j = 0; j < lowerObj.size(); j++) {
+    			// add shouldn't overwrite anything :)
+    			lowerObj.get(j).addFeature(newF);
+    		}
+    	}
+    	
+    	for (int i = 0; i < features.size(); i++) {
+    		Feature f = features.get(i);
     		for (int j = 0; j < lowerObj.size(); j++) {
     			if (f.getValue()) {
-    				lowerObj.get(j).setFeature(f.getName(), f.getValue(), this.level);
+    				lowerObj.get(j).setFeature(f.getName(), f.getValue(), f.getLevel());
     			} else {
     				lowerObj.get(j).addFeature(f);
     			}

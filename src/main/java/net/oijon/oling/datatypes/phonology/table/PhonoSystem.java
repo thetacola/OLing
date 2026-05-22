@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.phonology.PhonoAnomaly;
 import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
+import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
 import net.oijon.olog.Log;
 import net.oijon.oling.LegacyParser;
@@ -118,6 +119,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	public PhonoSystem(PhonoSystem ps) {
 		initFeatures();
 		this.name = ps.name;
+		this.lowerObj = new ArrayList<FeaturalXMLDatatype>(ps.lowerObj);
 		this.diacriticList = new ArrayList<String>(ps.diacriticList);
 	}
 	
@@ -168,6 +170,10 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 			}
 		}
 		return tables;
+	}
+	
+	public void addTable(PhonoTable pt) {
+		super.lowerObj.add(pt);
 	}
 	
 	/**

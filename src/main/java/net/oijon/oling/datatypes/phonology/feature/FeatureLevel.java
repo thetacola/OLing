@@ -6,5 +6,6 @@ public enum FeatureLevel {
 	ROW,
 	COLUMN,
 	TABLE,
+	SYSTEM,
 	OTHER;
 }

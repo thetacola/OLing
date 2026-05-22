@@ -10,8 +10,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
-import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.oling.datatypes.phonology.PhonoAnomaly;
+import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
+import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
 import net.oijon.olog.Log;
 import net.oijon.oling.LegacyParser;
 import net.oijon.oling.info.Info;
@@ -24,7 +25,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-//last edit: 5/4/2026 -N3
+//last edit: 5/22/2026 -N3
 
 /**
  * A way to transcribe all sounds allowed in a vocal tract. IPA is specified here as that
@@ -33,10 +34,10 @@ import javax.xml.parsers.ParserConfigurationException;
  * @author alex
  *
  */
-public class PhonoSystem implements XMLDatatype {
+public class PhonoSystem extends FeaturalXMLDatatype {
 
 	private String name;
-	private ArrayList<PhonoTable> tables = new ArrayList<PhonoTable>();
+	//private ArrayList<PhonoTable> tables = new ArrayList<PhonoTable>();
 	private ArrayList<String> diacriticList = new ArrayList<String>();
 	private ArrayList<PhonoList> lists = new ArrayList<PhonoList>();
 	private ArrayList<PhonoAnomaly> anomalies = new ArrayList<PhonoAnomaly>();
@@ -76,8 +77,9 @@ public class PhonoSystem implements XMLDatatype {
 	 * @param tables The list of all tables used in the phono system
 	 */
 	public PhonoSystem(String name, ArrayList<PhonoTable> tables) {
+		initFeatures();
 		this.name = name;
-		this.tables = tables;
+		super.lowerObj.addAll(tables);
 	}
 	/**
 	 * Creates a PhonoSystem object with a pre-defined ArrayList and diacritic list
@@ -86,8 +88,9 @@ public class PhonoSystem implements XMLDatatype {
 	 * @param diacriticList The list of all tables used in the phono system
 	 */
 	public PhonoSystem(String name, ArrayList<PhonoTable> tables, ArrayList<String> diacriticList) {
+		initFeatures();
 		this.name = name;
-		this.tables = tables;
+		super.lowerObj.addAll(tables);
 		this.diacriticList = diacriticList;
 	}
 	/**
@@ -95,6 +98,7 @@ public class PhonoSystem implements XMLDatatype {
 	 * @param name The name of the phono system
 	 */
 	public PhonoSystem(String name) {
+		initFeatures();
 		this.name = name;
 	}
 
@@ -112,8 +116,8 @@ public class PhonoSystem implements XMLDatatype {
 	 * @param ps The PhonoSystem to be copied
 	 */
 	public PhonoSystem(PhonoSystem ps) {
+		initFeatures();
 		this.name = ps.name;
-		this.tables = new ArrayList<PhonoTable>(ps.tables);
 		this.diacriticList = new ArrayList<String>(ps.diacriticList);
 	}
 	
@@ -129,7 +133,7 @@ public class PhonoSystem implements XMLDatatype {
 			PhonoSystem parsedSys = parser.parsePhonoSys();
 			this.diacriticList = parsedSys.getDiacritics();
 			this.name = parsedSys.getName();
-			this.tables = parsedSys.getTables();
+			super.lowerObj.addAll(parsedSys.getTables());
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.print("\n");
@@ -140,7 +144,7 @@ public class PhonoSystem implements XMLDatatype {
 			System.err.println("Exception encountered! " + e.toString());
 			System.err.println("Defaulting to IPA...");
 			this.name = PhonoSystem.IPA.getName();
-			this.tables = PhonoSystem.IPA.getTables();
+			super.lowerObj.addAll(PhonoSystem.IPA.getTables());
 		}
 	}
 	
@@ -157,6 +161,12 @@ public class PhonoSystem implements XMLDatatype {
 	 * @return ArrayList of several PhonoCategory instances
 	 */
 	public ArrayList<PhonoTable> getTables() {
+		ArrayList<PhonoTable> tables = new ArrayList<PhonoTable>();
+		for (int i = 0; i < super.lowerObj.size(); i++) {
+			if (super.lowerObj.get(i) instanceof PhonoTable) {
+				tables.add((PhonoTable) super.lowerObj.get(i));
+			}
+		}
 		return tables;
 	}
 	
@@ -165,9 +175,10 @@ public class PhonoSystem implements XMLDatatype {
 	 * @param name Name of category to be removed
 	 */
 	public void removeTable(String name) {
-		for (int i = 0; i < tables.size(); i++) {
-			if (tables.get(i).getName().equals(name)) {
-				tables.remove(i);
+		for (int i = 0; i < super.lowerObj.size(); i++) {
+			PhonoTable pt = (PhonoTable) super.lowerObj.get(i);
+			if (pt.getName().equals(name)) {
+				super.lowerObj.remove(i);
 				break;
 			}
 		}
@@ -182,7 +193,8 @@ public class PhonoSystem implements XMLDatatype {
 	 * @return The sound at both indexes
 	 */
 	public String getSound(int i, int x, int y, int z) {
-		return tables.get(i).getRow(x).getCell(y).getPhonemes().get(z).getSound();
+		PhonoTable table = (PhonoTable) super.lowerObj.get(i);
+		return table.getRow(x).getCell(y).getPhonemes().get(z).getSound();
 	}
 	/**
 	 * Sets the diacritic list to a new list
@@ -217,8 +229,8 @@ public class PhonoSystem implements XMLDatatype {
 	
 	public String toString() {
 		String returnString = "sysName:" + name + "\n";
-		for (int i = 0; i < tables.size(); i++) {
-			returnString += tables.get(i) + "\n";
+		for (int i = 0; i < super.lowerObj.size(); i++) {
+			returnString += super.lowerObj.get(i) + "\n";
 		}
 		returnString += "diacritics:" + diacriticList.toString() + "\n";
 		for (int i = 0; i < lists.size(); i++) {
@@ -243,8 +255,8 @@ public class PhonoSystem implements XMLDatatype {
 			output = output.substring(0, output.length() - 1);
 		}
 		output += "\n";
-		for (int i = 0; i < tables.size(); i++) {
-			output += tables.get(i).toString() + "\n";
+		for (int i = 0; i < super.lowerObj.size(); i++) {
+			output += super.lowerObj.get(i).toString() + "\n";
 		}
 		output += "===Tablelist End===";
 		return output;
@@ -261,8 +273,9 @@ public class PhonoSystem implements XMLDatatype {
 		if (value.length() > 1) {
 			value = Character.toString(value.charAt(0));
 		}
-		for (int i = 0; i < tables.size(); i++) {
-			if (tables.get(i).getSoundList().contains(value)) {
+		for (int i = 0; i < super.lowerObj.size(); i++) {
+			PhonoTable pt = (PhonoTable) super.lowerObj.get(i);
+			if (pt.getSoundList().contains(value)) {
 				return true;
 			}
 		}
@@ -333,7 +346,7 @@ public class PhonoSystem implements XMLDatatype {
 	public boolean equals(Object obj) {
 		if (obj instanceof PhonoSystem) {
 			PhonoSystem p = (PhonoSystem) obj;			
-			if (p.name.equals(name) && p.tables.equals(tables) &
+			if (p.name.equals(name) && p.lowerObj.equals(super.lowerObj) &
 					p.diacriticList.equals(diacriticList)) {
 				return true;
 			}
@@ -361,8 +374,11 @@ public class PhonoSystem implements XMLDatatype {
 			root.appendChild(doc.importNode(list.toXML(), true));
 		}
 
-        for (PhonoTable pt : tables) {
-            root.appendChild(doc.importNode(pt.toXML(), true));
+        for (FeaturalXMLDatatype fxd : super.lowerObj) {
+        	if (fxd instanceof PhonoTable) {
+        		PhonoTable pt = (PhonoTable) fxd;
+        		root.appendChild(doc.importNode(pt.toXML(), true));
+        	}
         }
 
         Element anomaliesE = doc.createElement("anomalies");
@@ -376,6 +392,7 @@ public class PhonoSystem implements XMLDatatype {
 
     @Override
     public void fromXML(Element e) throws InvalidXMLException {
+    	initFeatures();
 	    if (e.getTagName().equals("tables")) {
 		    name = e.getAttribute("name");
 		    NodeList nl = e.getChildNodes();
@@ -391,7 +408,7 @@ public class PhonoSystem implements XMLDatatype {
                         break;
 				    case "table":
 					    if (n.getNodeType() == Node.ELEMENT_NODE) {
-							tables.add(new PhonoTable((Element) n));
+							super.lowerObj.add(new PhonoTable((Element) n));
 					    }
                         break;
 				    case "list":
@@ -417,5 +434,10 @@ public class PhonoSystem implements XMLDatatype {
 	    } else {
 		    throw new InvalidXMLException("Node name not expected name! Expected: tables; Actual: " + e.getTagName());
 	    }
+	    applyFeatures();
     }
+	@Override
+	protected void initFeatures() {
+		super.level = FeatureLevel.SYSTEM;
+	}
 }

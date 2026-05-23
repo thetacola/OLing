@@ -364,6 +364,10 @@ public class PhonoTable extends FeaturalXMLDatatype {
 							super.lowerObj.add(new PhonoCategory(rowE));
 						}
                         break;
+				    case "feature":
+				    	String textContent = ((Element) n).getTextContent();
+	        			Feature f = new Feature(textContent, true, FeatureLevel.TABLE);
+	        			this.addFeature(f);
 				    default:
 
 			    }

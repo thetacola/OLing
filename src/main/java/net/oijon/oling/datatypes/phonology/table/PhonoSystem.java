@@ -7,9 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.StringReader;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.language.Language;
 import net.oijon.oling.datatypes.phonology.PhonoAnomaly;
 import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
@@ -21,6 +26,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -52,25 +59,53 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	public static final PhonoSystem IPA = loadIPA();
 	
 	private static PhonoSystem loadIPA() {
-		// FIXME: Loads IPA from PHOSYS (EEK!)
 		PhonoSystem IPA = new PhonoSystem("Blank");
-		try {
-			InputStream IPAStream = PhonoSystem.class.getResourceAsStream("/IPA.phosys");
-			File tempFile = File.createTempFile(String.valueOf(IPAStream.hashCode()), ".tmp");
-			log.debug("IPA temp file created at " + tempFile.toString());
-	        tempFile.deleteOnExit();
-	        
-	        try (FileOutputStream toTemp = new FileOutputStream(tempFile)) {
-	        	writeStreams(IPAStream, toTemp);	        	
-	        	IPA = new PhonoSystem(tempFile);
-	        }
-	        
-		} catch (IOException e) {
-			e.printStackTrace();
-			log.critical("Unable to open default IPA PhonoSystem!!! (Is the program corrupted?)");
-		}
-		return IPA;
 		
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	        DocumentBuilder builder = factory.newDocumentBuilder();
+			
+	        File f = new File(PhonoSystem.class.getResource("/IPA.xml").toURI());
+	        
+	        Scanner reader = new Scanner(f, StandardCharsets.UTF_8);
+	        boolean firstLine = true;
+	        String data = "";
+	        while (reader.hasNextLine()) {
+	            if (firstLine) {
+	                data = reader.nextLine();
+	                String[] splitData = data.split("<\\?xml");
+	                if (splitData.length > 1) {
+	                	data = "<?xml" + splitData[1];
+	                } else {
+	                	data = splitData[0];
+	                }
+	                firstLine = false;
+	            } else {
+	                data += reader.nextLine().strip();
+	            }
+	        }
+	        reader.close();
+	        Document doc = builder.parse(new InputSource(new StringReader(data)));
+	        Element element = doc.getDocumentElement();
+	        IPA = new PhonoSystem(element);
+		} catch (SAXException e) {
+			log.err("SAXException when parsing IPA from program.");
+			e.printStackTrace();
+		} catch (IOException e) {
+			log.err("Unable to read IPA from program.");
+			e.printStackTrace();
+		} catch (InvalidXMLException e) {
+			log.err("Given IPA in program is invalid! Have resources been edited?");
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			log.critical("ParserConfigurationException when parsing default IPA!!!");
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			log.critical("Unable to load IPA system from program!!! (Is the program corrupted?)");
+			e.printStackTrace();
+		}
+		
+		return IPA;
 	}
 	/**
 	 * Creates a PhonoSystem object with a pre-defined ArrayList

@@ -15,6 +15,8 @@ import net.oijon.oling.datatypes.lexicon.Lexicon;
 import net.oijon.oling.datatypes.lexicon.Word;
 import net.oijon.oling.datatypes.orthography.Orthography;
 import net.oijon.oling.datatypes.phonology.Phonology;
+import net.oijon.oling.datatypes.phonology.feature.Feature;
+import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
 import net.oijon.oling.datatypes.phonology.table.PhonoSystem;
 import net.oijon.oling.datatypes.phonology.table.PhonoTable;
 import net.oijon.oling.datatypes.tags.Multitag;
@@ -254,6 +256,9 @@ public class LegacyParser {
 				if (tablelist.getSubMultitags().get(i).getName().equals("PhonoTable")) {
 					Multitag phonoTableTag = tablelist.getSubMultitags().get(i);
 					PhonoTable phonoTable = PhonoTable.parse(phonoTableTag);
+					phonoTable.addFeature(new Feature("SYLLPART_ONSET", true, FeatureLevel.TABLE));
+					phonoTable.addFeature(new Feature("SYLLPART_NUCLEUS", true, FeatureLevel.TABLE));
+					phonoTable.addFeature(new Feature("SYLLPART_CODA", true, FeatureLevel.TABLE));
 					phonoSystem.addTable(phonoTable);
 				}
 			}

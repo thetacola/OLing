@@ -171,7 +171,8 @@ public class PhonoCell extends FeaturalXMLDatatype {
 
 	@Override
 	public String toString() {
-		return "[" + index + ": " + super.lowerObj.toString() + "]";
+		return "[" + index + ": " + super.lowerObj.toString() + "]\n" +
+				"features: " + features;
 	}
 
     @Override

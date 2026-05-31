@@ -1,8 +1,9 @@
 package net.oijon.oling.datatypes.phonology.table;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
-import net.oijon.oling.datatypes.phonology.SyllablePart;
 import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
+import net.oijon.oling.datatypes.phonology.feature.Feature;
+import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
 import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
 
@@ -24,21 +25,16 @@ public class PhonoList extends PhonoCell {
 
 	private static Log log = Info.log;
 	private String name;
-	private SyllablePart part;
 
 	public PhonoList() {
 		super();
+		initFeatures();
 	}
 
 	public PhonoList(String name) {
 		super();
 		this.name = name;
-		this.part = SyllablePart.ANY;
-	}
-	
-	public PhonoList(String name, SyllablePart part) {
-		this(name);
-		this.part = part;
+		initFeatures();
 	}
 
 	public PhonoList(Element e) throws InvalidXMLException {
@@ -55,11 +51,17 @@ public class PhonoList extends PhonoCell {
 
 	@Override
 	public Element toXML() throws ParserConfigurationException {
+		initFeatures();
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		Document doc = builder.newDocument();
 		Element root = doc.createElement("list");
 		root.setAttribute("name", name);
-		root.setAttribute("part", part.name());
+		
+		for (Feature f : super.features.values()) {
+			Element fe = (Element) doc.importNode(f.toXML(), true);
+			root.appendChild(fe);
+		}
+		
 		for (FeaturalXMLDatatype fxd : super.lowerObj) {
 			if (fxd instanceof Phoneme) {
 				Phoneme p = (Phoneme) fxd;
@@ -73,18 +75,43 @@ public class PhonoList extends PhonoCell {
 
 	@Override
 	public void fromXML(Element e) throws InvalidXMLException {
+		initFeatures();
 		if (e.getTagName().equals("list")) {
 			name = e.getAttribute("name");
-			try {
-		    	part = SyllablePart.valueOf(e.getAttribute("part"));
-		    } catch (NullPointerException e1) {
-		    	log.warn("No syllable part specified for phono list " + name +
-		    			". Defaulting to any.");
-		    	part = SyllablePart.ANY;
-		    } catch (IllegalArgumentException e1) {
-		    	log.err("Given syllable part on list " + name + " not valid! Got: \"" 
-		    			+ e.getAttribute("part") + "\". Defaulting to any.");
-		    	part = SyllablePart.ANY;
+			String attrPart = e.getAttribute("part");
+		    switch (attrPart) {
+		    	case "": 
+		    	case "NONE":
+		    		break;
+		    	case "ONSET":
+		    		this.features.put("SYLLPART_ONSET", new Feature("SYLLPART_ONSET", true, FeatureLevel.TABLE));
+		    		break;
+		    	case "NUCLEUS":
+		    		this.features.put("SYLLPART_NUCLEUS", new Feature("SYLLPART_NUCLEUS", true, FeatureLevel.TABLE));
+		    		break;
+		    	case "CODA":
+		    		this.features.put("SYLLPART_CODA", new Feature("SYLLPART_CODA", true, FeatureLevel.TABLE));
+		    		break;
+		    	case "ONSET_NUCLEUS":
+		    		this.features.put("SYLLPART_ONSET", new Feature("SYLLPART_ONSET", true, FeatureLevel.TABLE));
+		    		this.features.put("SYLLPART_NUCLEUS", new Feature("SYLLPART_NUCLEUS", true, FeatureLevel.TABLE));
+		    		break;
+		    	case "NUCLEUS_CODA":
+		    		this.features.put("SYLLPART_NUCLEUS", new Feature("SYLLPART_NUCLEUS", true, FeatureLevel.TABLE));
+		    		this.features.put("SYLLPART_CODA", new Feature("SYLLPART_CODA", true, FeatureLevel.TABLE));
+		    		break;
+		    	case "ONSET_CODA":
+		    		this.features.put("SYLLPART_ONSET", new Feature("SYLLPART_ONSET", true, FeatureLevel.TABLE));
+		    		this.features.put("SYLLPART_CODA", new Feature("SYLLPART_CODA", true, FeatureLevel.TABLE));
+		    		break;
+		    	case "ANY":
+		    		this.features.put("SYLLPART_ONSET", new Feature("SYLLPART_ONSET", true, FeatureLevel.TABLE));
+		    		this.features.put("SYLLPART_NUCLEUS", new Feature("SYLLPART_NUCLEUS", true, FeatureLevel.TABLE));
+		    		this.features.put("SYLLPART_CODA", new Feature("SYLLPART_CODA", true, FeatureLevel.TABLE));
+		    		break;
+		    	default:
+		    		log.warn("Found attribute for syllable part on list " + name + 
+		    				", though matched with no known value! Given: " + attrPart);
 		    }
 			NodeList nl = e.getChildNodes();
 			for (int i = 0; i < nl.getLength(); i++) {
@@ -92,11 +119,19 @@ public class PhonoList extends PhonoCell {
 				if (n.getNodeName().equals("sound") && n.getNodeType() == Node.ELEMENT_NODE) {
 					Phoneme p = new Phoneme((Element) n);
 					super.lowerObj.add(p);
+				} else if (n.getNodeName().equals("feature") && n.getNodeType() == Node.ELEMENT_NODE) {
+					Feature f = new Feature((Element) n, level);
+					super.features.put(f.getName(), f);
 				}
 			}
 		} else {
 			throw new InvalidXMLException("Node name not expected name! Expected: list; Actual: " + e.getTagName());
 		}
+	}
+	
+	@Override
+	protected void initFeatures() {
+		super.level = FeatureLevel.TABLE;
 	}
 
 }

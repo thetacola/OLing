@@ -2,10 +2,10 @@ package net.oijon.oling.datatypes.phonology.table;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.function.BiConsumer;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
-import net.oijon.oling.datatypes.phonology.SyllablePart;
 import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
@@ -35,25 +35,10 @@ public class PhonoTable extends FeaturalXMLDatatype {
 	private ArrayList<PhonoColumn> columns = new ArrayList<>();
 	//private ArrayList<String> columnNames = new ArrayList<>();
 	//private ArrayList<PhonoCategory> rows = new ArrayList<>();
-	private SyllablePart part;
 	@Deprecated
 	private int soundsPerCell;
 	
 	private static Log log = Info.log;
-	
-	/**
-	 * Creates a PhonoTable
-	 * @param name The name of the PhonoTable (Consonants, Vowels, etc.)
-	 * @param columnNames The names of the columns
-	 * @param rows An ArrayList of all the rows to be added
-	 * @param soundsPerCell How many sounds should be in a cell
-	 * @param part The part of the syllable this elements of this table should go in
-	 */
-	public PhonoTable(String name, ArrayList<String> columnNames,
-			ArrayList<PhonoCategory> rows, int soundsPerCell, SyllablePart part) {
-		this(name, columnNames, rows, soundsPerCell);
-		this.part = part;
-	}
 	
 	/**
 	 * Creates a PhonoTable
@@ -74,7 +59,6 @@ public class PhonoTable extends FeaturalXMLDatatype {
 		}
 		this.soundsPerCell = soundsPerCell;
         fixIndecies();
-        this.part = SyllablePart.ANY;
         applyFeatures();
 	}
 
@@ -96,6 +80,7 @@ public class PhonoTable extends FeaturalXMLDatatype {
 		this.name = pt.name;
 		this.columns = new ArrayList<PhonoColumn>(pt.columns);
 		super.lowerObj = new ArrayList<FeaturalXMLDatatype>(pt.lowerObj);
+		super.features = new HashMap<String, Feature>(pt.features);
 		this.soundsPerCell = pt.soundsPerCell;
 		applyFeatures();
 	}
@@ -151,6 +136,11 @@ public class PhonoTable extends FeaturalXMLDatatype {
 		}
 		
 		PhonoTable phonoTable = new PhonoTable(name, columns, cats, perCell);
+		
+		phonoTable.features.put("SYLLPART_ONSET", new Feature("SYLLPART_ONSET", true, FeatureLevel.TABLE));
+		phonoTable.features.put("SYLLPART_NUCLEUS", new Feature("SYLLPART_NUCLEUS", true, FeatureLevel.TABLE));
+		phonoTable.features.put("SYLLPART_CODA", new Feature("SYLLPART_CODA", true, FeatureLevel.TABLE));
+		
 		return phonoTable;
 	}
 
@@ -160,8 +150,8 @@ public class PhonoTable extends FeaturalXMLDatatype {
 		for (int i = 0; i < super.lowerObj.size(); i++) {
 			returnString += super.lowerObj.get(i) + "\n";
 		}
-		returnString += "part:" + part.name() + "\n" +
-				"soundsPerCell:" + soundsPerCell;
+		returnString += "soundsPerCell:" + soundsPerCell;
+		returnString += "features:" + features;
 		return returnString;
 	}
 	
@@ -310,7 +300,6 @@ public class PhonoTable extends FeaturalXMLDatatype {
         Document doc = builder.newDocument();
         Element root = doc.createElement("table");
         root.setAttribute("name", name);
-        root.setAttribute("part", part.name());
 
         Element columnsE = doc.createElement("columns");
         for (PhonoColumn pc : columns) {
@@ -343,17 +332,45 @@ public class PhonoTable extends FeaturalXMLDatatype {
     	initFeatures();
 	    if (e.getTagName().equals("table")) {
 		    name = e.getAttribute("name");
-		    try {
-		    	part = SyllablePart.valueOf(e.getAttribute("part"));
-		    } catch (NullPointerException e1) {
-		    	log.warn("No syllable part specified for phono table " + name +
-		    			". Defaulting to any.");
-		    	part = SyllablePart.ANY;
-		    } catch (IllegalArgumentException e1) {
-		    	log.err("Given syllable part on table " + name + " not valid! Got: \"" 
-		    			+ e.getAttribute("part") + "\". Defaulting to any.");
-		    	part = SyllablePart.ANY;
+		    
+		    // the attribute way was how i was doing it before features were added
+		    // it's a nice shorthand, plus i don't need to change my test cases with this
+		    String attrPart = e.getAttribute("part");
+		    switch (attrPart) {
+		    	case "": 
+		    	case "NONE":
+		    		break;
+		    	case "ONSET":
+		    		this.features.put("SYLLPART_ONSET", new Feature("SYLLPART_ONSET", true, FeatureLevel.TABLE));
+		    		break;
+		    	case "NUCLEUS":
+		    		this.features.put("SYLLPART_NUCLEUS", new Feature("SYLLPART_NUCLEUS", true, FeatureLevel.TABLE));
+		    		break;
+		    	case "CODA":
+		    		this.features.put("SYLLPART_CODA", new Feature("SYLLPART_CODA", true, FeatureLevel.TABLE));
+		    		break;
+		    	case "ONSET_NUCLEUS":
+		    		this.features.put("SYLLPART_ONSET", new Feature("SYLLPART_ONSET", true, FeatureLevel.TABLE));
+		    		this.features.put("SYLLPART_NUCLEUS", new Feature("SYLLPART_NUCLEUS", true, FeatureLevel.TABLE));
+		    		break;
+		    	case "NUCLEUS_CODA":
+		    		this.features.put("SYLLPART_NUCLEUS", new Feature("SYLLPART_NUCLEUS", true, FeatureLevel.TABLE));
+		    		this.features.put("SYLLPART_CODA", new Feature("SYLLPART_CODA", true, FeatureLevel.TABLE));
+		    		break;
+		    	case "ONSET_CODA":
+		    		this.features.put("SYLLPART_ONSET", new Feature("SYLLPART_ONSET", true, FeatureLevel.TABLE));
+		    		this.features.put("SYLLPART_CODA", new Feature("SYLLPART_CODA", true, FeatureLevel.TABLE));
+		    		break;
+		    	case "ANY":
+		    		this.features.put("SYLLPART_ONSET", new Feature("SYLLPART_ONSET", true, FeatureLevel.TABLE));
+		    		this.features.put("SYLLPART_NUCLEUS", new Feature("SYLLPART_NUCLEUS", true, FeatureLevel.TABLE));
+		    		this.features.put("SYLLPART_CODA", new Feature("SYLLPART_CODA", true, FeatureLevel.TABLE));
+		    		break;
+		    	default:
+		    		log.warn("Found attribute for syllable part on table " + name + 
+		    				", though matched with no known value! Given: " + attrPart);
 		    }
+		    
 		    NodeList nl = e.getChildNodes();
 		    for (int i = 0; i < nl.getLength(); i++) {
 			    Node n = nl.item(i);

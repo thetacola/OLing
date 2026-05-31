@@ -1,6 +1,16 @@
 package net.oijon.oling.datatypes.phonology.feature;
 
-public class Feature {
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
+
+public class Feature implements XMLDatatype {
 
 	private String name;
 	private boolean value;
@@ -9,6 +19,12 @@ public class Feature {
 	public Feature(String name, boolean value, FeatureLevel level) {
 		this.name = name;
 		this.value = value;
+		this.level = level;
+	}
+	
+	public Feature(Element e, FeatureLevel level) throws InvalidXMLException {
+		fromXML(e);
+		// The level is stored via the position of the parent, we can't get that so the level needs to be defined here
 		this.level = level;
 	}
 	
@@ -60,6 +76,30 @@ public class Feature {
 		String returnString = "[" + name + ", " + value + ", " +
 				this.getLevel().toString() + "]";
 		return returnString;
+	}
+
+	@Override
+	public Element toXML() throws ParserConfigurationException {
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("sound");
+        
+        Element featureElement = doc.createElement("feature");
+		featureElement.setTextContent(name);
+		root.appendChild(featureElement);
+		
+		return featureElement;
+	}
+
+	@Override
+	public void fromXML(Element e) throws InvalidXMLException {
+		if (e.getTagName().equals("feature")) {
+			String textContent = e.getTextContent();
+			this.name = textContent;
+			this.value = true;
+		} else {
+            throw new InvalidXMLException("Node name not expected name! Expected: feature; Actual: " + e.getTagName());
+        }
 	}
 	
 }

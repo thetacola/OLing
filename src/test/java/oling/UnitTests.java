@@ -37,16 +37,23 @@ public class UnitTests {
 	void readWriteEquivalency() {
 		log.info("Testing read-write equivalancy...");
 		try {
+			long start = System.currentTimeMillis();
 			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
 			Language oldL = Language.parse(f);
+			long read = System.currentTimeMillis();
 			
 			File newFile = File.createTempFile("testish", "xml");
 			log.debug("Writing to " + newFile + ", then reading from same file");
 			oldL.toFile(newFile);
+			long write = System.currentTimeMillis();
+			log.info("Time taken to read from file: " + (read - start) + "ms");
+			log.info("Time taken to write to file: " + (write - read) + "ms");
 			
 			Language newL = Language.parse(newFile);
-			// fun line to make the language appear in the debugger
-			//newL.setLexicon(new Lexicon());
+			
+			//log.info("Old language: " + oldL.toString());
+			//log.info("New language:" + newL.toString());
+			
 			
 			assertEquals(oldL, newL);
 			
@@ -68,18 +75,20 @@ public class UnitTests {
 			ArrayList<Feature> features = new ArrayList<Feature>();
 			Phonology phono = l.getPhono();
 			PhonoSystem ps = phono.getPhonoSystem();
-			features.addAll(ps.getFeatures());
 			PhonoTable table = ps.getTables().get(0);
-			features.addAll(table.getFeatures());
 			PhonoCategory row = table.getRow(1);
-			features.addAll(row.getFeatures());
 			PhonoCell cell = row.getCell(0);
-			features.addAll(cell.getFeatures());
 			PhonoColumn column = table.getColumn(cell.getIndex());
-			features.addAll(column.getFeatures());
 			Phoneme p = cell.getPhonemes().get(0);
-			features.addAll(p.getFeatures());
-			ArrayList<Feature> phonemeFeatures = p.getFeatures();
+			
+			features.addAll(p.getFeatures().values());
+			features.addAll(column.getFeatures().values());
+			features.addAll(cell.getFeatures().values());
+			features.addAll(row.getFeatures().values());
+			features.addAll(table.getFeatures().values());
+			features.addAll(ps.getFeatures().values());
+			
+			ArrayList<Feature> phonemeFeatures = new ArrayList<Feature>(p.getFeatures().values());
 			// remove duplicates, helpful for logging
 			
 			for (int i = 0; i < features.size(); i++) {

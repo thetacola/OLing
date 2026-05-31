@@ -10,6 +10,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -85,46 +86,6 @@ public class Phoneme extends FeaturalXMLDatatype {
     public void setSound(String sound) {
         this.sound = sound;
     }
-
-    public void addFeature(Feature f) {
-    	boolean found = false;
-    	for (int i = 0; i < features.size(); i++) {
-    		if (features.get(i).getName().equals(f.getName())) {
-    			found = true;
-    			break;
-    		}
-    	}
-    	if (!found) {
-    		features.add(f);
-    	}
-    }
-    
-    public void removeFeature(String name) {
-    	for (int i = 0; i < features.size(); i++) {
-    		if (features.get(i).getName().equals(name)) {
-    			features.remove(i);
-    			break;
-    		}
-    	}
-    }
-    
-    public void setFeature(String name, boolean value, FeatureLevel level) {
-    	boolean found = false;
-    	for (int i = 0; i < features.size(); i++) {
-    		if (features.get(i).getName().equals(name)) {
-    			features.get(i).setValue(value);
-    			found = true;
-    			break;
-    		}
-    	}
-    	if (!found) {
-    		this.addFeature(new Feature(name, value, level));
-    	}
-    }
-    
-    public ArrayList<Feature> getFeatures() {
-    	return new ArrayList<Feature>(features);
-    }
     
     @Override
     public Element toXML() throws ParserConfigurationException {
@@ -136,12 +97,9 @@ public class Phoneme extends FeaturalXMLDatatype {
             Element charElement = doc.createElement("char");
             charElement.appendChild(doc.createTextNode(sound));
             root.appendChild(charElement);
-            for (int i = 0; i < features.size(); i++) {
-            	Feature f = features.get(i);
+            for (Feature f : features.values()) {
             	if (f.getValue() && f.getLevel() == FeatureLevel.SOUND) {
-            		Element featureElement = doc.createElement("feature");
-            		featureElement.setTextContent(features.get(i).getName());
-            		root.appendChild(featureElement);
+            		root.appendChild(doc.importNode(f.toXML(), true));
             	}
             }
         }
@@ -166,8 +124,7 @@ public class Phoneme extends FeaturalXMLDatatype {
             			complex = true;
             			sound = childE.getTextContent();
             		} else if (childE.getTagName().equals("feature")) {
-            			String textContent = childE.getTextContent();
-            			Feature f = new Feature(textContent, true, FeatureLevel.SOUND);
+            			Feature f = new Feature(childE, level);
             			this.addFeature(f);
             		}
             	}
@@ -182,28 +139,17 @@ public class Phoneme extends FeaturalXMLDatatype {
 
     @Override
     public boolean equals(Object o) {
-    	boolean partOne = false;
         if (o instanceof Phoneme) {
             Phoneme p = (Phoneme) o;
-            partOne = p.getSound().equals(sound) && p.getIndex() == index;
-            boolean partTwo = true;
-            if (p.getFeatures().size() == features.size()) {
-            	for (int i = 0; i < features.size(); i++) {
-            		boolean found = false;
-            		for (int j = 0; j < p.getFeatures().size(); j++) {
-            			if (features.get(i).equals(p.getFeatures().get(j))) {
-            				found = true;
-            				break;
-            			}
-            		}
-            		if (!found) {
-            			partTwo = false;
-            			break;
+            if (p.features.size() == features.size()) {
+            	ArrayList<String> keys = new ArrayList<>(features.keySet());
+            	for (String key : keys) {
+            		if (!p.features.get(key).equals(features.get(key))) {
+            			return false;
             		}
             	}
+            	return true;
             }
-            
-            return partOne && partTwo;
         }
         return false;
     }

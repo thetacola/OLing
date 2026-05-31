@@ -193,12 +193,9 @@ public class PhonoCategory extends FeaturalXMLDatatype {
         root.setAttribute("name", name);
         root.setAttribute("index", index + "");
         
-        for (int i = 0; i < features.size(); i++) {
-        	Feature f = features.get(i);
+        for (Feature f : features.values()) {
         	if (f.getValue() && f.getLevel() == FeatureLevel.ROW) {
-        		Element featureElement = doc.createElement("feature");
-        		featureElement.setTextContent(features.get(i).getName());
-        		root.appendChild(featureElement);
+        		root.appendChild(doc.importNode(f.toXML(), true));
         	}
         }
         
@@ -235,8 +232,7 @@ public class PhonoCategory extends FeaturalXMLDatatype {
                     PhonoCell pc = new PhonoCell((Element) n);
                     super.lowerObj.add(pc);
                 } else if (n.getNodeName().equals("feature") && n.getNodeType() == Node.ELEMENT_NODE) {
-                	String textContent = ((Element) n).getTextContent();
-        			Feature f = new Feature(textContent, true, FeatureLevel.ROW);
+                	Feature f = new Feature((Element) n, level);
         			this.addFeature(f);
                 }
             }

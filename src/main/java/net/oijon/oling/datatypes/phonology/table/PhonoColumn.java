@@ -1,5 +1,7 @@
 package net.oijon.oling.datatypes.phonology.table;
 
+import java.util.ArrayList;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -52,6 +54,7 @@ public class PhonoColumn extends FeaturalXMLDatatype {
 
 	@Override
 	public Element toXML() throws ParserConfigurationException {
+		initFeatures();
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document doc = builder.newDocument();
         Element root = doc.createElement("column");
@@ -61,10 +64,11 @@ public class PhonoColumn extends FeaturalXMLDatatype {
         nameE.setTextContent(name);
         root.appendChild(nameE);
         
-        for (Feature f : super.features) {
-        	Element featureE = doc.createElement("feature");
-        	featureE.setTextContent(f.getName());
-        	root.appendChild(featureE);
+        for (Feature f : super.features.values()) {
+        	if (f.getValue() && f.getLevel() == level) {
+        		Element fe = (Element) doc.importNode(f.toXML(), true);
+        		root.appendChild(fe);
+        	}
         }
         
 		return root;
@@ -81,8 +85,7 @@ public class PhonoColumn extends FeaturalXMLDatatype {
                 if (n.getNodeName().equals("name") && n.getNodeType() == Node.ELEMENT_NODE) {
                     this.name = n.getTextContent();
                 } else if (n.getNodeName().equals("feature") && n.getNodeType() == Node.ELEMENT_NODE) {
-                	String textContent = ((Element) n).getTextContent();
-        			Feature f = new Feature(textContent, true, FeatureLevel.COLUMN);
+                	Feature f = new Feature((Element) n, level);
         			this.addFeature(f);
                 }
             }
@@ -95,14 +98,13 @@ public class PhonoColumn extends FeaturalXMLDatatype {
 
 	@Override
 	protected void initFeatures() {
-		// TODO Auto-generated method stub
-		
+		this.level = FeatureLevel.COLUMN;
 	}
 	
 	@Override
 	public String toString() {
 		String str = "[" + index + ": " + name + ", [";
-		for (Feature f : features) {
+		for (Feature f : features.values()) {
 			str += f.toString();
 		}
 		str+= "]]";
@@ -113,22 +115,14 @@ public class PhonoColumn extends FeaturalXMLDatatype {
 	public boolean equals(Object o) {
 		if (o instanceof PhonoColumn) {
 			PhonoColumn pc = (PhonoColumn) o;
-			if (pc.name.equals(name) && pc.index == index) {
-				boolean oneNotFound = false;
-				for (int i = 0; i < this.features.size(); i++) {
-					boolean found = false;
-					for (int j = 0; j < pc.features.size(); j++) {
-						if (features.get(i).equals(pc.features.get(j))) {
-							found = true;
-							break;
-						}
-					}
-					if (!found) {
-						oneNotFound = true;
-						break;
+			if (pc.name.equals(name) && pc.index == index && pc.features.size() == features.size()) {
+				ArrayList<String> keys = new ArrayList<>(features.keySet());
+				for (String key : keys) {
+					if (!features.get(key).equals(pc.features.get(key))) {
+						return false;
 					}
 				}
-				return !oneNotFound;
+				return true;
 			}
 		}
 		return false;

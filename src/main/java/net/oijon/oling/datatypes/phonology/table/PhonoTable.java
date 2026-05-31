@@ -2,6 +2,7 @@ package net.oijon.oling.datatypes.phonology.table;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.BiConsumer;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.phonology.SyllablePart;
@@ -324,6 +325,14 @@ public class PhonoTable extends FeaturalXMLDatatype {
         		rowsE.appendChild(doc.importNode(pc.toXML(), true));
         	}
         }
+        
+        for (Feature f : features.values()) {
+        	if (f.getLevel().equals(level)) {
+        		Element fe = (Element) doc.importNode(f.toXML(), true);
+        		root.appendChild(fe);
+        	}
+        }
+        
         root.appendChild(rowsE);
 
         return root;
@@ -378,47 +387,36 @@ public class PhonoTable extends FeaturalXMLDatatype {
 	    }
 	    this.applyFeatures();
     }
+    
+    @Override
+    protected void applyFeatures() {
+    	super.applyFeatures();
+    	// essentially a copy of the super method, but for columns
+    	for (PhonoColumn c : columns) {
+			// set true features to lower datatype
+			features.forEach(new BiConsumer<String, Feature>() {
+				@Override
+				public void accept(String name, Feature f) {
+					if (f.getValue()) {
+						c.addFeature(f);
+					} else {
+						c.addFeature(new Feature(name, false, FeatureLevel.SYSTEM));
+					}
+				}
+			});
+			// get missing features from lower datatype
+			c.getFeatures().forEach(new BiConsumer<String, Feature>() {
+				@Override
+				public void accept(String name, Feature f) {
+					// false features should be system level
+					features.putIfAbsent(name, new Feature(name, false, FeatureLevel.SYSTEM));
+				}
+			});
+    	}
+    }
 
 	@Override
 	protected void initFeatures() {
 		super.level = FeatureLevel.TABLE;
-	}
-	
-	@Override
-	protected void applyFeatures() {
-		super.applyFeatures();		
-		// we can assume that the cells have already had any cell/row level features applied above,
-		// so there's no need to check for them
-		for (int i = 0; i < columns.size(); i++) {
-			ArrayList<PhonoCell> cells = getCellsInColumn(columns.get(i).getIndex());
-			ArrayList<Feature> features = columns.get(i).getFeatures();
-			features.addAll(getAllFeatures(cells));
-			for (int j = 0; j < features.size(); j++) {
-				Feature f = features.get(j);
-				for (int k = 0; k < cells.size(); k++) {
-					if (f.getValue()) {
-						cells.get(k).setFeature(f.getName(), f.getValue(), FeatureLevel.COLUMN);
-					} else {
-						cells.get(k).addFeature(f);
-					}
-				}
-			}
-		}
-	}
-	
-	private ArrayList<PhonoCell> getCellsInColumn(int index) {
-		ArrayList<PhonoCell> c = new ArrayList<>();
-		
-		for (FeaturalXMLDatatype fxd : super.lowerObj) {
-			PhonoCategory pc = (PhonoCategory) fxd;
-			for (int i = 0; i < pc.size(); i++) {
-				PhonoCell cell = pc.getCell(i);
-				if (cell.getIndex() == index) {
-					c.add(cell);
-				}
-			}
-		}
-		
-		return c;
 	}
 }

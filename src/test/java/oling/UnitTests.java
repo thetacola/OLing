@@ -163,7 +163,7 @@ public class UnitTests {
 			List<String> newPL = newPhono.getList();
 			assertEquals(oldPL, newPL);
 
-			PhonoSystem oldPS = oldPhono.getPhonoSystem();
+			PhonoSystem oldPS = PhonoSystem.IPA;
 			PhonoSystem newPS = newPhono.getPhonoSystem();
 
 			String oldPSName = oldPS.getName();
@@ -204,7 +204,9 @@ public class UnitTests {
 				assertEquals(oldT, newT);
 			}
 			assertEquals(oldPSTables, newPSTables);
-			assertEquals(oldPS, newPS);
+			// the parser changes it to the IPA system when it detects that it needs to be updated
+			assertEquals(oldPS, PhonoSystem.IPA);
+			oldPhono.setPhonoSystem(PhonoSystem.IPA);
 			assertEquals(oldPhono, newPhono);
 
 			Orthography oldO = testLang.getOrtho();

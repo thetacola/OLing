@@ -150,7 +150,7 @@ public class PhonoTable extends FeaturalXMLDatatype {
 		for (int i = 0; i < super.lowerObj.size(); i++) {
 			returnString += super.lowerObj.get(i) + "\n";
 		}
-		returnString += "soundsPerCell:" + soundsPerCell;
+		returnString += "soundsPerCell:" + soundsPerCell + "\n";
 		returnString += "features:" + features;
 		return returnString;
 	}

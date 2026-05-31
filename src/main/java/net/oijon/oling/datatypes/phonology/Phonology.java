@@ -94,10 +94,10 @@ public class Phonology implements XMLDatatype {
 	
 	/**
 	 * Sets the phono system attached to the phonology.
-	 * This is a private method because it should only be used when creating a phonology.
+	 * This is dangerous! Only do this when either creating a phonology or updating to a version with more features!
 	 * @param phonoSystem
 	 */
-	private void setPhonoSystem(PhonoSystem phonoSystem) {
+	public void setPhonoSystem(PhonoSystem phonoSystem) {
 		this.phonoSystem = phonoSystem;
 	}
 	

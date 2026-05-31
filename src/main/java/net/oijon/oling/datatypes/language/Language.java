@@ -17,6 +17,8 @@ import net.oijon.oling.info.Info;
 import net.oijon.oling.datatypes.lexicon.Lexicon;
 import net.oijon.oling.datatypes.orthography.Orthography;
 import net.oijon.oling.datatypes.phonology.Phonology;
+import net.oijon.oling.datatypes.phonology.table.PhonoSystem;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -114,6 +116,7 @@ public class Language implements XMLDatatype {
 	 */
 	public Language(String name) {
 		this.properties.setProperty(LanguageProperty.NAME, name);
+		checkPhonoSys();
 	}
 
     public Language(Element e) throws InvalidXMLException {
@@ -292,6 +295,7 @@ public class Language implements XMLDatatype {
                             break;
                         case "phonology":
                             phono = new Phonology(element);
+                            checkPhonoSys();
                             break;
                         case "orthography":
                             ortho = new Orthography(element);
@@ -307,5 +311,21 @@ public class Language implements XMLDatatype {
         } else {
             throw new InvalidXMLException("Node name not expected name! Expected: language; Actual: " + e.getTagName());
         }
+    }
+    
+    private void checkPhonoSys() {
+    	try {
+	    	if (this.phono.getPhonoSystem().getName().equals("IPA")) {
+	    		PhonoSystem ps = this.phono.getPhonoSystem();
+	    		PhonoSystem ipa = PhonoSystem.IPA;
+	    		if (!ps.equals(ipa)) {
+	    			log.warn("Despite being called IPA, this phono system does not match actual IPA!");
+	    			log.warn("Changing to IPA, this is most often caused by an update...");
+	    			this.phono.setPhonoSystem(ipa);
+	    		}
+	    	}
+    	} catch (NullPointerException e) {
+    		// if null, then there's nothing needed to do
+    	}
     }
 }

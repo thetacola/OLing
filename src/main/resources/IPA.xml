@@ -62,6 +62,32 @@
 		<diacritic>‿</diacritic>
 		<diacritic>͡</diacritic>
 	</diacritics>
+	<sonorancy>
+		<sonorance type=pos>
+			<feature>voice</feature>
+			<value>1</value>
+		</sonorance>
+		<sonorance type=pos>
+			<feature>continuant</feature>
+			<value>2</value>
+		</sonorance>
+		<sonorance type=neg>
+			<feature>lateral</feature>
+			<value>4</value>
+		</sonorance>
+		<sonorance type=neg>
+			<feature>nasal</feature>
+			<value>8</value>
+		</sonorance>
+		<sonorance type=pos>
+			<feature>sonorant</feature>
+			<value>16</value>
+		</sonorance>
+		<sonorance type=pos>
+			<feature>syllabic</feature>
+			<value>32</value>
+		</sonorance>
+	</sonorancy>
 	<table name="IPA Consonants" part="ONSET_CODA">
 		<columns>
 			<column index="0">

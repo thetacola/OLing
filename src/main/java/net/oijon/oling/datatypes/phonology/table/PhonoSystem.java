@@ -11,11 +11,13 @@ import java.io.StringReader;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.language.Language;
 import net.oijon.oling.datatypes.phonology.PhonoAnomaly;
+import net.oijon.oling.datatypes.phonology.feature.Diacritic;
 import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
@@ -46,7 +48,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 
 	private String name;
 	//private ArrayList<PhonoTable> tables = new ArrayList<PhonoTable>();
-	private ArrayList<String> diacriticList = new ArrayList<String>();
+	private HashMap<String, Diacritic> diacritics = new HashMap<String, Diacritic>();
 	private ArrayList<PhonoList> lists = new ArrayList<PhonoList>();
 	private ArrayList<PhonoAnomaly> anomalies = new ArrayList<PhonoAnomaly>();
 
@@ -117,17 +119,31 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 		this.name = name;
 		super.lowerObj.addAll(tables);
 	}
+	
 	/**
-	 * Creates a PhonoSystem object with a pre-defined ArrayList and diacritic list
+	 * Creates a PhonoSystem object with a pre-defined ArrayList and diacritics
 	 * @param name The name of the phono system
 	 * @param tables The list of all tables used in the phono system
-	 * @param diacriticList The list of all tables used in the phono system
+	 * @param diacritics The list of all diacritics used in the phono system, indexed by their string representation
+	 */
+	public PhonoSystem(String name, ArrayList<PhonoTable> tables, HashMap<String, Diacritic> diacritics) {
+		initFeatures();
+		this.name = name;
+		this.diacritics = new HashMap<String, Diacritic>(diacritics);
+	}
+	
+	/**
+	 * Creates a PhonoSystem object with a pre-defined ArrayList and diacritic list
+	 * Note that this does not give features to diacritics
+	 * @param name The name of the phono system
+	 * @param tables The list of all tables used in the phono system
+	 * @param diacriticList The list of all diacritic string representations used in the phono system
 	 */
 	public PhonoSystem(String name, ArrayList<PhonoTable> tables, ArrayList<String> diacriticList) {
 		initFeatures();
 		this.name = name;
 		super.lowerObj.addAll(tables);
-		this.diacriticList = diacriticList;
+		addDiacriticsFromList(diacriticList);
 	}
 	/**
 	 * Creates a PhonoSystem object with a blank category list. This list will need something added to it to work!
@@ -155,7 +171,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 		initFeatures();
 		this.name = ps.name;
 		this.lowerObj = new ArrayList<FeaturalXMLDatatype>(ps.lowerObj);
-		this.diacriticList = new ArrayList<String>(ps.diacriticList);
+		this.diacritics = new HashMap<String, Diacritic>(ps.diacritics);
 	}
 	
 	/**
@@ -168,7 +184,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 			LegacyParser parser = new LegacyParser(file);
 			// this is silly
 			PhonoSystem parsedSys = parser.parsePhonoSys();
-			this.diacriticList = parsedSys.getDiacritics();
+			this.diacritics = parsedSys.diacritics;
 			this.name = parsedSys.getName();
 			super.lowerObj.addAll(parsedSys.getTables());
 		} catch (Exception e) {
@@ -237,35 +253,38 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 		PhonoTable table = (PhonoTable) super.lowerObj.get(i);
 		return table.getRow(x).getCell(y).getPhonemes().get(z).getSound();
 	}
+
 	/**
-	 * Sets the diacritic list to a new list
-	 * @param newList The new list of diacritics
+	 * Gets a diacritic in the phono system. Returns null if not found
+	 * @param key The string representation of the diacritic
+	 * @return The diacritic object
 	 */
-	public void setDiacritics(ArrayList<String> newList) {
-		diacriticList = newList;
-	}
-	/**
-	 * Gets the list of diacritics
-	 * @return The list of diacritics
-	 */
-	public ArrayList<String> getDiacritics() {
-		return diacriticList;
+	public Diacritic getDiacritic(String key) {
+		return diacritics.get(key);
 	}
 	
+	/**
+	 * Sets a diacritic, overwriting anything with the same character
+	 * @param d The diacritic to set
+	 */
+	public void setDiacritic(Diacritic d) {
+		diacritics.put(d.getCharacter(), d);
+	}
 	
 	/**
-	 * Used once in here to read to an InputStream and write to an OutputStream.
-	 * Will be replaced by OStream soon (once it comes out that is)
-	 * @param is The input stream to read from
-	 * @param os The output stream to write to
-	 * @throws IOException
+	 * Adds a diacritic only if there is no other diacritic with the same string representation
+	 * @param d The diacritic to add
 	 */
-	private static void writeStreams(InputStream is, OutputStream os) throws IOException {
-		byte[] buffer = new byte[1024];
-    	int bytesRead;
-    	while ((bytesRead = is.read(buffer)) != -1) {
-    		os.write(buffer, 0, bytesRead);
-    	}
+	public void addDiacritic(Diacritic d) {
+		diacritics.putIfAbsent(d.getCharacter(), d);
+	}
+	
+	/**
+	 * Removes a diacritic based off its string representation
+	 * @param key The string representation of the diacritic
+	 */
+	public void removeDiacritic(String key) {
+		diacritics.remove(key);
 	}
 	
 	public String toString() {
@@ -273,7 +292,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 		for (int i = 0; i < super.lowerObj.size(); i++) {
 			returnString += super.lowerObj.get(i) + "\n";
 		}
-		returnString += "diacritics:" + diacriticList.toString() + "\n";
+		returnString += "diacritics:" + diacritics + "\n";
 		for (int i = 0; i < lists.size(); i++) {
 			returnString += lists.get(i) + "\n";
 		}
@@ -289,6 +308,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 		String output = "===Tablelist Start===\n";
 		output += "tablelistName:" + name + "\n";
 		output += "diacriticList:";
+		ArrayList<String> diacriticList = new ArrayList<String>(diacritics.keySet());
 		for (int i = 0; i < diacriticList.size(); i++) {
 			output += diacriticList.get(i) + ",";
 		}
@@ -308,8 +328,9 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	 * @return Returns true if value is found in phono system, false if not
 	 */
 	public boolean contains(String value) {
-		for (int i = 0; i < diacriticList.size(); i++) {
-			value = value.replace(Character.toString(diacriticList.get(i).charAt(0)), "");
+		ArrayList<String> keys = new ArrayList<String>(diacritics.keySet());
+		for (int i = 0; i < keys.size(); i++) {
+			value = value.replace(Character.toString(keys.get(i).charAt(0)), "");
 		}
 		if (value.length() > 1) {
 			value = Character.toString(value.charAt(0));
@@ -388,7 +409,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 		if (obj instanceof PhonoSystem) {
 			PhonoSystem p = (PhonoSystem) obj;			
 			if (p.name.equals(name) && p.lowerObj.equals(super.lowerObj) &
-					p.diacriticList.equals(diacriticList)) {
+					p.diacritics.equals(diacritics)) {
 				return true;
 			}
 			
@@ -404,10 +425,8 @@ public class PhonoSystem extends FeaturalXMLDatatype {
         root.setAttribute("name", name);
 
         Element diacritics = doc.createElement("diacritics");
-        for (String s : diacriticList) {
-            Element diacritic = doc.createElement("diacritic");
-            diacritic.appendChild(doc.createTextNode(s));
-            diacritics.appendChild(diacritic);
+        for (Diacritic d : this.diacritics.values()) {
+            diacritics.appendChild(doc.importNode(d.toXML(), true));
         }
         root.appendChild(diacritics);
 
@@ -443,8 +462,12 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 				    case "diacritics":
 					    NodeList diacritics = n.getChildNodes();
 					    for (int j = 0; j < diacritics.getLength(); j++) {
-						    Node diacritic = diacritics.item(j);
-						    this.diacriticList.add(diacritic.getTextContent());
+					    	Node dn = diacritics.item(i);
+					    	if (n.getNodeType() == Node.ELEMENT_NODE) {
+								Diacritic d = new Diacritic((Element) n);
+								this.diacritics.put(d.getCharacter(), d);
+						    }
+					    	
 					    }
                         break;
 				    case "table":
@@ -480,5 +503,12 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	@Override
 	protected void initFeatures() {
 		super.level = FeatureLevel.SYSTEM;
+	}
+	
+	private void addDiacriticsFromList(ArrayList<String> diacriticList) {
+		for (String s : diacriticList) {
+			Diacritic d = new Diacritic(s);
+			diacritics.putIfAbsent(s, d);
+		}
 	}
 }

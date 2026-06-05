@@ -1,57 +1,86 @@
 package net.oijon.oling.datatypes.phonology.feature;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Diacritic {
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import net.oijon.oling.datatypes.InvalidXMLException;
+
+public class Diacritic extends FeaturalXMLDatatype {
 
 	private String character;
-	// Diacritics applied to a character override the features of a given phoneme
-	private ArrayList<Feature> features;
 	
 	public Diacritic(String character) {
+		initFeatures();
 		this.character = character;
 	}
 	
-	public Diacritic(String character, ArrayList<Feature> features) {
+	public Diacritic(String character, HashMap<String, Feature> features) {
 		this(character);
-		this.features = features;
+		super.features = features;
+	}
+	
+	public Diacritic(Element e) throws InvalidXMLException {
+		this.fromXML(e);
 	}
 	
 	public String getCharacter() {
 		return character;
 	}
-	
-	public ArrayList<Feature> getFeatures() {
-		return new ArrayList<Feature>(features);
-	}
-	
-	public void addFeature(Feature f) {
-		// There should only ever be one instance of a given feature in the list
-		boolean found = false;
-		for (int i = 0; i < features.size(); i++) {
-			if (features.get(i).getName().equals(f.getName())) {
-				found = true;
-				break;
-			}
+
+	@Override
+	public Element toXML() throws ParserConfigurationException {
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document doc = builder.newDocument();
+		Element root = doc.createElement("diacritic");
+		
+		Element charE = doc.createElement("char");
+		root.appendChild(charE);
+		
+		for (Feature f : super.features.values()) {
+			root.appendChild(doc.importNode(f.toXML(), true));
 		}
 		
-		if (!found) {
-			this.features.add(f);
+		return root;
+	}
+
+	@Override
+	public void fromXML(Element e) throws InvalidXMLException {
+		initFeatures();
+		if (e.getTagName().equals("diacritic")) {
+			boolean complex = false;
+            for (int i = 0; i < e.getChildNodes().getLength(); i++) {
+            	Node child = e.getChildNodes().item(i);
+            	if (child.getNodeType() == Node.ELEMENT_NODE) {
+            		// technically considered complex at this point, though the marker
+            		// is moved into the name check to prevent null diacritics
+            		Element childE = (Element) child;
+            		if (childE.getTagName().equals("char")) {
+            			complex = true;
+            			character = childE.getTextContent();
+            		} else if (childE.getTagName().equals("feature")) {
+            			Feature f = new Feature(childE, level);
+            			this.addFeature(f);
+            		}
+            	}
+            }
+            if (!complex) {
+            	character = e.getTextContent();
+            }
+		} else {
+			throw new InvalidXMLException("Node name not expected name! Expected: diacritic; Actual: " + e.getTagName());
 		}
 	}
-	
-	public void removeFeature(String name) {
-		for (int i = 0; i < features.size(); i++) {
-			// As due to how addFeature works one can assume only one of each feature,
-			// this can break on the first find
-			if (features.get(i).getName().equals(name)) {
-				features.remove(i);
-				break;
-			}
-		}
-	}
-	
-	public void removeFeature(Feature f) {
-		removeFeature(f.getName());
+
+	@Override
+	protected void initFeatures() {
+		super.level = FeatureLevel.DIACRITIC;
 	}
 }

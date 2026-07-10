@@ -12,8 +12,6 @@ import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.BiConsumer;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -138,6 +136,14 @@ public class Phoneme extends FeaturalXMLDatatype {
         } else {
             throw new InvalidXMLException("Node name not expected name! Expected: sound; Actual: " + e.getTagName());
         }
+    }
+    
+    @Override
+    public Phoneme find(String value) {
+    	if (value.equals(sound)) {
+    		return this;
+    	}
+    	return null;
     }
 
     @Override

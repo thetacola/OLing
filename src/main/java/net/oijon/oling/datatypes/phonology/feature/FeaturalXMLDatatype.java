@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 import net.oijon.oling.datatypes.XMLDatatype;
+import net.oijon.oling.datatypes.phonology.table.Phoneme;
 
 public abstract class FeaturalXMLDatatype implements XMLDatatype {
 
@@ -31,6 +32,20 @@ public abstract class FeaturalXMLDatatype implements XMLDatatype {
     public HashMap<String, Feature> getFeatures() {
     	applyFeatures();
     	return features;
+    }
+    
+    /**
+	 * Finds a particular phoneme object from a given string
+	 * @param value The string representation of the wanted phoneme
+	 * @return The phoneme that matches the given string.
+	 */
+    public Phoneme find(String value) {
+    	for (int i = 0; i < lowerObj.size(); i++) {
+    		if (lowerObj.get(i).find(value) != null) {
+    			return lowerObj.get(i).find(value);
+    		}
+    	}
+    	return null;
     }
     
     protected void applyFeatures() {    	

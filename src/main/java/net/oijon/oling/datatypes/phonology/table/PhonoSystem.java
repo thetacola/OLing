@@ -328,6 +328,15 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	 * @return Returns true if value is found in phono system, false if not
 	 */
 	public boolean contains(String value) {
+		return (find(value) != null);
+	}
+	
+	/**
+	 * Finds a particular phoneme object from a given string
+	 * @param value The string representation of the wanted phoneme
+	 * @return The phoneme that matches the given string.
+	 */
+	public Phoneme find(String value) {
 		ArrayList<String> keys = new ArrayList<String>(diacritics.keySet());
 		for (int i = 0; i < keys.size(); i++) {
 			value = value.replace(Character.toString(keys.get(i).charAt(0)), "");
@@ -335,22 +344,32 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 		if (value.length() > 1) {
 			value = Character.toString(value.charAt(0));
 		}
+		
+		// looks awful, pretty sure it's O(n) and not O(n⁴) though
 		for (int i = 0; i < super.lowerObj.size(); i++) {
 			PhonoTable pt = (PhonoTable) super.lowerObj.get(i);
-			if (pt.getSoundList().contains(value)) {
-				return true;
+			for (int j = 0; j < pt.size(); j++) {
+				PhonoCategory pc = pt.getRow(j);
+				for (int k = 0; k < pc.size(); k++) {
+					PhonoCell pce = pc.getCell(k);
+					for (int l = 0; l < pce.size(); l++) {
+						Phoneme p = pce.getPhonemes().get(i);
+						if (p.getSound().equals(value)) {
+							return p;
+						}
+					}
+				}
 			}
 		}
 		for (int i = 0; i < lists.size(); i++) {
 			ArrayList<Phoneme> phonemesInList = lists.get(i).getPhonemes();
 			for (int j = 0; j < phonemesInList.size(); j++) {
 				if (phonemesInList.get(j).getSound().equals(value)) {
-					return true;
+					return phonemesInList.get(j);
 				}
 			}
 		}
-
-		return false;
+		return null;
 	}
 
 	public PhonoList getList(int index) {
@@ -380,6 +399,10 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 			output = anomalies.get(i).normalize(output);
 		}
 		return output;
+	}
+	
+	public ArrayList<String> getDiacriticKeys() {
+		return new ArrayList<String>(diacritics.keySet());
 	}
 
 	/**
@@ -505,7 +528,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 		super.level = FeatureLevel.SYSTEM;
 	}
 	
-	private void addDiacriticsFromList(ArrayList<String> diacriticList) {
+	public void addDiacriticsFromList(ArrayList<String> diacriticList) {
 		for (String s : diacriticList) {
 			Diacritic d = new Diacritic(s);
 			diacritics.putIfAbsent(s, d);

@@ -1,6 +1,5 @@
 package net.oijon.oling.datatypes.phonology.feature;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;

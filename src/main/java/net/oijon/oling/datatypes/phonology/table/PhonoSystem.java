@@ -21,6 +21,7 @@ import net.oijon.oling.datatypes.phonology.feature.Diacritic;
 import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
+import net.oijon.oling.datatypes.phonology.feature.sonorancy.SonorancyTree;
 import net.oijon.olog.Log;
 import net.oijon.oling.LegacyParser;
 import net.oijon.oling.info.Info;
@@ -51,6 +52,8 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	private HashMap<String, Diacritic> diacritics = new HashMap<String, Diacritic>();
 	private ArrayList<PhonoList> lists = new ArrayList<PhonoList>();
 	private ArrayList<PhonoAnomaly> anomalies = new ArrayList<PhonoAnomaly>();
+	// FIXME: make a constructor without a feature, so that it can be filled by the parser
+	private SonorancyTree sonorancyTree = new SonorancyTree(null);
 
 	static Log log = Info.log;
 	
@@ -528,10 +531,31 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 		super.level = FeatureLevel.SYSTEM;
 	}
 	
+	@Override
+	public ArrayList<Phoneme> getAllPhonemes() {
+		ArrayList<Phoneme> phonemes = super.getAllPhonemes();
+		
+		for (int i = 0; i < lists.size(); i++) {
+			PhonoList l = lists.get(i);
+			phonemes.addAll(l.getAllPhonemes());
+		}
+		
+		return phonemes;
+	}
+	
 	public void addDiacriticsFromList(ArrayList<String> diacriticList) {
 		for (String s : diacriticList) {
 			Diacritic d = new Diacritic(s);
 			diacritics.putIfAbsent(s, d);
+		}
+	}
+	
+	public void setAllSonorance() {
+		ArrayList<Phoneme> phonemes = this.getAllPhonemes();
+		for (int i = 0; i < phonemes.size(); i++) {
+			Phoneme p = phonemes.get(i);
+			int value = sonorancyTree.getPhonemeValue(p);
+			p.setSonorancy(value);
 		}
 	}
 }

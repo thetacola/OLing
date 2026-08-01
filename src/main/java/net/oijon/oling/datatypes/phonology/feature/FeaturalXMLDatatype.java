@@ -48,6 +48,17 @@ public abstract class FeaturalXMLDatatype implements XMLDatatype {
     	return null;
     }
     
+    public ArrayList<Phoneme> getAllPhonemes() {
+    	ArrayList<Phoneme> list = new ArrayList<>();
+    	
+    	for (int i = 0; i < lowerObj.size(); i++) {
+    		FeaturalXMLDatatype fxd = lowerObj.get(i);
+    		list.addAll(fxd.getAllPhonemes());
+    	}
+    	
+    	return list;
+    }
+    
     protected void applyFeatures() {    	
     	// get features from all other lower datatypes, only apply those that are true to all
     	for (FeaturalXMLDatatype fxd : lowerObj) {

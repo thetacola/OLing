@@ -62,6 +62,106 @@
 		<diacritic>‿</diacritic>
 		<diacritic>͡</diacritic>
 	</diacritics>
+	<sonorancy>
+		<!-- left == more sonorous, right == less -->
+		<son-feature>
+			<feature>syllabic</feature>
+			<left type="pos">
+				<son-feature>
+					<feature>low</feature>
+					<left type="pos">
+						<!-- low vowels -->
+					</left>
+					<right>
+						<son-feature>
+							<feature>high</feature>
+							<left type="neg">
+								<!-- mid vowels -->
+							</left>
+							<right>
+								<!-- high vowels -->
+							</right>
+						</son-feature>
+					</right>
+				</son-feature>
+			</left>
+			<right>
+				<son-feature>
+					<feature>sonorant</feature>
+					<left type="pos">
+						<son-feature>
+							<feature>nasal</feature>
+							<left type="neg">
+								<son-feature>
+									<feature>lateral</feature>
+									<left type="neg">
+										<son-feature>
+											<feature>vocalic</feature>
+											<left type="pos">
+												<!-- glides -->
+											</left>
+											<right>
+												<!-- flaps -->
+											</right>
+										</son-feature>
+									</left>
+									<right>
+										<!-- lateral glides -->
+									</right>
+								</son-feature>
+							</left>
+							<right>
+								<!-- nasals -->
+							</right>
+						</son-feature>
+					</left>
+					<right>
+						<son-feature>
+							<feature>continuant</feature>
+							<left type="pos">
+								<son-feature>
+									<feature>voice</feature>
+									<left type="pos">
+										<!-- voiced fricatives -->
+									</left>
+									<right>
+										<!-- voiceless fricatives -->
+									</right>
+								</son-feature>
+							</left>
+							<right>
+								<son-feature>
+									<feature>delayedrelease</feature>
+									<left type="pos">
+										<son-feature>
+											<feature>voice</feature>
+											<left type="pos">
+												<!-- voiced affricates -->
+											</left>
+											<right>
+												<!-- voiceless affricates -->
+											</right>
+										</son-feature>
+									</left>
+									<right>
+										<son-feature>
+											<feature>voice</feature>
+											<left type="pos">
+												<!-- voiced stops -->
+											</left>
+											<right>
+												<!-- voiceless stops -->
+											</right>
+										</son-feature>
+									</right>
+								</son-feature>
+							</right>
+						</son-feature>
+					</right>
+				</son-feature>
+			</right>
+		</son-feature>
+	</sonorancy>
 	<table name="IPA Consonants" part="ONSET_CODA">
 		<columns>
 			<column index="0">
@@ -249,6 +349,7 @@
 				</cell>
 			</row>
 			<row name="Tap or Flap" index="3">
+				<feature>sonorant</feature>
 				<cell index="1">
 					<sound index="1">
 						<char>ⱱ</char>
@@ -390,6 +491,7 @@
 				<feature>continuant</feature>
 				<feature>sonorant</feature>
 				<cell index="1">
+					<feature>vocalic</feature>
 					<sound index="1">
 						<char>ʋ</char>
 						<feature>voice</feature>
@@ -408,12 +510,14 @@
 					</sound>
 				</cell>
 				<cell index="6">
+					<feature>vocalic</feature>
 					<sound index="1">
 						<char>j</char>
 						<feature>voice</feature>
 					</sound>
 				</cell>
 				<cell index="7">
+					<feature>vocalic</feature>
 					<sound index="1">
 						<char>ɰ</char>
 						<feature>voice</feature>
@@ -454,6 +558,7 @@
 	<table name="IPA Vowels" part="NUCLEUS">
 		<feature>syllabic</feature>
 		<feature>voice</feature>
+		<feature>vocalic</feature>
 		<feature type="place">DORSAL</feature>
 		<columns>
 			<column index="0">
@@ -684,6 +789,7 @@
 			<feature>back</feature>
 			<feature>continuant</feature>
 			<feature>sonorant</feature>
+			<feature>vocalic</feature>
 		</sound>
 		<sound index="1">
 			<char>w</char>
@@ -693,6 +799,7 @@
 			<feature>continuant</feature>
 			<feature>sonorant</feature>
 			<feature>voice</feature>
+			<feature>vocalic</feature>
 		</sound>
 		<sound index="2">
 			<char>ɥ</char>

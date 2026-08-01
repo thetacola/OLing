@@ -24,7 +24,8 @@ public class Phoneme extends FeaturalXMLDatatype {
     private int index;
     private String sound;
     private HashMap<String, Diacritic> diacritics = new HashMap<String, Diacritic>();
-
+    private int sonorancy = -1;
+    
     /**
      * Creates a phoneme with a given sound in a string. Note that if this is to be used in a PhonoTable, it needs
      * an index to work properly!
@@ -73,6 +74,14 @@ public class Phoneme extends FeaturalXMLDatatype {
     }
 
     /**
+     * Gets the sonorancy of the given phoneme
+     * @return The sonorancy of the given phoneme
+     */
+    public int getSonorancy() {
+    	return sonorancy;
+    }
+    
+    /**
      * Sets the index of this phoneme inside its cell
      * @param index The new index to use
      */
@@ -86,6 +95,15 @@ public class Phoneme extends FeaturalXMLDatatype {
      */
     public void setSound(String sound) {
         this.sound = sound;
+    }
+    
+    /**
+     * Sets the sonorancy of the phoneme. Note that this will likely be overwritten by the PhonoSystem
+     * to make it properly conform with the configured sonorancy tree.
+     * @param sonorancy The sonorancy value for the phoneme
+     */
+    public void setSonorancy(int sonorancy) {
+    	this.sonorancy = sonorancy;
     }
     
     @Override
@@ -144,6 +162,15 @@ public class Phoneme extends FeaturalXMLDatatype {
     		return this;
     	}
     	return null;
+    }
+    
+    @Override
+    public ArrayList<Phoneme> getAllPhonemes() {
+    	ArrayList<Phoneme> list = new ArrayList<>();
+    	
+    	list.add(this);
+    	
+    	return list;
     }
 
     @Override

@@ -53,7 +53,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	private ArrayList<PhonoList> lists = new ArrayList<PhonoList>();
 	private ArrayList<PhonoAnomaly> anomalies = new ArrayList<PhonoAnomaly>();
 	// FIXME: make a constructor without a feature, so that it can be filled by the parser
-	private SonorancyTree sonorancyTree = new SonorancyTree(null);
+	private SonorancyTree sonorancyTree = new SonorancyTree();
 
 	static Log log = Info.log;
 	
@@ -455,7 +455,8 @@ public class PhonoSystem extends FeaturalXMLDatatype {
             diacritics.appendChild(doc.importNode(d.toXML(), true));
         }
         root.appendChild(diacritics);
-
+        root.appendChild(doc.importNode(sonorancyTree.toXML(), true));
+        
 		for (PhonoList list : lists) {
 			root.appendChild(doc.importNode(list.toXML(), true));
 		}
@@ -506,6 +507,11 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 							lists.add(new PhonoList((Element) n));
 						}
                         break;
+				    case "sonorancy":
+				    	if (n.getNodeType() == Node.ELEMENT_NODE) {
+				    		sonorancyTree = new SonorancyTree((Element) n);
+				    	}
+				    	break;
 				    case "anomalies":
 						if (n.getNodeType() == Node.ELEMENT_NODE) {
 							NodeList anomalyNodes = n.getChildNodes();

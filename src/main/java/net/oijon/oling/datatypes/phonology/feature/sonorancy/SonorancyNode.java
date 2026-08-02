@@ -2,7 +2,18 @@ package net.oijon.oling.datatypes.phonology.feature.sonorancy;
 
 import java.util.ArrayList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
+import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
 import net.oijon.oling.datatypes.phonology.table.Phoneme;
 
 public class SonorancyNode {
@@ -17,11 +28,15 @@ public class SonorancyNode {
 		this.feature = feature;
 	}
 	
-	protected SonorancyNode() {
+	public SonorancyNode() {
 		// for terminals
 	}
 	
-	protected int getValue(Phoneme p) {
+	public SonorancyNode(Element e) throws InvalidXMLException {
+		fromXML(e);
+	}
+
+	public int getValue(Phoneme p) {
 		if (left == null && right == null) {
 			return value;
 		} else if (left != null && right != null) {
@@ -49,7 +64,15 @@ public class SonorancyNode {
 		right.parent = this;
 	}
 	
-	protected void calcValue(int parentValue, boolean isLeft, int currentDepth, int maxDepth, 
+	public SonorancyNode getLeft() {
+		return left;
+	}
+	
+	public SonorancyNode getRight() {
+		return right;
+	}
+	
+	public void calcValue(int parentValue, boolean isLeft, int currentDepth, int maxDepth, 
 			ArrayList<SonorancyNode> passedNodes) {
 		// this implementation only allows for trees of 32 depth, which should be fine for just
 		// about any system
@@ -103,7 +126,7 @@ public class SonorancyNode {
 		return false;
 	}
 	
-	protected int getPhonemeValue(Phoneme p) {
+	public int getPhonemeValue(Phoneme p) {
 		if (left == null && right == null) {
 			return value;
 		} else if (left != null && right == null) {
@@ -127,5 +150,100 @@ public class SonorancyNode {
 			return right.getPhonemeValue(p);
 		}
 		
+	}
+	
+	public Element toXML() throws ParserConfigurationException {
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document doc = builder.newDocument();
+		Element root = doc.createElement("son-feature");
+		
+		if (feature != null) {
+			Element featureE = doc.createElement("feature");
+			featureE.setTextContent(feature.getName());
+			root.appendChild(featureE);
+			
+			Element leftE = doc.createElement("left");
+			if (feature.getValue()) {
+				leftE.setAttribute("type", "pos");
+			} else {
+				leftE.setAttribute("type", "neg");
+			}
+			
+			if (left != null) {
+				leftE.appendChild(doc.importNode(left.toXML(), true));
+			}
+			root.appendChild(leftE);
+			
+			Element rightE = doc.createElement("right");
+			if (right != null) {
+				leftE.appendChild(doc.importNode(right.toXML(), true));
+			}
+			root.appendChild(rightE);
+			
+		}
+		
+		
+		return root;
+	}
+	
+	public void fromXML(Element e) throws InvalidXMLException {
+		if (e.getTagName().equals("son-feature")) {
+			NodeList nodes = e.getChildNodes();
+			
+			String featureName = "";
+			boolean featureValue = false;
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Node n = nodes.item(i);
+				switch (n.getNodeName()) {
+					case "feature":
+						featureName = n.getNodeValue();
+						break;
+					case "left":
+						if (n.getNodeType() == Node.ELEMENT_NODE) {
+							left = new SonorancyNode();
+							left.parent = this;
+							Element nodeElem = (Element) n;
+							String type = nodeElem.getAttribute("type");
+							if (type.equals("pos")) {
+								featureValue = true;
+							} else if (type.equals("neg")) {
+								featureValue = false;
+							}
+							NodeList leftChildren = nodeElem.getChildNodes();
+							for (int j = 0; j < leftChildren.getLength(); j++) {
+								Node lchild = leftChildren.item(j);
+								if (lchild.getNodeType() == Node.ELEMENT_NODE) {
+									Element lchildE = (Element) lchild;
+									if (lchildE.getTagName().equals("son-feature")) {
+										left.fromXML(lchildE);
+									}
+								}
+							}
+						}
+						
+						break;
+					case "right":
+						right = new SonorancyNode();
+						right.parent = this;
+						if (n.getNodeType() == Node.ELEMENT_NODE) {
+							Element nodeElem = (Element) n;
+							NodeList rightChildren = nodeElem.getChildNodes();
+							for (int j = 0; j < rightChildren.getLength(); j++) {
+								Node rchild = rightChildren.item(j);
+								if (rchild.getNodeType() == Node.ELEMENT_NODE) {
+									Element rchildE = (Element) rchild;
+									if (rchildE.getTagName().equals("son-feature")) {
+										right.fromXML(rchildE);
+									}
+								}
+							}
+						}
+				}
+			}
+			
+			if (!featureName.equals("")) {
+				feature = new Feature(featureName, featureValue, FeatureLevel.SYSTEM);
+			}
+		}
 	}
 }

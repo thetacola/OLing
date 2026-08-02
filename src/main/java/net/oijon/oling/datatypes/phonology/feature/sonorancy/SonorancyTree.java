@@ -33,7 +33,6 @@ public class SonorancyTree{
 	
 	public void calcAllValues() {
 		ArrayList<SonorancyNode> visited = new ArrayList<>();
-		visited.add(root);
 		int maxDepth = root.findDeepest(visited);
 		visited.clear();
 		visited.add(root);

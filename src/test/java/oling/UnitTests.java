@@ -1,12 +1,10 @@
 package oling;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
@@ -272,23 +270,56 @@ public class UnitTests {
 		SonorancyTree st = IPA.getSonorancyTree();
 		ArrayList<Phoneme> phonemes = IPA.getAllPhonemes();
 		
-		Phoneme voicedVelarStop = null;
-		Phoneme voicelessVelarStop = null;
+		Phoneme[] testSet = new Phoneme[11];	
+		
 		// get /g/ and /k/
 		for (Phoneme p : phonemes) {
-			if (p.getSound().equals("g")) {
-				voicedVelarStop = p;
-			} else if (p.getSound().equals("k")) {
-				voicelessVelarStop = p;
+			switch (p.getSound()) {
+				case "k":
+					testSet[0] = p;
+					break;
+				case "g":
+					testSet[1] = p;
+					break;
+				case "x":
+					testSet[2] = p;
+					break;
+				case "ɣ":
+					testSet[3] = p;
+					break;
+				case "n":
+					testSet[4] = p;
+					break;
+				case "l":
+					testSet[5] = p;
+					break;
+				case "ɾ":
+					testSet[6] = p;
+					break;
+				case "j":
+					testSet[7] = p;
+					break;
+				case "i":
+					testSet[8] = p;
+					break;
+				case "o":
+					testSet[9] = p;
+					break;
+				case "ɑ":
+					testSet[10] = p;
+					break;
 			}
 		}
 		
-		int kSonorancy = st.getPhonemeValue(voicelessVelarStop);
-		int gSonorancy = st.getPhonemeValue(voicedVelarStop);
-		
-		log.info("/k/ == " + kSonorancy + " (" + Integer.toBinaryString(kSonorancy) +
-				"); /g/ == " + gSonorancy + " (" + Integer.toBinaryString(gSonorancy) + ")");
-		assertTrue(kSonorancy < gSonorancy);
+		int[] rankings = new int[testSet.length];
+		for (int i = 0; i < testSet.length; i++) {
+			rankings[i] = st.getPhonemeValue(testSet[i]);
+			log.info("/" + testSet[i].getSound() + "/ == " + rankings[i] +
+					" (" + Integer.toBinaryString(rankings[i]) + ")");
+			if (i != 0) {
+				assertTrue(rankings[i] > rankings[i - 1]);
+			}
+		}
 		
 	}
 	

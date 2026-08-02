@@ -15,6 +15,8 @@ import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
 import net.oijon.oling.datatypes.phonology.table.Phoneme;
+import net.oijon.oling.info.Info;
+import net.oijon.olog.Log;
 
 public class SonorancyNode {
 
@@ -23,6 +25,8 @@ public class SonorancyNode {
 	protected SonorancyNode left;
 	protected SonorancyNode right;
 	private int value = -1;
+	
+	private static Log log = Info.log;
 	
 	public SonorancyNode(Feature feature) {
 		this.feature = feature;
@@ -78,11 +82,14 @@ public class SonorancyNode {
 		// about any system
 		
 		if (checkForThis(passedNodes)) {
+			log.err("Loop in sonorancy tree detected!");
 			return;
+		} else if (currentDepth > 30) {
+			log.err("Sonorancy tree deeper than maximum! Comparisons will be inaccurate...");
 		}
 		passedNodes.add(this);
 		
-		int binaryDigit = maxDepth - currentDepth;
+		int binaryDigit = maxDepth - currentDepth - 1;
 		if (isLeft) {
 			value = (int) (parentValue + (1 << binaryDigit));
 		} else {
@@ -96,11 +103,12 @@ public class SonorancyNode {
 		}
 	}
 	
-	protected int findDeepest(ArrayList<SonorancyNode> passedNodes) {
+	public int findDeepest(ArrayList<SonorancyNode> passedNodes) {
 		int deepest = 0;
 		
 		// Prevents any loops, possible if a program erroneously makes a child node the same as a parent
 		if (checkForThis(passedNodes)) {
+			log.err("Loop detected in sonorancy tree!");
 			return deepest;
 		}
 		passedNodes.add(this);
@@ -114,6 +122,7 @@ public class SonorancyNode {
 				deepest = rightDeepest;
 			}
 		}
+		
 		return deepest + 1;
 	}
 	

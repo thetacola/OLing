@@ -1,9 +1,12 @@
 package oling;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +14,7 @@ import java.util.List;
 import net.oijon.oling.datatypes.language.LanguageProperties;
 import net.oijon.oling.datatypes.phonology.*;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
+import net.oijon.oling.datatypes.phonology.feature.sonorancy.SonorancyTree;
 import net.oijon.oling.datatypes.phonology.table.Phoneme;
 import net.oijon.oling.datatypes.phonology.table.PhonoCategory;
 import net.oijon.oling.datatypes.phonology.table.PhonoCell;
@@ -53,8 +57,8 @@ public class UnitTests {
 			
 			//log.info("Old language: " + oldL.toString());
 			//log.info("New language:" + newL.toString());
-			
-			
+			assertEquals(oldL.getPhono().getPhonoSystem().getSonorancyTree(),
+					newL.getPhono().getPhonoSystem().getSonorancyTree());
 			assertEquals(oldL, newL);
 			
 		} catch (Exception e) {
@@ -242,5 +246,71 @@ public class UnitTests {
         }
 
     }
+	
+	@Test
+	void testIPAEquivalency() {
+		try {
+			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
+			Language l = Language.parse(f);
+			
+			SonorancyTree lTree = l.getPhono().getPhonoSystem().getSonorancyTree();
+			SonorancyTree IPATree = PhonoSystem.IPA.getSonorancyTree();
+			
+			assertEquals(l.getPhono().getPhonoSystem(), PhonoSystem.IPA);
+			assertEquals(lTree, IPATree);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail();
+		}
+	}
 
+	@Test
+	void testIPASonorancy() {
+		log.info("Testing proper sonorancy...");
+		PhonoSystem IPA = PhonoSystem.IPA;
+		SonorancyTree st = IPA.getSonorancyTree();
+		ArrayList<Phoneme> phonemes = IPA.getAllPhonemes();
+		
+		Phoneme voicedVelarStop = null;
+		Phoneme voicelessVelarStop = null;
+		// get /g/ and /k/
+		for (Phoneme p : phonemes) {
+			if (p.getSound().equals("g")) {
+				voicedVelarStop = p;
+			} else if (p.getSound().equals("k")) {
+				voicelessVelarStop = p;
+			}
+		}
+		
+		int kSonorancy = st.getPhonemeValue(voicelessVelarStop);
+		int gSonorancy = st.getPhonemeValue(voicedVelarStop);
+		
+		log.info("/k/ == " + kSonorancy + " (" + Integer.toBinaryString(kSonorancy) +
+				"); /g/ == " + gSonorancy + " (" + Integer.toBinaryString(gSonorancy) + ")");
+		assertTrue(kSonorancy < gSonorancy);
+		
+	}
+	
+	@Test
+	void testDiacriticEquivalency() {
+		try {
+			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
+			Language l = Language.parse(f);
+			
+			PhonoSystem lSys = l.getPhono().getPhonoSystem();
+			PhonoSystem IPA = PhonoSystem.IPA;
+			
+			for (String key : IPA.getDiacriticKeys()) {
+				assertEquals(lSys.getDiacritic(key), IPA.getDiacritic(key));
+			}
+			
+			assertEquals(l.getPhono().getPhonoSystem(), PhonoSystem.IPA);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail();
+		}
+	}
+	
 }

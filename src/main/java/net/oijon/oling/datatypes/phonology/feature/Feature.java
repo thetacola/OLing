@@ -82,11 +82,9 @@ public class Feature implements XMLDatatype {
 	public Element toXML() throws ParserConfigurationException {
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document doc = builder.newDocument();
-        Element root = doc.createElement("sound");
         
         Element featureElement = doc.createElement("feature");
 		featureElement.setTextContent(name);
-		root.appendChild(featureElement);
 		
 		return featureElement;
 	}

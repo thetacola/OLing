@@ -19,6 +19,7 @@ import net.oijon.oling.datatypes.orthography.Orthography;
 import net.oijon.oling.datatypes.phonology.Phonology;
 import net.oijon.oling.datatypes.phonology.table.PhonoSystem;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -116,7 +117,7 @@ public class Language implements XMLDatatype {
 	 */
 	public Language(String name) {
 		this.properties.setProperty(LanguageProperty.NAME, name);
-		checkPhonoSys();
+		//checkPhonoSys();
 	}
 
     public Language(Element e) throws InvalidXMLException {
@@ -156,6 +157,7 @@ public class Language implements XMLDatatype {
 	 */
 	public void setPhono(Phonology phono) {
 		this.phono = phono;
+		checkPhonoSys();
 	}
 	
 	/**

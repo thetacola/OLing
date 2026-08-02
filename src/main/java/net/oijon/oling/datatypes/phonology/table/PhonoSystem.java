@@ -290,6 +290,14 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 		diacritics.remove(key);
 	}
 	
+	public SonorancyTree getSonorancyTree() {
+		return sonorancyTree;
+	}
+	
+	public void setSonorancyTree(SonorancyTree st) {
+		this.sonorancyTree = st;
+	}
+	
 	public String toString() {
 		String returnString = "sysName:" + name + "\n";
 		for (int i = 0; i < super.lowerObj.size(); i++) {
@@ -434,8 +442,15 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	public boolean equals(Object obj) {
 		if (obj instanceof PhonoSystem) {
 			PhonoSystem p = (PhonoSystem) obj;			
-			if (p.name.equals(name) && p.lowerObj.equals(super.lowerObj) &
-					p.diacritics.equals(diacritics)) {
+			if (p.name.equals(name) && p.lowerObj.equals(super.lowerObj) 
+					&& p.sonorancyTree.equals(sonorancyTree)) {
+				
+				for (String key : diacritics.keySet()) {
+					if (p.getDiacritic(key) == null ||
+							!p.getDiacritic(key).equals(diacritics.get(key))) {
+						return false;
+					}
+				}
 				return true;
 			}
 			
@@ -489,11 +504,11 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 				    case "diacritics":
 					    NodeList diacritics = n.getChildNodes();
 					    for (int j = 0; j < diacritics.getLength(); j++) {
-					    	Node dn = diacritics.item(i);
+					    	Node dn = diacritics.item(j);
 					    	if (n.getNodeType() == Node.ELEMENT_NODE) {
 								Diacritic d = new Diacritic((Element) dn);
 								this.diacritics.put(d.getCharacter(), d);
-						    }
+							}
 					    	
 					    }
                         break;

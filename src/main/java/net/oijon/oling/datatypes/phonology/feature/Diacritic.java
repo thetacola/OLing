@@ -41,6 +41,7 @@ public class Diacritic extends FeaturalXMLDatatype {
 		Element root = doc.createElement("diacritic");
 		
 		Element charE = doc.createElement("char");
+		charE.setTextContent(character);
 		root.appendChild(charE);
 		
 		for (Feature f : super.features.values()) {
@@ -81,5 +82,35 @@ public class Diacritic extends FeaturalXMLDatatype {
 	@Override
 	protected void initFeatures() {
 		super.level = FeatureLevel.DIACRITIC;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Diacritic) {
+			Diacritic d = (Diacritic) o;
+			if (d.character.equals(character)) {
+				for (String key : features.keySet()) {
+					Feature f = features.get(key);
+					Feature df = d.features.get(key);
+					if (df == null) {
+						return false;
+					} else if (!f.equals(df)) {
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Override
+	public String toString() {
+		String retString = "char: " + character;
+		retString += "\nfeatures:\n";
+		for (String key : features.keySet()) {
+			retString += key + ":" + features.get(key).getValue() + "\n";
+		}
+		return retString;
 	}
 }

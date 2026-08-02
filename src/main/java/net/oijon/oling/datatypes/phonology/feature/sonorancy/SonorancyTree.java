@@ -24,7 +24,7 @@ public class SonorancyTree{
 	}
 	
 	public SonorancyTree(Element e) throws InvalidXMLException {
-		
+		fromXML(e);
 	}
 	
 	public SonorancyTree(Feature feature) {
@@ -78,4 +78,14 @@ public class SonorancyTree{
 		calcAllValues();
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof SonorancyTree) {
+			SonorancyTree st = (SonorancyTree) o;
+			if (st.root.equals(root)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

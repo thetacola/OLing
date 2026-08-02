@@ -169,14 +169,14 @@ public class SonorancyNode {
 				leftE.setAttribute("type", "neg");
 			}
 			
-			if (left != null) {
+			if (left != null && left.feature != null) {
 				leftE.appendChild(doc.importNode(left.toXML(), true));
 			}
 			root.appendChild(leftE);
 			
 			Element rightE = doc.createElement("right");
-			if (right != null) {
-				leftE.appendChild(doc.importNode(right.toXML(), true));
+			if (right != null && right.feature != null) {
+				rightE.appendChild(doc.importNode(right.toXML(), true));
 			}
 			root.appendChild(rightE);
 			
@@ -194,56 +194,87 @@ public class SonorancyNode {
 			boolean featureValue = false;
 			for (int i = 0; i < nodes.getLength(); i++) {
 				Node n = nodes.item(i);
-				switch (n.getNodeName()) {
-					case "feature":
-						featureName = n.getNodeValue();
-						break;
-					case "left":
-						if (n.getNodeType() == Node.ELEMENT_NODE) {
+				if (n.getNodeType() == Node.ELEMENT_NODE) {
+					Element ne = (Element) n;
+					switch (ne.getTagName()) {
+						case "feature":
+							featureName = ne.getTextContent();
+							break;
+						case "left":
 							left = new SonorancyNode();
-							left.parent = this;
-							Element nodeElem = (Element) n;
-							String type = nodeElem.getAttribute("type");
+							String type = ne.getAttribute("type");
 							if (type.equals("pos")) {
 								featureValue = true;
 							} else if (type.equals("neg")) {
 								featureValue = false;
 							}
-							NodeList leftChildren = nodeElem.getChildNodes();
+							NodeList leftChildren = ne.getChildNodes();
 							for (int j = 0; j < leftChildren.getLength(); j++) {
 								Node lchild = leftChildren.item(j);
 								if (lchild.getNodeType() == Node.ELEMENT_NODE) {
 									Element lchildE = (Element) lchild;
 									if (lchildE.getTagName().equals("son-feature")) {
-										left.fromXML(lchildE);
+										left = new SonorancyNode(lchildE);
 									}
 								}
 							}
-						}
-						
-						break;
-					case "right":
-						right = new SonorancyNode();
-						right.parent = this;
-						if (n.getNodeType() == Node.ELEMENT_NODE) {
-							Element nodeElem = (Element) n;
-							NodeList rightChildren = nodeElem.getChildNodes();
+							left.parent = this;
+							break;
+						case "right":
+							right = new SonorancyNode();
+							
+							NodeList rightChildren = ne.getChildNodes();
 							for (int j = 0; j < rightChildren.getLength(); j++) {
 								Node rchild = rightChildren.item(j);
 								if (rchild.getNodeType() == Node.ELEMENT_NODE) {
 									Element rchildE = (Element) rchild;
 									if (rchildE.getTagName().equals("son-feature")) {
-										right.fromXML(rchildE);
+										right = new SonorancyNode(rchildE);
 									}
 								}
 							}
-						}
+							right.parent = this;
+							break;
+					}
+			
+					if (!featureName.equals("")) {
+						feature = new Feature(featureName, featureValue, FeatureLevel.SYSTEM);
+					}
 				}
 			}
-			
-			if (!featureName.equals("")) {
-				feature = new Feature(featureName, featureValue, FeatureLevel.SYSTEM);
-			}
+		} else {
+			throw new InvalidXMLException("Expected son-feature, got " + e.getTagName());
 		}
+	}
+			
+	
+	@Override
+	public boolean equals (Object o) {
+		if (o instanceof SonorancyNode) {
+			SonorancyNode sn = (SonorancyNode) o;
+			boolean featureMatches = false;
+			if (feature != null && sn.feature != null) {
+				featureMatches = (feature.getName().equals(sn.feature.getName()) &&
+						feature.getValue() == sn.feature.getValue());
+			} else if (feature == null && sn.feature == null) {
+				featureMatches = true;
+			}
+			
+			boolean leftMatches = false;
+			if (left != null && sn.left != null) {
+				leftMatches = left.equals(sn.left);
+			} else if (left == null && sn.left == null) {
+				leftMatches = true;
+			}
+			
+			boolean rightMatches = false;
+			if (right != null && sn.right != null) {
+				rightMatches = right.equals(sn.right);
+			} else if (right == null && sn.right == null) {
+				rightMatches = true;
+			}
+			return (leftMatches & rightMatches & featureMatches);
+		}
+		return false;
 	}
 }

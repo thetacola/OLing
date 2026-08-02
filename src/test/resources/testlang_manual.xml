@@ -114,6 +114,106 @@
 				<diacritic>‿</diacritic>
 				<diacritic>͡</diacritic>
 			</diacritics>
+			<sonorancy>
+				<!-- left == more sonorous, right == less -->
+				<son-feature>
+					<feature>syllabic</feature>
+					<left type="pos">
+						<son-feature>
+							<feature>low</feature>
+							<left type="pos">
+								<!-- low vowels -->
+							</left>
+							<right>
+								<son-feature>
+									<feature>high</feature>
+									<left type="neg">
+										<!-- mid vowels -->
+									</left>
+									<right>
+										<!-- high vowels -->
+									</right>
+								</son-feature>
+							</right>
+						</son-feature>
+					</left>
+					<right>
+						<son-feature>
+							<feature>sonorant</feature>
+							<left type="pos">
+								<son-feature>
+									<feature>nasal</feature>
+									<left type="neg">
+										<son-feature>
+											<feature>lateral</feature>
+											<left type="neg">
+												<son-feature>
+													<feature>vocalic</feature>
+													<left type="pos">
+														<!-- glides -->
+													</left>
+													<right>
+														<!-- flaps -->
+													</right>
+												</son-feature>
+											</left>
+											<right>
+												<!-- lateral glides -->
+											</right>
+										</son-feature>
+									</left>
+									<right>
+										<!-- nasals -->
+									</right>
+								</son-feature>
+							</left>
+							<right>
+								<son-feature>
+									<feature>continuant</feature>
+									<left type="pos">
+										<son-feature>
+											<feature>voice</feature>
+											<left type="pos">
+												<!-- voiced fricatives -->
+											</left>
+											<right>
+												<!-- voiceless fricatives -->
+											</right>
+										</son-feature>
+									</left>
+									<right>
+										<son-feature>
+											<feature>delayedrelease</feature>
+											<left type="pos">
+												<son-feature>
+													<feature>voice</feature>
+													<left type="pos">
+														<!-- voiced affricates -->
+													</left>
+													<right>
+														<!-- voiceless affricates -->
+													</right>
+												</son-feature>
+											</left>
+											<right>
+												<son-feature>
+													<feature>voice</feature>
+													<left type="pos">
+														<!-- voiced stops -->
+													</left>
+													<right>
+														<!-- voiceless stops -->
+													</right>
+												</son-feature>
+											</right>
+										</son-feature>
+									</right>
+								</son-feature>
+							</right>
+						</son-feature>
+					</right>
+				</son-feature>
+			</sonorancy>
 			<table name="IPA Consonants" part="ONSET_CODA">
 				<columns>
 					<column index="0">
@@ -157,658 +257,666 @@
 					</column>
 					<column index="8">
 						<name>Uvular</name>
-						<feature type="place">DORSAL</feature>
-						<feature>high</feature>
-						<feature>back</feature>
-					</column>
-					<column index="9">
-						<name>Pharyngeal</name>
-						<feature type="place">RADICAL</feature>
-						<feature>rtr</feature>
-					</column>
-					<column index="10">
-						<name>Glottal</name>
-						<feature type="place">GLOTTAL</feature>
-					</column>
-				</columns>
-				<rows>
-					<row name="Plosive" index="0">
-						<cell index="0">
-							<sound index="0">
-								<char>p</char>
-							</sound>
-							<sound index="1">
-								<char>b</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="3">
-							<sound index="0">
-								<char>t</char>
-							</sound>
-							<sound index="1">
-								<char>d</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="5">
-							<sound index="0">
-								<char>ʈ</char>
-							</sound>
-							<sound index="1">
-								<char>ɖ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="6">
-							<sound index="0">
-								<char>c</char>
-							</sound>
-							<sound index="1">
-								<char>ɟ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="7">
-							<sound index="0">
-								<char>k</char>
-							</sound>
-							<sound index="1">
-								<char>g</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="8">
-							<sound index="0">
-								<char>q</char>
-							</sound>
-							<sound index="1">
-								<char>ɢ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="10">
-							<sound index="0">
-								<char>ʔ</char>
-							</sound>
-						</cell>
-					</row>
-					<row name="Nasal" index="1">
-						<feature>nasal</feature>
-						<feature>sonorant</feature>
-						<cell index="0">
-							<sound index="1">
-								<char>m</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="1">
-							<sound index="1">
-								<char>ɱ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="3">
-							<sound index="1">
-								<char>n</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="5">
-							<sound index="1">
-								<char>ɳ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="6">
-							<sound index="1">
-								<char>ɲ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="7">
-							<sound index="1">
-								<char>ŋ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="8">
-							<sound index="1">
-								<char>ɴ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-					</row>
-					<row name="Trill" index="2">
-						<feature>continuant</feature>
-						<cell index="0">
-							<sound index="1">
-								<char>ʙ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="3">
-							<sound index="1">
-								<char>r</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="8">
-							<sound index="1">
-								<char>ʀ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-					</row>
-					<row name="Tap or Flap" index="3">
-						<cell index="1">
-							<sound index="1">
-								<char>ⱱ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="3">
-							<sound index="1">
-								<char>ɾ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="5">
-							<sound index="1">
-								<char>ɽ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-					</row>
-					<row name="Fricative" index="4">
-						<feature>continuant</feature>
-						<cell index="0">
-							<sound index="0">
-								<char>ɸ</char>
-							</sound>
-							<sound index="1">
-								<char>β</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="1">
-							<sound index="0">
-								<char>f</char>
-							</sound>
-							<sound index="1">
-								<char>v</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="2">
-							<sound index="0">
-								<char>θ</char>
-							</sound>
-							<sound index="1">
-								<char>ð</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="3">
-							<feature>sibilant</feature>
-							<sound index="0">
-								<char>s</char>
-							</sound>
-							<sound index="1">
-								<char>z</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="4">
-							<feature>sibilant</feature>
-							<sound index="0">
-								<char>ʃ</char>
-							</sound>
-							<sound index="1">
-								<char>ʒ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="5">
-							<feature>sibilant</feature>
-							<sound index="0">
-								<char>ʂ</char>
-							</sound>
-							<sound index="1">
-								<char>ʐ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="6">
-							<sound index="0">
-								<char>ç</char>
-							</sound>
-							<sound index="1">
-								<char>ʝ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="7">
-							<sound index="0">
-								<char>x</char>
-							</sound>
-							<sound index="1">
-								<char>ɣ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="8">
-							<sound index="0">
-								<char>χ</char>
-							</sound>
-							<sound index="1">
-								<char>ʁ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="9">
-							<sound index="0">
-								<char>ħ</char>
-							</sound>
-							<sound index="1">
-								<char>ʕ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="10">
-							<sound index="0">
-								<char>h</char>
-							</sound>
-							<sound index="1">
-								<char>ɦ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-					</row>
-					<row name="Lateral Fricative" index="5">
-						<feature>continuant</feature>
-						<feature>lateral</feature>
-						<cell index="3">
-							<sound index="0">
-								<char>ɬ</char>
-							</sound>
-							<sound index="1">
-								<char>ɮ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-					</row>
-					<row name="Approximant" index="6">
-						<feature>continuant</feature>
-						<feature>sonorant</feature>
-						<cell index="1">
-							<sound index="1">
-								<char>ʋ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="3">
-							<sound index="1">
-								<char>ɹ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="5">
-							<sound index="1">
-								<char>ɻ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="6">
-							<sound index="1">
-								<char>j</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="7">
-							<sound index="1">
-								<char>ɰ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-					</row>
-					<row name="Lateral Approximant" index="7">
-						<feature>continuant</feature>
-						<feature>sonorant</feature>
-						<feature>lateral</feature>
-						<cell index="3">
-							<sound index="1">
-								<char>l</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="5">
-							<sound index="1">
-								<char>ɭ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="6">
-							<sound index="1">
-								<char>ʎ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-						<cell index="7">
-							<sound index="1">
-								<char>ʟ</char>
-								<feature>voice</feature>
-							</sound>
-						</cell>
-					</row>
-				</rows>
-			</table>
-			<table name="IPA Vowels" type="NUCLEUS">
-				<feature>syllabic</feature>
-				<feature>voice</feature>
 				<feature type="place">DORSAL</feature>
-				<columns>
-					<column index="0">
-						<name>Front</name>
-					</column>
-					<column index="1">
-						<name>Central</name>
-					</column>
-					<column index="2">
-						<name>Back</name>
-						<feature>back</feature>
-					</column>
-				</columns>
-				<rows>
-					<row name="Close" index="0">
-						<feature>high</feature>
-						<feature>atr</feature>
-						<cell index="0">
-							<sound index="0">
-								<char>i</char>
-							</sound>
-							<sound index="1">
-								<char>y</char>
-								<feature>round</feature>
-							</sound>
-						</cell>
-						<cell index="1">
-							<sound index="0">
-								<char>ɨ</char>
-							</sound>
-							<sound index="1">
-								<char>ʉ</char>
-								<feature>round</feature>
-							</sound>
-						</cell>
-						<cell index="2">
-							<sound index="0">
-								<char>ɯ</char>
-							</sound>
-							<sound index="1">
-								<char>u</char>
-								<feature>round</feature>
-							</sound>
-						</cell>
-					</row>
-					<row name="Near Close" index="1">
-						<feature>high</feature>
-						<cell index="0">
-							<sound index="0">
-								<char>ɪ</char>
-							</sound>
-							<sound index="1">
-								<char>ʏ</char>
-								<feature>round</feature>
-							</sound>
-						</cell>
-						<cell index="2">
-							<sound index="1">
-								<char>ʊ</char>
-								<feature>round</feature>
-							</sound>
-						</cell>
-					</row>
-					<row name="Close Mid" index="2">
-						<feature>atr</feature>
-						<cell index="0">
-							<sound index="0">
-								<char>e</char>
-							</sound>
-							<sound index="1">
-								<char>ø</char>
-								<feature>round</feature>
-							</sound>
-						</cell>
-						<cell index="1">
-							<sound index="0">
-								<char>ɘ</char>
-							</sound>
-							<sound index="1">
-								<char>ɵ</char>
-								<feature>round</feature>
-							</sound>
-						</cell>
-						<cell index="2">
-							<sound index="0">
-								<char>ɤ</char>
-							</sound>
-							<sound index="1">
-								<char>o</char>
-								<feature>round</feature>
-							</sound>
-						</cell>
-					</row>
-					<row name="Mid" index="3">
-						<cell index="1">
-							<sound index="0">
-								<char>ə</char>
-							</sound>
-						</cell>
-					</row>
-					<row name="Open Mid" index="4">
-						<cell index="0">
-							<sound index="0">
-								<char>ɛ</char>
-							</sound>
-							<sound index="1">
-								<char>œ</char>
-								<feature>round</feature>
-							</sound>
-						</cell>
-						<cell index="1">
-							<sound index="0">
-								<char>ɜ</char>
-							</sound>
-							<sound index="1">
-								<char>ɞ</char>
-								<feature>round</feature>
-							</sound>
-						</cell>
-						<cell index="2">
-							<sound index="0">
-								<char>ʌ</char>
-							</sound>
-							<sound index="1">
-								<char>ɔ</char>
-								<feature>round</feature>
-							</sound>
-						</cell>
-					</row>
-					<row name="Close Open" index="5">
-						<feature>low</feature>
-						<cell index="0">
-							<sound index="0">
-								<char>æ</char>
-							</sound>
-						</cell>
-						<cell index="1">
-							<sound index="0">
-								<char>ɐ</char>
-							</sound>
-						</cell>
-					</row>
-					<row name="Open" index="6">
-						<feature>low</feature>
-						<feature>atr</feature>
-						<cell index="0">
-							<sound index="0">
-								<char>a</char>
-							</sound>
-							<sound index="1">
-								<char>ɶ</char>
-								<feature>round</feature>
-							</sound>
-						</cell>
-						<cell index="2">
-							<sound index="0">
-								<char>ɑ</char>
-							</sound>
-							<sound index="1">
-								<char>ɒ</char>
-								<feature>round</feature>
-							</sound>
-						</cell>
-					</row>
-				</rows>
-			</table>
-			<list name="Click" part="ONSET">
-				<sound index="0">
-					<char>ʘ</char>
-					<feature type="place">LABIAL</feature>
-					<feature>round</feature>
-				</sound>
-				<sound index="1">
-					<char>ǀ</char>
-					<feature type="place">CORONAL</feature>
-					<feature>anterior</feature>
-					<feature>distributed</feature>
-				</sound>
-				<sound index="2">
-					<char>ǃ</char>
-					<feature type="place">CORONAL</feature>
-				</sound>
-				<sound index="3">
-					<char>ǂ</char>
-					<feature type="place">DORSAL</feature>
-					<feature>high</feature>
-				</sound>
-				<sound index="4">
-					<char>ǁ</char>
-					<feature type="place">CORONAL</feature>
-					<feature>lateral</feature>
-				</sound>
-			</list>
-			<list name="Implosive" part="ONSET_CODA">
-				<feature>voice</feature>
-				<sound index="0">
-					<char>ɓ</char>
-					<feature type="place">LABIAL</feature>
-					<feature>round</feature>
-				</sound>
-				<sound index="1">
-					<char>ɗ</char>
-					<feature type="place">CORONAL</feature>
-				</sound>
-				<sound index="2">
-					<char>ʄ</char>
-					<feature type="place">DORSAL</feature>
-					<feature>high</feature>
-				</sound>
-				<sound index="3">
-					<char>ɠ</char>
-					<feature type="place">DORSAL</feature>
-					<feature>high</feature>
-					<feature>back</feature>
-				</sound>
-				<sound index="4">
-					<char>ʛ</char>
-					<feature type="place">DORSAL</feature>
-					<feature>high</feature>
-					<feature>back</feature>
-				</sound>
-			</list>
-			<list name="Other" part="ONSET_CODA">
-				<sound index="0">
-					<char>ʍ</char>
-					<feature type="place">DORSAL</feature>
-					<feature>high</feature>
-					<feature>back</feature>
-					<feature>continuant</feature>
-					<feature>sonorant</feature>
-				</sound>
-				<sound index="1">
-					<char>w</char>
-					<feature type="place">DORSAL</feature>
-					<feature>high</feature>
-					<feature>back</feature>
-					<feature>continuant</feature>
-					<feature>sonorant</feature>
-					<feature>voice</feature>
-				</sound>
-				<sound index="2">
-					<char>ɥ</char>
-					<feature type="place">DORSAL</feature>
-					<feature>high</feature>
-					<feature>continuant</feature>
-					<feature>sonorant</feature>
-					<feature>voice</feature>
-				</sound>
-				<sound index="3">
-					<char>ʜ</char>
-					<feature type="place">RADICAL</feature>
-					<feature>rtr</feature>
-					<feature>continuant</feature>
-				</sound>
-				<sound index="4">
-					<char>ʢ</char>
-					<feature type="place">RADICAL</feature>
-					<feature>rtr</feature>
-					<feature>continuant</feature>
-					<feature>voice</feature>
-				</sound>
-				<sound index="5">
-					<char>ʡ</char>
-					<feature type="place">RADICAL</feature>
-					<feature>rtr</feature>
-				</sound>
-				<sound index="6">
-					<char>ɕ</char>
-					<feature type="place">DORSAL</feature>
-					<feature>high</feature>
-					<feature>continuant</feature>
+				<feature>high</feature>
+				<feature>back</feature>
+			</column>
+			<column index="9">
+				<name>Pharyngeal</name>
+				<feature type="place">RADICAL</feature>
+				<feature>rtr</feature>
+			</column>
+			<column index="10">
+				<name>Glottal</name>
+				<feature type="place">GLOTTAL</feature>
+			</column>
+		</columns>
+		<rows>
+			<row name="Plosive" index="0">
+				<cell index="0">
+					<sound index="0">
+						<char>p</char>
+					</sound>
+					<sound index="1">
+						<char>b</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="3">
+					<sound index="0">
+						<char>t</char>
+					</sound>
+					<sound index="1">
+						<char>d</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="5">
+					<sound index="0">
+						<char>ʈ</char>
+					</sound>
+					<sound index="1">
+						<char>ɖ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="6">
+					<sound index="0">
+						<char>c</char>
+					</sound>
+					<sound index="1">
+						<char>ɟ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="7">
+					<sound index="0">
+						<char>k</char>
+					</sound>
+					<sound index="1">
+						<char>g</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="8">
+					<sound index="0">
+						<char>q</char>
+					</sound>
+					<sound index="1">
+						<char>ɢ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="10">
+					<sound index="0">
+						<char>ʔ</char>
+					</sound>
+				</cell>
+			</row>
+			<row name="Nasal" index="1">
+				<feature>nasal</feature>
+				<feature>sonorant</feature>
+				<cell index="0">
+					<sound index="1">
+						<char>m</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="1">
+					<sound index="1">
+						<char>ɱ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="3">
+					<sound index="1">
+						<char>n</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="5">
+					<sound index="1">
+						<char>ɳ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="6">
+					<sound index="1">
+						<char>ɲ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="7">
+					<sound index="1">
+						<char>ŋ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="8">
+					<sound index="1">
+						<char>ɴ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+			</row>
+			<row name="Trill" index="2">
+				<feature>continuant</feature>
+				<cell index="0">
+					<sound index="1">
+						<char>ʙ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="3">
+					<sound index="1">
+						<char>r</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="8">
+					<sound index="1">
+						<char>ʀ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+			</row>
+			<row name="Tap or Flap" index="3">
+				<feature>sonorant</feature>
+				<cell index="1">
+					<sound index="1">
+						<char>ⱱ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="3">
+					<sound index="1">
+						<char>ɾ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="5">
+					<sound index="1">
+						<char>ɽ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+			</row>
+			<row name="Fricative" index="4">
+				<feature>continuant</feature>
+				<cell index="0">
+					<sound index="0">
+						<char>ɸ</char>
+					</sound>
+					<sound index="1">
+						<char>β</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="1">
+					<sound index="0">
+						<char>f</char>
+					</sound>
+					<sound index="1">
+						<char>v</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="2">
+					<sound index="0">
+						<char>θ</char>
+					</sound>
+					<sound index="1">
+						<char>ð</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="3">
 					<feature>sibilant</feature>
-				</sound>
-				<sound index="7">
-					<char>ʑ</char>
-					<feature type="place">DORSAL</feature>
-					<feature>high</feature>
-					<feature>continuant</feature>
+					<sound index="0">
+						<char>s</char>
+					</sound>
+					<sound index="1">
+						<char>z</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="4">
 					<feature>sibilant</feature>
-					<feature>voice</feature>
-				</sound>
-				<sound index="8">
-					<char>ɺ</char>
-					<feature type="place">CORONAL</feature>
-					<feature>lateral</feature>
-					<feature>voice</feature>
-				</sound>
-				<sound index="9">
-					<char>ɧ</char>
-					<feature>continuant</feature>
-				</sound>
-			</list>
-			<anomalies>
-				<anomaly>
-					<from>g</from>
-					<to>g</to>
-				</anomaly>
-				<anomaly>
-					<from>ɚ</from>
-					<to>ə˞</to>
-				</anomaly>
-			</anomalies>
-		</tables>
+					<sound index="0">
+						<char>ʃ</char>
+					</sound>
+					<sound index="1">
+						<char>ʒ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="5">
+					<feature>sibilant</feature>
+					<sound index="0">
+						<char>ʂ</char>
+					</sound>
+					<sound index="1">
+						<char>ʐ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="6">
+					<sound index="0">
+						<char>ç</char>
+					</sound>
+					<sound index="1">
+						<char>ʝ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="7">
+					<sound index="0">
+						<char>x</char>
+					</sound>
+					<sound index="1">
+						<char>ɣ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="8">
+					<sound index="0">
+						<char>χ</char>
+					</sound>
+					<sound index="1">
+						<char>ʁ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="9">
+					<sound index="0">
+						<char>ħ</char>
+					</sound>
+					<sound index="1">
+						<char>ʕ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="10">
+					<sound index="0">
+						<char>h</char>
+					</sound>
+					<sound index="1">
+						<char>ɦ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+			</row>
+			<row name="Lateral Fricative" index="5">
+				<feature>continuant</feature>
+				<feature>lateral</feature>
+				<cell index="3">
+					<sound index="0">
+						<char>ɬ</char>
+					</sound>
+					<sound index="1">
+						<char>ɮ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+			</row>
+			<row name="Approximant" index="6">
+				<feature>continuant</feature>
+				<feature>sonorant</feature>
+				<cell index="1">
+					<feature>vocalic</feature>
+					<sound index="1">
+						<char>ʋ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="3">
+					<sound index="1">
+						<char>ɹ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="5">
+					<sound index="1">
+						<char>ɻ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="6">
+					<feature>vocalic</feature>
+					<sound index="1">
+						<char>j</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="7">
+					<feature>vocalic</feature>
+					<sound index="1">
+						<char>ɰ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+			</row>
+			<row name="Lateral Approximant" index="7">
+				<feature>continuant</feature>
+				<feature>sonorant</feature>
+				<feature>lateral</feature>
+				<cell index="3">
+					<sound index="1">
+						<char>l</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="5">
+					<sound index="1">
+						<char>ɭ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="6">
+					<sound index="1">
+						<char>ʎ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+				<cell index="7">
+					<sound index="1">
+						<char>ʟ</char>
+						<feature>voice</feature>
+					</sound>
+				</cell>
+			</row>
+		</rows>
+	</table>
+	<table name="IPA Vowels" part="NUCLEUS">
+		<feature>syllabic</feature>
+		<feature>voice</feature>
+		<feature>vocalic</feature>
+		<feature type="place">DORSAL</feature>
+		<columns>
+			<column index="0">
+				<name>Front</name>
+			</column>
+			<column index="1">
+				<name>Central</name>
+			</column>
+			<column index="2">
+				<name>Back</name>
+				<feature>back</feature>
+			</column>
+		</columns>
+		<rows>
+			<row name="Close" index="0">
+				<feature>high</feature>
+				<feature>atr</feature>
+				<cell index="0">
+					<sound index="0">
+						<char>i</char>
+					</sound>
+					<sound index="1">
+						<char>y</char>
+						<feature>round</feature>
+					</sound>
+				</cell>
+				<cell index="1">
+					<sound index="0">
+						<char>ɨ</char>
+					</sound>
+					<sound index="1">
+						<char>ʉ</char>
+						<feature>round</feature>
+					</sound>
+				</cell>
+				<cell index="2">
+					<sound index="0">
+						<char>ɯ</char>
+					</sound>
+					<sound index="1">
+						<char>u</char>
+						<feature>round</feature>
+					</sound>
+				</cell>
+			</row>
+			<row name="Near Close" index="1">
+				<feature>high</feature>
+				<cell index="0">
+					<sound index="0">
+						<char>ɪ</char>
+					</sound>
+					<sound index="1">
+						<char>ʏ</char>
+						<feature>round</feature>
+					</sound>
+				</cell>
+				<cell index="2">
+					<sound index="1">
+						<char>ʊ</char>
+						<feature>round</feature>
+					</sound>
+				</cell>
+			</row>
+			<row name="Close Mid" index="2">
+				<feature>atr</feature>
+				<cell index="0">
+					<sound index="0">
+						<char>e</char>
+					</sound>
+					<sound index="1">
+						<char>ø</char>
+						<feature>round</feature>
+					</sound>
+				</cell>
+				<cell index="1">
+					<sound index="0">
+						<char>ɘ</char>
+					</sound>
+					<sound index="1">
+						<char>ɵ</char>
+						<feature>round</feature>
+					</sound>
+				</cell>
+				<cell index="2">
+					<sound index="0">
+						<char>ɤ</char>
+					</sound>
+					<sound index="1">
+						<char>o</char>
+						<feature>round</feature>
+					</sound>
+				</cell>
+			</row>
+			<row name="Mid" index="3">
+				<cell index="1">
+					<sound index="0">
+						<char>ə</char>
+					</sound>
+				</cell>
+			</row>
+			<row name="Open Mid" index="4">
+				<cell index="0">
+					<sound index="0">
+						<char>ɛ</char>
+					</sound>
+					<sound index="1">
+						<char>œ</char>
+						<feature>round</feature>
+					</sound>
+				</cell>
+				<cell index="1">
+					<sound index="0">
+						<char>ɜ</char>
+					</sound>
+					<sound index="1">
+						<char>ɞ</char>
+						<feature>round</feature>
+					</sound>
+				</cell>
+				<cell index="2">
+					<sound index="0">
+						<char>ʌ</char>
+					</sound>
+					<sound index="1">
+						<char>ɔ</char>
+						<feature>round</feature>
+					</sound>
+				</cell>
+			</row>
+			<row name="Close Open" index="5">
+				<feature>low</feature>
+				<cell index="0">
+					<sound index="0">
+						<char>æ</char>
+					</sound>
+				</cell>
+				<cell index="1">
+					<sound index="0">
+						<char>ɐ</char>
+					</sound>
+				</cell>
+			</row>
+			<row name="Open" index="6">
+				<feature>low</feature>
+				<feature>atr</feature>
+				<cell index="0">
+					<sound index="0">
+						<char>a</char>
+					</sound>
+					<sound index="1">
+						<char>ɶ</char>
+						<feature>round</feature>
+					</sound>
+				</cell>
+				<cell index="2">
+					<sound index="0">
+						<char>ɑ</char>
+					</sound>
+					<sound index="1">
+						<char>ɒ</char>
+						<feature>round</feature>
+					</sound>
+				</cell>
+			</row>
+		</rows>
+	</table>
+	<list name="Click" part="ONSET">
+		<sound index="0">
+			<char>ʘ</char>
+			<feature type="place">LABIAL</feature>
+			<feature>round</feature>
+		</sound>
+		<sound index="1">
+			<char>ǀ</char>
+			<feature type="place">CORONAL</feature>
+			<feature>anterior</feature>
+			<feature>distributed</feature>
+		</sound>
+		<sound index="2">
+			<char>ǃ</char>
+			<feature type="place">CORONAL</feature>
+		</sound>
+		<sound index="3">
+			<char>ǂ</char>
+			<feature type="place">DORSAL</feature>
+			<feature>high</feature>
+		</sound>
+		<sound index="4">
+			<char>ǁ</char>
+			<feature type="place">CORONAL</feature>
+			<feature>lateral</feature>
+		</sound>
+	</list>
+	<list name="Implosive" part="ONSET_CODA">
+		<feature>voice</feature>
+		<sound index="0">
+			<char>ɓ</char>
+			<feature type="place">LABIAL</feature>
+			<feature>round</feature>
+		</sound>
+		<sound index="1">
+			<char>ɗ</char>
+			<feature type="place">CORONAL</feature>
+		</sound>
+		<sound index="2">
+			<char>ʄ</char>
+			<feature type="place">DORSAL</feature>
+			<feature>high</feature>
+		</sound>
+		<sound index="3">
+			<char>ɠ</char>
+			<feature type="place">DORSAL</feature>
+			<feature>high</feature>
+			<feature>back</feature>
+		</sound>
+		<sound index="4">
+			<char>ʛ</char>
+			<feature type="place">DORSAL</feature>
+			<feature>high</feature>
+			<feature>back</feature>
+		</sound>
+	</list>
+	<list name="Other" part="ONSET_CODA">
+		<sound index="0">
+			<char>ʍ</char>
+			<feature type="place">DORSAL</feature>
+			<feature>high</feature>
+			<feature>back</feature>
+			<feature>continuant</feature>
+			<feature>sonorant</feature>
+			<feature>vocalic</feature>
+		</sound>
+		<sound index="1">
+			<char>w</char>
+			<feature type="place">DORSAL</feature>
+			<feature>high</feature>
+			<feature>back</feature>
+			<feature>continuant</feature>
+			<feature>sonorant</feature>
+			<feature>voice</feature>
+			<feature>vocalic</feature>
+		</sound>
+		<sound index="2">
+			<char>ɥ</char>
+			<feature type="place">DORSAL</feature>
+			<feature>high</feature>
+			<feature>continuant</feature>
+			<feature>sonorant</feature>
+			<feature>voice</feature>
+		</sound>
+		<sound index="3">
+			<char>ʜ</char>
+			<feature type="place">RADICAL</feature>
+			<feature>rtr</feature>
+			<feature>continuant</feature>
+		</sound>
+		<sound index="4">
+			<char>ʢ</char>
+			<feature type="place">RADICAL</feature>
+			<feature>rtr</feature>
+			<feature>continuant</feature>
+			<feature>voice</feature>
+		</sound>
+		<sound index="5">
+			<char>ʡ</char>
+			<feature type="place">RADICAL</feature>
+			<feature>rtr</feature>
+		</sound>
+		<sound index="6">
+			<char>ɕ</char>
+			<feature type="place">DORSAL</feature>
+			<feature>high</feature>
+			<feature>continuant</feature>
+			<feature>sibilant</feature>
+		</sound>
+		<sound index="7">
+			<char>ʑ</char>
+			<feature type="place">DORSAL</feature>
+			<feature>high</feature>
+			<feature>continuant</feature>
+			<feature>sibilant</feature>
+			<feature>voice</feature>
+		</sound>
+		<sound index="8">
+			<char>ɺ</char>
+			<feature type="place">CORONAL</feature>
+			<feature>lateral</feature>
+			<feature>voice</feature>
+		</sound>
+		<sound index="9">
+			<char>ɧ</char>
+			<feature>continuant</feature>
+		</sound>
+	</list>
+	<anomalies>
+		<anomaly>
+			<from>g</from>
+			<to>g</to>
+		</anomaly>
+		<anomaly>
+			<from>ɚ</from>
+			<to>ə˞</to>
+		</anomaly>
+	</anomalies>
+</tables>
+
 	</phonology>
 	<orthography></orthography>
 	<grammar>

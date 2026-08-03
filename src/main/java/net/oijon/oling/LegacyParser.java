@@ -32,6 +32,7 @@ import net.oijon.oling.datatypes.tags.Tag;
  * @author alex
  * @deprecated as of 3.0.0, as files are now stored via XML
  */
+@Deprecated
 public class LegacyParser {
 	
 	public static Log log = Info.log;
@@ -85,7 +86,7 @@ public class LegacyParser {
 	private void writeXML(File xmlFile) {
 		try {
 			Language l = this.parseLanguage();
-			log.debug(l.toString());
+			//log.debug(l.toString());
 			l.toFile(xmlFile);
 			log.info("Successfully converted file at " + xmlFile.toString());
 		} catch (Exception e) {

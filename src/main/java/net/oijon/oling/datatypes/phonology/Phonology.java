@@ -95,7 +95,7 @@ public class Phonology implements XMLDatatype {
 	/**
 	 * Sets the phono system attached to the phonology.
 	 * This is dangerous! Only do this when either creating a phonology or updating to a version with more features!
-	 * @param phonoSystem
+	 * @param phonoSystem The system to set for the phonology
 	 */
 	public void setPhonoSystem(PhonoSystem phonoSystem) {
 		this.phonoSystem = phonoSystem;
@@ -141,8 +141,9 @@ public class Phonology implements XMLDatatype {
 	/**
 	 * Converts a phonology into a string
 	 * @deprecated Since v3.1.0, as it is only for the legacy parser.
-	 * @return
+	 * @return The string used to store the phonology in the legacy format
 	 */
+	@Deprecated
 	public String toLegacyString() {
 		String returnString = "===Phonology Start===\n";
 		returnString += "soundlist:";

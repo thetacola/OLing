@@ -37,7 +37,7 @@ public class UnitTests {
 	
 	@Test
 	void readWriteEquivalency() {
-		log.info("Testing read-write equivalancy...");
+		log.info("Testing read-write equivalency...");
 		try {
 			long start = System.currentTimeMillis();
 			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
@@ -48,8 +48,8 @@ public class UnitTests {
 			log.debug("Writing to " + newFile + ", then reading from same file");
 			oldL.toFile(newFile);
 			long write = System.currentTimeMillis();
-			log.info("Time taken to read from file: " + (read - start) + "ms");
-			log.info("Time taken to write to file: " + (write - read) + "ms");
+			log.debug("Time taken to read from file: " + (read - start) + "ms");
+			log.debug("Time taken to write to file: " + (write - read) + "ms");
 			
 			Language newL = Language.parse(newFile);
 			
@@ -58,9 +58,10 @@ public class UnitTests {
 			assertEquals(oldL.getPhono().getPhonoSystem().getSonorancyTree(),
 					newL.getPhono().getPhonoSystem().getSonorancyTree());
 			assertEquals(oldL, newL);
-			
+			log.info("Read-write equivalency successfully verified!");
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.err("Could not load needed resources!");
 			fail();
 		}
 	}
@@ -105,10 +106,10 @@ public class UnitTests {
 				}
 			}
 			
-			log.info("Phoneme is reporting " + phonemeFeatures.size() + " features.");
-			log.info("Phoneme features: " + phonemeFeatures);
-			log.info("Manual count of features is reporting " + features.size() + " features.");
-			log.info("Manual features: " + features);
+			log.debug("Phoneme is reporting " + phonemeFeatures.size() + " features.");
+			log.debug("Phoneme features: " + phonemeFeatures);
+			log.debug("Manual count of features is reporting " + features.size() + " features.");
+			log.debug("Manual features: " + features);
 			if (phonemeFeatures.size() == 0 || features.size() == 0) {
 				log.err("No features found in table or in phoneme!");
 				log.err("Test failed!");
@@ -122,7 +123,7 @@ public class UnitTests {
 				for (int j = 0; j < phonemeFeatures.size(); j++) {
 					if (features.get(i).getName().equals(phonemeFeatures.get(j).getName())) {
 						count++;
-						log.info("Found feature " + count + "/" + total +
+						log.debug("Found feature " + count + "/" + total +
 								" " + features.get(i).toString());
 						found = true;
 					}
@@ -137,6 +138,7 @@ public class UnitTests {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.err("Could not load needed resources!");
 			fail();
 		}
 	}
@@ -243,10 +245,12 @@ public class UnitTests {
             fail();
         }
 
+        log.info("Legacy file parsing successfully verified!");
     }
 	
 	@Test
 	void testIPAEquivalency() {
+		log.info("Testing equivalency between known-good IPA in language and IPA backup system");
 		try {
 			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
 			Language l = Language.parse(f);
@@ -259,8 +263,10 @@ public class UnitTests {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			log.err("Could not load needed resources!");
 			fail();
 		}
+		log.info("IPA equivalence successfully verified!");
 	}
 
 	@Test
@@ -314,17 +320,18 @@ public class UnitTests {
 		int[] rankings = new int[testSet.length];
 		for (int i = 0; i < testSet.length; i++) {
 			rankings[i] = st.getPhonemeValue(testSet[i]);
-			log.info("/" + testSet[i].getSound() + "/ == " + rankings[i] +
+			log.debug("/" + testSet[i].getSound() + "/ == " + rankings[i] +
 					" (" + Integer.toBinaryString(rankings[i]) + ")");
 			if (i != 0) {
 				assertTrue(rankings[i] > rankings[i - 1]);
 			}
 		}
-		
+		log.info("Sonorancy successfully verified!");
 	}
 	
 	@Test
 	void testDiacriticEquivalency() {
+		log.info("Testing diacritic equivalency between known-good file and IPA backup system");
 		try {
 			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
 			Language l = Language.parse(f);
@@ -340,8 +347,10 @@ public class UnitTests {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			log.err("Could not load needed resources!");
 			fail();
 		}
+		log.info("Diacritic equivalency successfully verified!");
 	}
 	
 }

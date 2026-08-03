@@ -200,7 +200,7 @@ public class Language implements XMLDatatype {
 		properties.setProperty(LanguageProperty.VERSION_EDITED, Info.getVersion());
 
 		Document doc = this.toXML().getOwnerDocument();
-		log.debug(doc.toString());
+		//log.debug(doc.toString());
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
@@ -221,7 +221,9 @@ public class Language implements XMLDatatype {
 	/**
 	 * Converts a language into a string
 	 * @deprecated Since v3.1.0, as it is only for the legacy parser.
+	 * @return The string used to store the language in the legacy format
 	 */
+	@Deprecated
 	public String toLegacyString() {
 		String returnString = "===Meta Start===\n";
 		returnString += "utilsVersion:" + properties.getProperty(LanguageProperty.VERSION_EDITED) + "\n" +

@@ -95,6 +95,7 @@ public class PhonoTable extends FeaturalXMLDatatype {
 	 * @throws Exception Thrown when any data inside the PhonoTable is invalid, 
 	 * for example if soundsPerCell is a non-integer.
 	 */
+	@Deprecated
 	public static PhonoTable parse(Multitag tag) throws Exception {
 		ArrayList<Tag> tableData = tag.getUnattachedData();
 		
@@ -158,7 +159,9 @@ public class PhonoTable extends FeaturalXMLDatatype {
 	/**
 	 * Converts a PhonoTable to a string
 	 * @deprecated Since v3.1.0, as it is only for the legacy parser.
+	 * @return The string used to store the PhonoTable in the legacy format
 	 */
+	@Deprecated
 	public String toLegacyString() {
 		String returnString = "===PhonoTable Start===\ntableName:" + name + "\ncolumnNames:";
 		for (int i = 0; i < columns.size(); i++) {
@@ -249,6 +252,7 @@ public class PhonoTable extends FeaturalXMLDatatype {
 	 * @return The amount of sounds per cell
 	 * @deprecated as of OLing v3.0.0, as this is not data used for the new file format.
 	 */
+	@Deprecated
 	public int dataPerCell() {
 		return soundsPerCell;
 	}

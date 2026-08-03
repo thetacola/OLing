@@ -182,6 +182,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	 * @param file The file to load from
 	 * @deprecated as of 3.0.0, as this uses the old .language format. Instead, parse your file into an XML element, then create a PhonoSystem from the element
 	 */
+	@Deprecated
 	public PhonoSystem(File file) {
 		try {
 			LegacyParser parser = new LegacyParser(file);
@@ -314,7 +315,9 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	/**
 	 * Converts a PhonoSystem object to a string
 	 * @deprecated Since v3.1.0, as it is only for the legacy parser.
+	 * @return The string used to store the language in the legacy format
 	 */
+	@Deprecated
 	public String toLegacyString() {
 		String output = "===Tablelist Start===\n";
 		output += "tablelistName:" + name + "\n";
@@ -420,6 +423,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	 * Creates a file of the PhonoSystem.
 	 * @deprecated since v3.0.0, as this makes a file with the old format. Instead, write the XML element of this to a file.
 	 */
+	@Deprecated
 	public void toFile() {
 		String output = "===PHOSYS Start===\n";
 		output += toString();

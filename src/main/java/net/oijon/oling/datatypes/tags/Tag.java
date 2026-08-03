@@ -7,6 +7,7 @@ package net.oijon.oling.datatypes.tags;
  * @author alex
  * @deprecated as of 3.0.0, as this is part of the legacy parser
  */
+@Deprecated
 public class Tag {
 	
 	static Tag NULL = new Tag("", "");

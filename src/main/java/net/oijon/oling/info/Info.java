@@ -2,7 +2,7 @@ package net.oijon.oling.info;
 
 import net.oijon.olog.Log;
 
-//last edit: 5/23/26 -N3
+//last edit: 8/3/26 -N3
 
 /**
  * A class to get the version information of the current build
@@ -16,7 +16,7 @@ public class Info {
 	private static String fullVersion = "OLing - v" + versionNum;
 	
 	private static String generateVersionNum() {
-		return "3.1.0";
+		return "3.1.1";
 	}
 	
 	/**

@@ -70,9 +70,9 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	        DocumentBuilder builder = factory.newDocumentBuilder();
 			
-	        File f = new File(PhonoSystem.class.getResource("/IPA.xml").toURI());
+	        InputStream ipaIS = PhonoSystem.class.getClassLoader().getResourceAsStream("IPA.xml");
 	        
-	        Scanner reader = new Scanner(f, StandardCharsets.UTF_8);
+	        Scanner reader = new Scanner(ipaIS, StandardCharsets.UTF_8);
 	        boolean firstLine = true;
 	        String data = "";
 	        while (reader.hasNextLine()) {
@@ -105,7 +105,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 		} catch (ParserConfigurationException e) {
 			log.critical("ParserConfigurationException when parsing default IPA!!!");
 			e.printStackTrace();
-		} catch (URISyntaxException e) {
+		} catch (NullPointerException e) {
 			log.critical("Unable to load IPA system from program!!! (Is the program corrupted?)");
 			e.printStackTrace();
 		}

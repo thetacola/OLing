@@ -57,6 +57,7 @@ public class LanguageProperties implements XMLDatatype {
 	 * @throws Exception Thrown when properties are mangled or invalid
 	 * @deprecated As of OLing 3.0.0, this requires the legacy file format
 	 */
+	@Deprecated
 	public static LanguageProperties parse(Multitag docTag) throws Exception {
 		LanguageProperties lp = new LanguageProperties();
 		
@@ -95,6 +96,7 @@ public class LanguageProperties implements XMLDatatype {
 	 * @deprecated as of OLing v3.0.0, as this uses the old file format.
 	 * @param meta
 	 */
+	@Deprecated
 	private void checkID(Multitag meta) {
 		Tag id = new Tag("id");
 		try {
@@ -122,6 +124,7 @@ public class LanguageProperties implements XMLDatatype {
 	 * @throws Exception Thrown if neither utilsVersion nor susquehannaVersion exist
 	 * @deprecated as of OLing v3.0.0, as this uses the old file format.
 	 */
+	@Deprecated
 	private void checkVersion(Multitag meta) throws Exception {
 		Tag ver;
 		try {
@@ -315,5 +318,17 @@ public class LanguageProperties implements XMLDatatype {
         } else {
             throw new InvalidXMLException("Node name not expected name! Expected: meta; Actual: " + e.getTagName());
         }
+    }
+    
+    @Override
+    public String toString() {
+    	String returnString = "autonym:" + strings[0] + "\n" +
+    			"id:" + strings[1] + "\n" +
+    			"name:" + strings[2] + "\n" +
+    			"versionEdited:" + strings[3] + "\n" +
+    			"created:" + dates[0] + "\n" +
+    			"edited:" + dates[1] + "\n" +
+    			"isReadOnly:" + isReadOnly;
+    	return returnString;
     }
 }

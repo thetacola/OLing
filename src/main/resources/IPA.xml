@@ -1,210 +1,156 @@
-<language>
-	<meta>
-		<version>Manual Input for OLing v3.1.0</version>
-		<name>testlang</name>
-		<id>TESTLANG124022334721972</id>
-		<autonym>testish</autonym>
-		<timeCreated>1685105632845</timeCreated>
-		<lastEdited>1765847668000</lastEdited>
-		<readonly>false</readonly>
-		<parent></parent>
-	</meta>
-	<phonology>
-		<sounds>
-			<sound>p</sound>
-			<sound>b</sound>
-			<sound>t</sound>
-			<sound>d</sound>
-			<sound>k</sound>
-			<sound>g</sound>
-			<sound>m</sound>
-			<sound>n</sound>
-			<sound>ŋ</sound>
-			<sound>f</sound>
-			<sound>v</sound>
-			<sound>θ</sound>
-			<sound>ð</sound>
-			<sound>s</sound>
-			<sound>z</sound>
-			<sound>ʃ</sound>
-			<sound>ʒ</sound>
-			<sound>pʰ</sound>
-			<sound>tʰ</sound>
-			<sound>kʰ</sound>
-			<sound>ɡ</sound>
-			<sound>j</sound>
-			<sound>l</sound>
-			<sound>i</sound>
-			<sound>ɪ</sound>
-			<sound>e</sound>
-			<sound>ɛ</sound>
-			<sound>æ</sound>
-			<sound>a</sound>
-			<sound>ə</sound>
-			<sound>ɑ</sound>
-			<sound>u</sound>
-			<sound>ʊ</sound>
-			<sound>o</sound>
-			<sound>w</sound>
-			<sound>ɹ</sound>
-			<sound>ɱ</sound>
-			<sound>ɱ̚</sound>
-		</sounds>
-		<tables name="IPA">
-			<diacritics>
-				<diacritic>
-					<char>̥</char>
-				</diacritic>
-				<diacritic>
-					<char>̬</char>
-					<feature>voice</feature>
-				</diacritic>
-				<diacritic>ʰ</diacritic>
-				<diacritic>̹</diacritic>
-				<diacritic>̜</diacritic>
-				<diacritic>̟</diacritic>
-				<diacritic>̠</diacritic>
-				<diacritic>̈</diacritic>
-				<diacritic>̽</diacritic>
-				<diacritic>
-					<char>̩</char>
-					<feature>syllabic</feature>
-				</diacritic>
-				<diacritic>
-					<char>̯</char>
-				</diacritic>
-				<diacritic>˞</diacritic>
-				<diacritic>̤</diacritic>
-				<diacritic>̰</diacritic>
-				<diacritic>̼</diacritic>
-				<diacritic>ʷ</diacritic>
-				<diacritic>ʲ</diacritic>
-				<diacritic>ˠ</diacritic>
-				<diacritic>ˤ</diacritic>
-				<diacritic>̴</diacritic>
-				<diacritic>̝</diacritic>
-				<diacritic>̞</diacritic>
-				<diacritic>̘</diacritic>
-				<diacritic>̙</diacritic>
-				<diacritic>̪</diacritic>
-				<diacritic>̺</diacritic>
-				<diacritic>̻</diacritic>
-				<diacritic>̃</diacritic>
-				<diacritic>ⁿ</diacritic>
-				<diacritic>ˡ</diacritic>
-				<diacritic>̚</diacritic>
-				<diacritic>̋</diacritic>
-				<diacritic>́</diacritic>
-				<diacritic>̄</diacritic>
-				<diacritic>̀</diacritic>
-				<diacritic>̏</diacritic>
-				<diacritic>̌</diacritic>
-				<diacritic>̂</diacritic>
-				<diacritic>᷄</diacritic>
-				<diacritic>᷅</diacritic>
-				<diacritic>᷈</diacritic>
-				<diacritic>ˈ</diacritic>
-				<diacritic>ˌ</diacritic>
-				<diacritic>ː</diacritic>
-				<diacritic>ˑ</diacritic>
-				<diacritic>̆</diacritic>
-				<diacritic>|</diacritic>
-				<diacritic>‖</diacritic>
-				<diacritic>.</diacritic>
-				<diacritic>‿</diacritic>
-				<diacritic>͡</diacritic>
-			</diacritics>
-			<sonorancy>
-				<!-- left == more sonorous, right == less -->
+<tables name="IPA">
+	<diacritics>
+		<diacritic>
+			<char>̥</char>
+		</diacritic>
+		<diacritic>
+			<char>̬</char>
+			<feature>voice</feature>
+		</diacritic>
+		<diacritic>ʰ</diacritic>
+		<diacritic>̹</diacritic>
+		<diacritic>̜</diacritic>
+		<diacritic>̟</diacritic>
+		<diacritic>̠</diacritic>
+		<diacritic>̈</diacritic>
+		<diacritic>̽</diacritic>
+		<diacritic>
+			<char>̩</char>
+			<feature>syllabic</feature>
+		</diacritic>
+		<diacritic>
+			<char>̯</char>
+		</diacritic>
+		<diacritic>˞</diacritic>
+		<diacritic>̤</diacritic>
+		<diacritic>̰</diacritic>
+		<diacritic>̼</diacritic>
+		<diacritic>ʷ</diacritic>
+		<diacritic>ʲ</diacritic>
+		<diacritic>ˠ</diacritic>
+		<diacritic>ˤ</diacritic>
+		<diacritic>̴</diacritic>
+		<diacritic>̝</diacritic>
+		<diacritic>̞</diacritic>
+		<diacritic>̘</diacritic>
+		<diacritic>̙</diacritic>
+		<diacritic>̪</diacritic>
+		<diacritic>̺</diacritic>
+		<diacritic>̻</diacritic>
+		<diacritic>̃</diacritic>
+		<diacritic>ⁿ</diacritic>
+		<diacritic>ˡ</diacritic>
+		<diacritic>̚</diacritic>
+		<diacritic>̋</diacritic>
+		<diacritic>́</diacritic>
+		<diacritic>̄</diacritic>
+		<diacritic>̀</diacritic>
+		<diacritic>̏</diacritic>
+		<diacritic>̌</diacritic>
+		<diacritic>̂</diacritic>
+		<diacritic>᷄</diacritic>
+		<diacritic>᷅</diacritic>
+		<diacritic>᷈</diacritic>
+		<diacritic>ˈ</diacritic>
+		<diacritic>ˌ</diacritic>
+		<diacritic>ː</diacritic>
+		<diacritic>ˑ</diacritic>
+		<diacritic>̆</diacritic>
+		<diacritic>|</diacritic>
+		<diacritic>‖</diacritic>
+		<diacritic>.</diacritic>
+		<diacritic>‿</diacritic>
+		<diacritic>͡</diacritic>
+	</diacritics>
+	<sonorancy>
+		<!-- left == more sonorous, right == less -->
+		<son-feature>
+			<feature>syllabic</feature>
+			<left type="pos">
 				<son-feature>
-					<feature>syllabic</feature>
+					<feature>low</feature>
 					<left type="pos">
+						<!-- low vowels -->
+					</left>
+					<right>
 						<son-feature>
-							<feature>low</feature>
-							<left type="pos">
-								<!-- low vowels -->
+							<feature>high</feature>
+							<left type="neg">
+								<!-- mid vowels -->
 							</left>
 							<right>
+								<!-- high vowels -->
+							</right>
+						</son-feature>
+					</right>
+				</son-feature>
+			</left>
+			<right>
+				<son-feature>
+					<feature>sonorant</feature>
+					<left type="pos">
+						<son-feature>
+							<feature>nasal</feature>
+							<left type="neg">
 								<son-feature>
-									<feature>high</feature>
+									<feature>lateral</feature>
 									<left type="neg">
-										<!-- mid vowels -->
+										<son-feature>
+											<feature>vocalic</feature>
+											<left type="pos">
+												<!-- glides -->
+											</left>
+											<right>
+												<!-- flaps -->
+											</right>
+										</son-feature>
 									</left>
 									<right>
-										<!-- high vowels -->
+										<!-- lateral glides -->
 									</right>
 								</son-feature>
+							</left>
+							<right>
+								<!-- nasals -->
 							</right>
 						</son-feature>
 					</left>
 					<right>
 						<son-feature>
-							<feature>sonorant</feature>
+							<feature>continuant</feature>
 							<left type="pos">
 								<son-feature>
-									<feature>nasal</feature>
-									<left type="neg">
-										<son-feature>
-											<feature>lateral</feature>
-											<left type="neg">
-												<son-feature>
-													<feature>vocalic</feature>
-													<left type="pos">
-														<!-- glides -->
-													</left>
-													<right>
-														<!-- flaps -->
-													</right>
-												</son-feature>
-											</left>
-											<right>
-												<!-- lateral glides -->
-											</right>
-										</son-feature>
+									<feature>voice</feature>
+									<left type="pos">
+										<!-- voiced fricatives -->
 									</left>
 									<right>
-										<!-- nasals -->
+										<!-- voiceless fricatives -->
 									</right>
 								</son-feature>
 							</left>
 							<right>
 								<son-feature>
-									<feature>continuant</feature>
+									<feature>delayedrelease</feature>
 									<left type="pos">
 										<son-feature>
 											<feature>voice</feature>
 											<left type="pos">
-												<!-- voiced fricatives -->
+												<!-- voiced affricates -->
 											</left>
 											<right>
-												<!-- voiceless fricatives -->
+												<!-- voiceless affricates -->
 											</right>
 										</son-feature>
 									</left>
 									<right>
 										<son-feature>
-											<feature>delayedrelease</feature>
+											<feature>voice</feature>
 											<left type="pos">
-												<son-feature>
-													<feature>voice</feature>
-													<left type="pos">
-														<!-- voiced affricates -->
-													</left>
-													<right>
-														<!-- voiceless affricates -->
-													</right>
-												</son-feature>
+												<!-- voiced stops -->
 											</left>
 											<right>
-												<son-feature>
-													<feature>voice</feature>
-													<left type="pos">
-														<!-- voiced stops -->
-													</left>
-													<right>
-														<!-- voiceless stops -->
-													</right>
-												</son-feature>
+												<!-- voiceless stops -->
 											</right>
 										</son-feature>
 									</right>
@@ -213,50 +159,52 @@
 						</son-feature>
 					</right>
 				</son-feature>
-			</sonorancy>
-			<table name="IPA Consonants" part="ONSET_CODA">
-				<columns>
-					<column index="0">
-						<name>Bilabial</name>
-						<feature type="place">LABIAL</feature>
-						<feature>round</feature>
-					</column>
-					<column index="1">
-						<name>Labiodental</name>
-						<feature type="place">LABIAL</feature>
-					</column>
-					<column index="2">
-						<name>Dental</name>
-						<feature type="place">CORONAL</feature>
-						<feature>anterior</feature>
-						<feature>distributed</feature>
-					</column>
-					<column index="3">
-						<name>Alveolar</name>
-						<feature type="place">CORONAL</feature>
-					</column>
-					<column index="4">
-						<name>Postalveolar</name>
-						<feature type="place">CORONAL</feature>
-						<feature>distributed</feature>
-					</column>
-					<column index="5">
-						<name>Retroflex</name>
-						<feature type="place">CORONAL</feature>
-					</column>
-					<column index="6">
-						<name>Palatal</name>
-						<feature type="place">DORSAL</feature>
-						<feature>high</feature>
-					</column>
-					<column index="7">
-						<name>Velar</name>
-						<feature type="place">DORSAL</feature>
-						<feature>high</feature>
-						<feature>back</feature>
-					</column>
-					<column index="8">
-						<name>Uvular</name>
+			</right>
+		</son-feature>
+	</sonorancy>
+	<table name="IPA Consonants" part="ONSET_CODA">
+		<columns>
+			<column index="0">
+				<name>Bilabial</name>
+				<feature type="place">LABIAL</feature>
+				<feature>round</feature>
+			</column>
+			<column index="1">
+				<name>Labiodental</name>
+				<feature type="place">LABIAL</feature>
+			</column>
+			<column index="2">
+				<name>Dental</name>
+				<feature type="place">CORONAL</feature>
+				<feature>anterior</feature>
+				<feature>distributed</feature>
+			</column>
+			<column index="3">
+				<name>Alveolar</name>
+				<feature type="place">CORONAL</feature>
+			</column>
+			<column index="4">
+				<name>Postalveolar</name>
+				<feature type="place">CORONAL</feature>
+				<feature>distributed</feature>
+			</column>
+			<column index="5">
+				<name>Retroflex</name>
+				<feature type="place">CORONAL</feature>
+			</column>
+			<column index="6">
+				<name>Palatal</name>
+				<feature type="place">DORSAL</feature>
+				<feature>high</feature>
+			</column>
+			<column index="7">
+				<name>Velar</name>
+				<feature type="place">DORSAL</feature>
+				<feature>high</feature>
+				<feature>back</feature>
+			</column>
+			<column index="8">
+				<name>Uvular</name>
 				<feature type="place">DORSAL</feature>
 				<feature>high</feature>
 				<feature>back</feature>
@@ -916,367 +864,3 @@
 		</anomaly>
 	</anomalies>
 </tables>
-
-	</phonology>
-	<orthography></orthography>
-	<grammar>
-		<glosses name="Leipzig">
-			<gloss>
-				<abb>1</abb>
-				<meaning>first person</meaning>
-			</gloss>
-			<gloss>
-				<abb>2</abb>
-				<meaning>second person</meaning>
-			</gloss>
-			<gloss>
-				<abb>3</abb>
-				<meaning>third person</meaning>
-			</gloss>
-			<gloss>
-				<abb>A</abb>
-				<meaning>agent-like argument of canonical transitive verb</meaning>
-			</gloss>
-			<gloss>
-				<abb>ABL</abb>
-				<meaning>ablative</meaning>
-			</gloss>
-			<gloss>
-				<abb>ABS</abb>
-				<meaning>absolutive</meaning>
-			</gloss>
-			<gloss>
-				<abb>ACC</abb>
-				<meaning>accusative</meaning>
-			</gloss>
-			<gloss>
-				<abb>ADJ</abb>
-				<meaning>adjective</meaning>
-			</gloss>
-			<gloss>
-				<abb>ADV</abb>
-				<meaning>adverb(ial)</meaning>
-			</gloss>
-			<gloss>
-				<abb>AGR</abb>
-				<meaning>agreement</meaning>
-			</gloss>
-			<gloss>
-				<abb>ALL</abb>
-				<meaning>allative</meaning>
-			</gloss>
-			<gloss>
-				<abb>ANTIP</abb>
-				<meaning>antipassive</meaning>
-			</gloss>
-			<gloss>
-				<abb>APPL</abb>
-				<meaning>applicative</meaning>
-			</gloss>
-			<gloss>
-				<abb>ART</abb>
-				<meaning>article</meaning>
-			</gloss>
-			<gloss>
-				<abb>AUX</abb>
-				<meaning>auxiliary</meaning>
-			</gloss>
-			<gloss>
-				<abb>BEN</abb>
-				<meaning>benefactive</meaning>
-			</gloss>
-			<gloss>
-				<abb>CAUS</abb>
-				<meaning>causative</meaning>
-			</gloss>
-			<gloss>
-				<abb>CLF</abb>
-				<meaning>classifier</meaning>
-			</gloss>
-			<gloss>
-				<abb>COM</abb>
-				<meaning>comitative</meaning>
-			</gloss>
-			<gloss>
-				<abb>COMP</abb>
-				<meaning>complementizer</meaning>
-			</gloss>
-			<gloss>
-				<abb>COMPL</abb>
-				<meaning>complementive</meaning>
-			</gloss>
-			<gloss>
-				<abb>COND</abb>
-				<meaning>conditional</meaning>
-			</gloss>
-			<gloss>
-				<abb>COP</abb>
-				<meaning>copula</meaning>
-			</gloss>
-			<gloss>
-				<abb>CVB</abb>
-				<meaning>converb</meaning>
-			</gloss>
-			<gloss>
-				<abb>DAT</abb>
-				<meaning>dative</meaning>
-			</gloss>
-			<gloss>
-				<abb>DECL</abb>
-				<meaning>declarative</meaning>
-			</gloss>
-			<gloss>
-				<abb>DEF</abb>
-				<meaning>definite</meaning>
-			</gloss>
-			<gloss>
-				<abb>DEM</abb>
-				<meaning>demonstrative</meaning>
-			</gloss>
-			<gloss>
-				<abb>DET</abb>
-				<meaning>determiner</meaning>
-			</gloss>
-			<gloss>
-				<abb>DIST</abb>
-				<meaning>distal</meaning>
-			</gloss>
-			<gloss>
-				<abb>DISTR</abb>
-				<meaning>distributive</meaning>
-			</gloss>
-			<gloss>
-				<abb>DU</abb>
-				<meaning>dual</meaning>
-			</gloss>
-			<gloss>
-				<abb>DUR</abb>
-				<meaning>durative</meaning>
-			</gloss>
-			<gloss>
-				<abb>ERG</abb>
-				<meaning>ergative</meaning>
-			</gloss>
-			<gloss>
-				<abb>EXCL</abb>
-				<meaning>exclusive</meaning>
-			</gloss>
-			<gloss>
-				<abb>F</abb>
-				<meaning>feminine</meaning>
-			</gloss>
-			<gloss>
-				<abb>FOC</abb>
-				<meaning>focus</meaning>
-			</gloss>
-			<gloss>
-				<abb>FUT</abb>
-				<meaning>future</meaning>
-			</gloss>
-			<gloss>
-				<abb>GEN</abb>
-				<meaning>genitive</meaning>
-			</gloss>
-			<gloss>
-				<abb>IMP</abb>
-				<meaning>imperative</meaning>
-			</gloss>
-			<gloss>
-				<abb>INCL</abb>
-				<meaning>inclusive</meaning>
-			</gloss>
-			<gloss>
-				<abb>IND</abb>
-				<meaning>indicative</meaning>
-			</gloss>
-			<gloss>
-				<abb>INDF</abb>
-				<meaning>indefinite</meaning>
-			</gloss>
-			<gloss>
-				<abb>INF</abb>
-				<meaning>infinitive</meaning>
-			</gloss>
-			<gloss>
-				<abb>INS</abb>
-				<meaning>instrumental</meaning>
-			</gloss>
-			<gloss>
-				<abb>INTR</abb>
-				<meaning>intransitive</meaning>
-			</gloss>
-			<gloss>
-				<abb>IPFV</abb>
-				<meaning>imperfective</meaning>
-			</gloss>
-			<gloss>
-				<abb>IRR</abb>
-				<meaning>irrealis</meaning>
-			</gloss>
-			<gloss>
-				<abb>LOC</abb>
-				<meaning>locative</meaning>
-			</gloss>
-			<gloss>
-				<abb>M</abb>
-				<meaning>masculine</meaning>
-			</gloss>
-			<gloss>
-				<abb>N</abb>
-				<meaning>neuter</meaning>
-			</gloss>
-			<gloss>
-				<abb>NEG</abb>
-				<meaning>negation, negative</meaning>
-			</gloss>
-			<gloss>
-				<abb>NMLZ</abb>
-				<meaning>nominalizer/nominalization</meaning>
-			</gloss>
-			<gloss>
-				<abb>NOM</abb>
-				<meaning>nominative</meaning>
-			</gloss>
-			<gloss>
-				<abb>OBJ</abb>
-				<meaning>object</meaning>
-			</gloss>
-			<gloss>
-				<abb>OBL</abb>
-				<meaning>oblique</meaning>
-			</gloss>
-			<gloss>
-				<abb>P</abb>
-				<meaning>patient-like argument of canonical transitive verb</meaning>
-			</gloss>
-			<gloss>
-				<abb>PASS</abb>
-				<meaning>passive</meaning>
-			</gloss>
-			<gloss>
-				<abb>PFV</abb>
-				<meaning>perfective</meaning>
-			</gloss>
-			<gloss>
-				<abb>PL</abb>
-				<meaning>plural</meaning>
-			</gloss>
-			<gloss>
-				<abb>POSS</abb>
-				<meaning>possessive</meaning>
-			</gloss>
-			<gloss>
-				<abb>PRED</abb>
-				<meaning>predicative</meaning>
-			</gloss>
-			<gloss>
-				<abb>PRF</abb>
-				<meaning>perfect</meaning>
-			</gloss>
-			<gloss>
-				<abb>PRS</abb>
-				<meaning>present</meaning>
-			</gloss>
-			<gloss>
-				<abb>PROG</abb>
-				<meaning>progressive</meaning>
-			</gloss>
-			<gloss>
-				<abb>PROH</abb>
-				<meaning>prohibitive</meaning>
-			</gloss>
-			<gloss>
-				<abb>PROX</abb>
-				<meaning>proximal/proximate</meaning>
-			</gloss>
-			<gloss>
-				<abb>PST</abb>
-				<meaning>past</meaning>
-			</gloss>
-			<gloss>
-				<abb>PTCP</abb>
-				<meaning>participle</meaning>
-			</gloss>
-			<gloss>
-				<abb>PURP</abb>
-				<meaning>purposive</meaning>
-			</gloss>
-			<gloss>
-				<abb>Q</abb>
-				<meaning>question particle/marker</meaning>
-			</gloss>
-			<gloss>
-				<abb>QUOT</abb>
-				<meaning>quotative</meaning>
-			</gloss>
-			<gloss>
-				<abb>RECP</abb>
-				<meaning>reciprocal</meaning>
-			</gloss>
-			<gloss>
-				<abb>REFL</abb>
-				<meaning>reflexive</meaning>
-			</gloss>
-			<gloss>
-				<abb>REL</abb>
-				<meaning>relative</meaning>
-			</gloss>
-			<gloss>
-				<abb>RES</abb>
-				<meaning>resultative</meaning>
-			</gloss>
-			<gloss>
-				<abb>S</abb>
-				<meaning>single argument of canonical intransitive verb</meaning>
-			</gloss>
-			<gloss>
-				<abb>SBJ</abb>
-				<meaning>subject</meaning>
-			</gloss>
-			<gloss>
-				<abb>SBJV</abb>
-				<meaning>subjunctive</meaning>
-			</gloss>
-			<gloss>
-				<abb>SG</abb>
-				<meaning>singular</meaning>
-			</gloss>
-			<gloss>
-				<abb>TOP</abb>
-				<meaning>topic</meaning>
-			</gloss>
-			<gloss>
-				<abb>TR</abb>
-				<meaning>transitive</meaning>
-			</gloss>
-			<gloss>
-				<abb>VOC</abb>
-				<meaning>vocative</meaning>
-			</gloss>
-		</glosses>
-	</grammar>
-	<lexicon>
-		<word>
-			<name>test</name>
-			<meaning>test</meaning>
-			<pronunciation></pronunciation>
-			<etymology></etymology>
-			<timeCreated>1704181031713</timeCreated>
-			<lastEdited>1704181031713</lastEdited>
-			<synonyms></synonyms>
-			<homonyms></homonyms>
-			<classes></classes>
-		</word>
-		<word>
-			<name>hi</name>
-			<meaning>hello</meaning>
-			<pronunciation>hi</pronunciation>
-			<etymology></etymology>
-			<timeCreated>1757020250451</timeCreated>
-			<lastEdited>1757020250451</lastEdited>
-			<synonyms></synonyms>
-			<homonyms></homonyms>
-			<classes></classes>
-		</word>
-	</lexicon>
-</language>

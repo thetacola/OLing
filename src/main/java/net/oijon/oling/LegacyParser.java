@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import net.oijon.olog.Log;
@@ -14,9 +15,12 @@ import net.oijon.oling.datatypes.language.LanguageProperty;
 import net.oijon.oling.datatypes.lexicon.Lexicon;
 import net.oijon.oling.datatypes.lexicon.Word;
 import net.oijon.oling.datatypes.orthography.Orthography;
-import net.oijon.oling.datatypes.phonology.PhonoSystem;
-import net.oijon.oling.datatypes.phonology.PhonoTable;
 import net.oijon.oling.datatypes.phonology.Phonology;
+import net.oijon.oling.datatypes.phonology.feature.Diacritic;
+import net.oijon.oling.datatypes.phonology.feature.Feature;
+import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
+import net.oijon.oling.datatypes.phonology.table.PhonoSystem;
+import net.oijon.oling.datatypes.phonology.table.PhonoTable;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.MultitagUtils;
 import net.oijon.oling.datatypes.tags.Tag;
@@ -28,6 +32,7 @@ import net.oijon.oling.datatypes.tags.Tag;
  * @author alex
  * @deprecated as of 3.0.0, as files are now stored via XML
  */
+@Deprecated
 public class LegacyParser {
 	
 	public static Log log = Info.log;
@@ -81,7 +86,7 @@ public class LegacyParser {
 	private void writeXML(File xmlFile) {
 		try {
 			Language l = this.parseLanguage();
-			log.debug(l.toString());
+			//log.debug(l.toString());
 			l.toFile(xmlFile);
 			log.info("Successfully converted file at " + xmlFile.toString());
 		} catch (Exception e) {
@@ -248,13 +253,16 @@ public class LegacyParser {
 				diacriticList = new Tag("diacriticList", "");
 			}			
 			PhonoSystem phonoSystem = new PhonoSystem(tablelist.getDirectChild("tablelistName").value());
-			ArrayList<String> diacritics = new ArrayList<String>(Arrays.asList(diacriticList.value().split(",")));
-			phonoSystem.setDiacritics(diacritics);
+			ArrayList<String> diacritics = new ArrayList<String>(Arrays.asList(diacriticList.value().split(",")));			
+			phonoSystem.addDiacriticsFromList(diacritics);
 			for (int i = 0; i < tablelist.getSubMultitags().size(); i++) {
 				if (tablelist.getSubMultitags().get(i).getName().equals("PhonoTable")) {
 					Multitag phonoTableTag = tablelist.getSubMultitags().get(i);
 					PhonoTable phonoTable = PhonoTable.parse(phonoTableTag);
-					phonoSystem.getTables().add(phonoTable);
+					phonoTable.addFeature(new Feature("SYLLPART_ONSET", true, FeatureLevel.TABLE));
+					phonoTable.addFeature(new Feature("SYLLPART_NUCLEUS", true, FeatureLevel.TABLE));
+					phonoTable.addFeature(new Feature("SYLLPART_CODA", true, FeatureLevel.TABLE));
+					phonoSystem.addTable(phonoTable);
 				}
 			}
 			return phonoSystem;

@@ -9,6 +9,7 @@ import java.util.ArrayList;
  * @author alex
  * @deprecated as of 3.0.0, as it is part of the legacy parser.
  */
+@Deprecated
 public class Multitag {
 
 	private String name;

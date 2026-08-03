@@ -1,7 +1,10 @@
-package net.oijon.oling.datatypes.phonology;
+package net.oijon.oling.datatypes.phonology.table;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
-import net.oijon.oling.datatypes.XMLDatatype;
+import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
+import net.oijon.oling.datatypes.phonology.feature.Feature;
+import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -15,16 +18,16 @@ import java.util.ArrayList;
 /**
  * Creates the equivalent of a cell in the IPA chart
  */
-public class PhonoCell implements XMLDatatype {
+public class PhonoCell extends FeaturalXMLDatatype {
 
-    protected ArrayList<Phoneme> phonemes = new ArrayList<>();
+    //protected ArrayList<Phoneme> phonemes = new ArrayList<>();
     private int index;
 
     /**
      * Creates a blank cell
      */
     public PhonoCell() {
-        phonemes = new ArrayList<Phoneme>();
+    	initFeatures();
     }
 
     /**
@@ -32,7 +35,7 @@ public class PhonoCell implements XMLDatatype {
      * @param index The index of this cell inside its PhonoCategory
      */
     public PhonoCell(int index) {
-        phonemes = new ArrayList<Phoneme>();
+    	initFeatures();
         this.index = index;
     }
 
@@ -42,7 +45,10 @@ public class PhonoCell implements XMLDatatype {
      * @param index The index of this cell inside its PhonoCategory
      */
     public PhonoCell(ArrayList<Phoneme> phonemes, int index) {
-        this.phonemes = phonemes;
+    	initFeatures();
+        for (int i = 0; i < phonemes.size(); i++) {
+        	super.lowerObj.add(phonemes.get(i));
+        }
         this.index = index;
     }
 
@@ -63,13 +69,16 @@ public class PhonoCell implements XMLDatatype {
         if (!s.equals("*") && !s.equals("#")) {
             Phoneme p = new Phoneme(s);
             int index = 0;
-            for (Phoneme lp : phonemes) {
-                if (lp.getIndex() > index) {
-                    index = lp.getIndex() + 1;
-                }
+            for (FeaturalXMLDatatype lp : super.lowerObj) {
+            	if (lp instanceof Phoneme) {
+            		Phoneme lpp = (Phoneme) lp;
+	                if (lpp.getIndex() > index) {
+	                    index = lpp.getIndex() + 1;
+	                }
+            	}
             }
             p.setIndex(index);
-            phonemes.add(p);
+            super.lowerObj.add(p);
         }
     }
 
@@ -78,13 +87,17 @@ public class PhonoCell implements XMLDatatype {
      * @param p The sound to be added
      */
     public void addSound(Phoneme p) {
-        for (int i = 0; i < phonemes.size(); i++) {
-            if (p.getIndex() == phonemes.get(i).getIndex()) {
-                p.setIndex(p.getIndex() + 1);
-                i = 0;
-            }
+        for (int i = 0; i < super.lowerObj.size(); i++) {
+        	FeaturalXMLDatatype fxd = super.lowerObj.get(i);
+        	if (fxd instanceof Phoneme) {
+        		Phoneme fxdp = (Phoneme) fxd;
+	            if (p.getIndex() == fxdp.getIndex()) {
+	                p.setIndex(p.getIndex() + 1);
+	                i = 0;
+	            }
+        	}
         }
-        phonemes.add(p);
+        super.lowerObj.add(p);
     }
 
     /**
@@ -92,7 +105,7 @@ public class PhonoCell implements XMLDatatype {
      * @return The amount of phonemes in the cell
      */
     public int size() {
-        return phonemes.size();
+        return super.lowerObj.size();
     }
 
     /**
@@ -100,7 +113,13 @@ public class PhonoCell implements XMLDatatype {
      * @return All of the phonemes in the cell
      */
     public ArrayList<Phoneme> getPhonemes() {
-        return phonemes;
+    	ArrayList<Phoneme> alp = new ArrayList<Phoneme>();
+    	for (FeaturalXMLDatatype fxd : super.lowerObj) {
+    		if (fxd instanceof Phoneme) {
+    			alp.add((Phoneme) fxd);
+    		}
+    	}
+        return alp;
     }
 
     /**
@@ -128,26 +147,32 @@ public class PhonoCell implements XMLDatatype {
     public int sizeWithoutSpacers() {
         int startSize = size();
         for (int i = 0; i < size(); i++) {
-            String sound = phonemes.get(i).getSound();
-            if (sound.equals("#") || sound.equals("*")) {
-                startSize--;
-            }
+        	FeaturalXMLDatatype fxd = super.lowerObj.get(i);
+        	if (fxd instanceof Phoneme) {
+        		Phoneme fxdp = (Phoneme) fxd;
+	            String sound = fxdp.getSound();
+	            if (sound.equals("#") || sound.equals("*")) {
+	                startSize--;
+	            }
+        	}
         }
         return startSize;
     }
-
+    
+    
     @Override
     public boolean equals(Object o) {
         if (o instanceof PhonoCell) {
             PhonoCell pc = (PhonoCell) o;
-            return (pc.getPhonemes().equals(phonemes));
+            return (pc.lowerObj.equals(super.lowerObj));
         }
         return false;
     }
 
 	@Override
 	public String toString() {
-		return "[" + index + ": " + phonemes.toString() + "]";
+		return "[" + index + ": " + super.lowerObj.toString() + "]\n" +
+				"features: " + features;
 	}
 
     @Override
@@ -156,11 +181,21 @@ public class PhonoCell implements XMLDatatype {
         Document doc = builder.newDocument();
         Element root = doc.createElement("cell");
         root.setAttribute("index", index + "");
-        for (Phoneme p : phonemes) {
-            Element pe = (Element) doc.importNode(p.toXML(), true);
-            if (!p.getSound().equals("*") && !p.getSound().equals("#")) {
-                root.appendChild(pe);
-            }
+        
+        for (Feature f : features.values()) {
+        	if (f.getValue() && f.getLevel() == FeatureLevel.CELL) {
+        		root.appendChild(doc.importNode(f.toXML(), true));
+        	}
+        }
+        
+        for (FeaturalXMLDatatype fxd : super.lowerObj) {
+        	if (fxd instanceof Phoneme) {
+        		Phoneme p = (Phoneme) fxd;
+	            Element pe = (Element) doc.importNode(p.toXML(), true);
+	            if (!p.getSound().equals("*") && !p.getSound().equals("#")) {
+	                root.appendChild(pe);
+	            }
+        	}
         }
 
         return root;
@@ -168,6 +203,7 @@ public class PhonoCell implements XMLDatatype {
 
     @Override
     public void fromXML(Element e) throws InvalidXMLException {
+    	initFeatures();
         if (e.getTagName().equals("cell")) {
             index = Integer.parseInt(e.getAttribute("index"));
             NodeList nl = e.getChildNodes();
@@ -175,11 +211,21 @@ public class PhonoCell implements XMLDatatype {
                 Node n = nl.item(i);
                 if (n.getNodeName().equals("sound") && n.getNodeType() == Node.ELEMENT_NODE) {
                     Phoneme p = new Phoneme((Element) n);
-                    phonemes.add(p);
+                    super.lowerObj.add(p);
+                } else if (n.getNodeName().equals("feature") && n.getNodeType() == Node.ELEMENT_NODE) {
+                	Feature f = new Feature((Element) n, level);
+        			this.addFeature(f);
                 }
             }
         } else {
             throw new InvalidXMLException("Node name not expected name! Expected: cell; Actual: " + e.getTagName());
         }
+        
+        applyFeatures();
     }
+
+	@Override
+	protected void initFeatures() {
+		super.level = FeatureLevel.CELL;
+	}
 }

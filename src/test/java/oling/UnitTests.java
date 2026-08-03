@@ -1,19 +1,25 @@
 package oling;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
-import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
-
 import net.oijon.oling.datatypes.language.LanguageProperties;
 import net.oijon.oling.datatypes.phonology.*;
+import net.oijon.oling.datatypes.phonology.feature.Feature;
+import net.oijon.oling.datatypes.phonology.feature.sonorancy.SonorancyTree;
+import net.oijon.oling.datatypes.phonology.table.Phoneme;
+import net.oijon.oling.datatypes.phonology.table.PhonoCategory;
+import net.oijon.oling.datatypes.phonology.table.PhonoCell;
+import net.oijon.oling.datatypes.phonology.table.PhonoColumn;
+import net.oijon.oling.datatypes.phonology.table.PhonoSystem;
+import net.oijon.oling.datatypes.phonology.table.PhonoTable;
+
 import org.junit.jupiter.api.Test;
 
 import net.oijon.olog.Log;
@@ -24,47 +30,131 @@ import net.oijon.oling.datatypes.lexicon.Lexicon;
 import net.oijon.oling.datatypes.lexicon.Word;
 import net.oijon.oling.datatypes.lexicon.WordProperties;
 import net.oijon.oling.datatypes.orthography.Orthography;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.InputSource;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 public class UnitTests {
 
 	Log log = new Log(System.getProperty("user.home") + "/.oling");
-
+	
+	@Test
+	void readWriteEquivalency() {
+		log.info("Testing read-write equivalency...");
+		try {
+			long start = System.currentTimeMillis();
+			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
+			Language oldL = Language.parse(f);
+			long read = System.currentTimeMillis();
+			
+			File newFile = File.createTempFile("testish", "xml");
+			log.debug("Writing to " + newFile + ", then reading from same file");
+			oldL.toFile(newFile);
+			long write = System.currentTimeMillis();
+			log.debug("Time taken to read from file: " + (read - start) + "ms");
+			log.debug("Time taken to write to file: " + (write - read) + "ms");
+			
+			Language newL = Language.parse(newFile);
+			
+			//log.info("Old language: " + oldL.toString());
+			//log.info("New language:" + newL.toString());
+			assertEquals(oldL.getPhono().getPhonoSystem().getSonorancyTree(),
+					newL.getPhono().getPhonoSystem().getSonorancyTree());
+			assertEquals(oldL, newL);
+			log.info("Read-write equivalency successfully verified!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.err("Could not load needed resources!");
+			fail();
+		}
+	}
+	
+	@Test
+	void testFeatures() {
+		log.info("Testing featural phonology...");
+		try {
+			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
+			Language l = Language.parse(f);
+			// should be /m/
+			//Phoneme p = l.getPhono().getPhonoSystem().getTables().get(0).getRow(1).getCell(0).getPhonemes().get(0);
+			//log.info(p.getSound() + " - " + p.getFeatures().toString());
+			ArrayList<Feature> features = new ArrayList<Feature>();
+			Phonology phono = l.getPhono();
+			PhonoSystem ps = phono.getPhonoSystem();
+			PhonoTable table = ps.getTables().get(0);
+			PhonoCategory row = table.getRow(1);
+			PhonoCell cell = row.getCell(0);
+			PhonoColumn column = table.getColumn(cell.getIndex());
+			Phoneme p = cell.getPhonemes().get(0);
+			
+			features.addAll(p.getFeatures().values());
+			features.addAll(column.getFeatures().values());
+			features.addAll(cell.getFeatures().values());
+			features.addAll(row.getFeatures().values());
+			features.addAll(table.getFeatures().values());
+			features.addAll(ps.getFeatures().values());
+			
+			ArrayList<Feature> phonemeFeatures = new ArrayList<Feature>(p.getFeatures().values());
+			// remove duplicates, helpful for logging
+			
+			for (int i = 0; i < features.size(); i++) {
+				for (int j = 0; j < features.size(); j++) {
+					if (i != j) {
+						if (features.get(i).getName().equals(features.get(j).getName())) {
+							features.remove(j);
+							i = 0;
+							j = 0;
+						}
+					}
+				}
+			}
+			
+			log.debug("Phoneme is reporting " + phonemeFeatures.size() + " features.");
+			log.debug("Phoneme features: " + phonemeFeatures);
+			log.debug("Manual count of features is reporting " + features.size() + " features.");
+			log.debug("Manual features: " + features);
+			if (phonemeFeatures.size() == 0 || features.size() == 0) {
+				log.err("No features found in table or in phoneme!");
+				log.err("Test failed!");
+				fail();
+			}
+			int count = 0;
+			int total = features.size();
+			// the level and value is in some instances expected to be different, so only check the name
+			for (int i = 0; i < features.size(); i++) {
+				boolean found = false;
+				for (int j = 0; j < phonemeFeatures.size(); j++) {
+					if (features.get(i).getName().equals(phonemeFeatures.get(j).getName())) {
+						count++;
+						log.debug("Found feature " + count + "/" + total +
+								" " + features.get(i).toString());
+						found = true;
+					}
+				}
+				if (!found) {
+					log.err("Could not find feature " + features.get(i) + " in phoneme!");
+					log.err("Test failed!");
+					fail();
+				}
+			}
+			log.info("Found all expected features in phoneme!");
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.err("Could not load needed resources!");
+			fail();
+		}
+	}
+	
 	@SuppressWarnings("deprecation")
     @Test
     void testLegacyToXML() {
+		log.info("Testing legacy file parsing...");
         try {
             LegacyParser parser = new LegacyParser(Paths.get(UnitTests.class.getClassLoader().getResource("testish.language").toURI()).toFile());
             Language testLang = parser.parseLanguage();
-
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-
-            File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
-            log.debug("Reading testish.xml from " + f.toString());
-            Scanner reader = new Scanner(f, StandardCharsets.UTF_8);
-            boolean firstLine = true;
-            String data = "";
-            while (reader.hasNextLine()) {
-                if (firstLine) {
-                    data = reader.nextLine();
-                    String[] splitData = data.split("<\\?xml");
-                    data = "<?xml" + splitData[1];
-                    firstLine = false;
-                } else {
-
-                    data += reader.nextLine() + "\n";
-                }
-            }
-            reader.close();
-            Document doc = builder.parse(new InputSource(new StringReader(data)));
-            Element element = doc.getDocumentElement();
-            Language newLang = new Language(element);
+            File f = File.createTempFile("testlang", "xml");
+            testLang.toFile(f);
+            
+            log.debug("Reading testlang.xml from " + f.toString());
+            Language newLang = Language.parse(f);
 
 			LanguageProperties oldLP = testLang.getProperties();
 	        LanguageProperties newLP = newLang.getProperties();
@@ -77,7 +167,7 @@ public class UnitTests {
 			List<String> newPL = newPhono.getList();
 			assertEquals(oldPL, newPL);
 
-			PhonoSystem oldPS = oldPhono.getPhonoSystem();
+			PhonoSystem oldPS = PhonoSystem.IPA;
 			PhonoSystem newPS = newPhono.getPhonoSystem();
 
 			String oldPSName = oldPS.getName();
@@ -118,7 +208,9 @@ public class UnitTests {
 				assertEquals(oldT, newT);
 			}
 			assertEquals(oldPSTables, newPSTables);
-			assertEquals(oldPS, newPS);
+			// the parser changes it to the IPA system when it detects that it needs to be updated
+			assertEquals(oldPS, PhonoSystem.IPA);
+			oldPhono.setPhonoSystem(PhonoSystem.IPA);
 			assertEquals(oldPhono, newPhono);
 
 			Orthography oldO = testLang.getOrtho();
@@ -153,6 +245,112 @@ public class UnitTests {
             fail();
         }
 
+        log.info("Legacy file parsing successfully verified!");
     }
+	
+	@Test
+	void testIPAEquivalency() {
+		log.info("Testing equivalency between known-good IPA in language and IPA backup system");
+		try {
+			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
+			Language l = Language.parse(f);
+			
+			SonorancyTree lTree = l.getPhono().getPhonoSystem().getSonorancyTree();
+			SonorancyTree IPATree = PhonoSystem.IPA.getSonorancyTree();
+			
+			assertEquals(l.getPhono().getPhonoSystem(), PhonoSystem.IPA);
+			assertEquals(lTree, IPATree);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			log.err("Could not load needed resources!");
+			fail();
+		}
+		log.info("IPA equivalence successfully verified!");
+	}
 
+	@Test
+	void testIPASonorancy() {
+		log.info("Testing proper sonorancy...");
+		PhonoSystem IPA = PhonoSystem.IPA;
+		SonorancyTree st = IPA.getSonorancyTree();
+		ArrayList<Phoneme> phonemes = IPA.getAllPhonemes();
+		
+		Phoneme[] testSet = new Phoneme[11];	
+		
+		// get /g/ and /k/
+		for (Phoneme p : phonemes) {
+			switch (p.getSound()) {
+				case "k":
+					testSet[0] = p;
+					break;
+				case "g":
+					testSet[1] = p;
+					break;
+				case "x":
+					testSet[2] = p;
+					break;
+				case "ɣ":
+					testSet[3] = p;
+					break;
+				case "n":
+					testSet[4] = p;
+					break;
+				case "l":
+					testSet[5] = p;
+					break;
+				case "ɾ":
+					testSet[6] = p;
+					break;
+				case "j":
+					testSet[7] = p;
+					break;
+				case "i":
+					testSet[8] = p;
+					break;
+				case "o":
+					testSet[9] = p;
+					break;
+				case "ɑ":
+					testSet[10] = p;
+					break;
+			}
+		}
+		
+		int[] rankings = new int[testSet.length];
+		for (int i = 0; i < testSet.length; i++) {
+			rankings[i] = st.getPhonemeValue(testSet[i]);
+			log.debug("/" + testSet[i].getSound() + "/ == " + rankings[i] +
+					" (" + Integer.toBinaryString(rankings[i]) + ")");
+			if (i != 0) {
+				assertTrue(rankings[i] > rankings[i - 1]);
+			}
+		}
+		log.info("Sonorancy successfully verified!");
+	}
+	
+	@Test
+	void testDiacriticEquivalency() {
+		log.info("Testing diacritic equivalency between known-good file and IPA backup system");
+		try {
+			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
+			Language l = Language.parse(f);
+			
+			PhonoSystem lSys = l.getPhono().getPhonoSystem();
+			PhonoSystem IPA = PhonoSystem.IPA;
+			
+			for (String key : IPA.getDiacriticKeys()) {
+				assertEquals(lSys.getDiacritic(key), IPA.getDiacritic(key));
+			}
+			
+			assertEquals(l.getPhono().getPhonoSystem(), PhonoSystem.IPA);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			log.err("Could not load needed resources!");
+			fail();
+		}
+		log.info("Diacritic equivalency successfully verified!");
+	}
+	
 }

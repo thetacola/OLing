@@ -3,8 +3,11 @@ package net.oijon.oling.datatypes.language;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Scanner;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
@@ -14,10 +17,16 @@ import net.oijon.oling.info.Info;
 import net.oijon.oling.datatypes.lexicon.Lexicon;
 import net.oijon.oling.datatypes.orthography.Orthography;
 import net.oijon.oling.datatypes.phonology.Phonology;
+import net.oijon.oling.datatypes.phonology.table.PhonoSystem;
+
+import org.codehaus.plexus.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,7 +37,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-//last edit: 12/20/25 -N3
+//last edit: 5/4/2026 -N3
 
 /**
  * Bundles all parts of a language together into one object
@@ -73,6 +82,34 @@ public class Language implements XMLDatatype {
         }
 		return files;
 	}
+	
+	public static Language parse(File f) throws ParserConfigurationException, IOException, SAXException, InvalidXMLException {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+		
+        Scanner reader = new Scanner(f, StandardCharsets.UTF_8);
+        boolean firstLine = true;
+        String data = "";
+        while (reader.hasNextLine()) {
+            if (firstLine) {
+                data = reader.nextLine();
+                String[] splitData = data.split("<\\?xml");
+                if (splitData.length > 1) {
+                	data = "<?xml" + splitData[1];
+                } else {
+                	data = splitData[0];
+                }
+                firstLine = false;
+            } else {
+                data += reader.nextLine().strip();
+            }
+        }
+        reader.close();
+        Document doc = builder.parse(new InputSource(new StringReader(data)));
+        Element element = doc.getDocumentElement();
+        return new Language(element);
+        
+	}
 		
 	/**
 	 * Creates a Language object
@@ -80,6 +117,7 @@ public class Language implements XMLDatatype {
 	 */
 	public Language(String name) {
 		this.properties.setProperty(LanguageProperty.NAME, name);
+		//checkPhonoSys();
 	}
 
     public Language(Element e) throws InvalidXMLException {
@@ -119,6 +157,7 @@ public class Language implements XMLDatatype {
 	 */
 	public void setPhono(Phonology phono) {
 		this.phono = phono;
+		checkPhonoSys();
 	}
 	
 	/**
@@ -161,7 +200,7 @@ public class Language implements XMLDatatype {
 		properties.setProperty(LanguageProperty.VERSION_EDITED, Info.getVersion());
 
 		Document doc = this.toXML().getOwnerDocument();
-		log.debug(doc.toString());
+		//log.debug(doc.toString());
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = transformerFactory.newTransformer();
@@ -172,10 +211,20 @@ public class Language implements XMLDatatype {
         transformer.transform(source, result);
 	}
 	
+	@Override
+	public String toString() {
+		String returnString = properties.toString() + "\n" + phono.toString() +
+				"\n" + lexicon.toString() + "\n" + ortho.toString();
+		return returnString;
+	}
+	
 	/**
 	 * Converts a language into a string
+	 * @deprecated Since v3.1.0, as it is only for the legacy parser.
+	 * @return The string used to store the language in the legacy format
 	 */
-	public String toString() {
+	@Deprecated
+	public String toLegacyString() {
 		String returnString = "===Meta Start===\n";
 		returnString += "utilsVersion:" + properties.getProperty(LanguageProperty.VERSION_EDITED) + "\n" +
 				"name:" + properties.getProperty(LanguageProperty.NAME) + "\n" +
@@ -250,6 +299,7 @@ public class Language implements XMLDatatype {
                             break;
                         case "phonology":
                             phono = new Phonology(element);
+                            checkPhonoSys();
                             break;
                         case "orthography":
                             ortho = new Orthography(element);
@@ -265,5 +315,21 @@ public class Language implements XMLDatatype {
         } else {
             throw new InvalidXMLException("Node name not expected name! Expected: language; Actual: " + e.getTagName());
         }
+    }
+    
+    private void checkPhonoSys() {
+    	try {
+	    	if (this.phono.getPhonoSystem().getName().equals("IPA")) {
+	    		PhonoSystem ps = this.phono.getPhonoSystem();
+	    		PhonoSystem ipa = PhonoSystem.IPA;
+	    		if (!ps.equals(ipa)) {
+	    			log.warn("Despite being called IPA, this phono system does not match actual IPA!");
+	    			log.warn("Changing to IPA, this is most often caused by an update...");
+	    			this.phono.setPhonoSystem(ipa);
+	    		}
+	    	}
+    	} catch (NullPointerException e) {
+    		// if null, then there's nothing needed to do
+    	}
     }
 }

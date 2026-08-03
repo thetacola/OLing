@@ -1,0 +1,36 @@
+<?xml version="1.0">
+<xs:schema xmlns:xs="https://www.w3.org/2001/XMLSchema">
+	
+	<xs:element name="language">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="meta">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="version" type="string"/>
+							<xs:element name="name" type="string"/>
+							<xs:element name="id" type="string"/>
+							<xs:element name="autonym" type="string"/>
+							<xs:element name="timeCreated" type="long"/>
+							<xs:element name="lastEdited" type="long"/>
+							<xs:element name="readonly" type="boolean"/>
+							<xs:element name="partent" type="string"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="phonology">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="sounds">
+								<xs:complexType>
+									<xs:element name="sound" type="string" maxOccurs="unbounded"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+</xs:schema>

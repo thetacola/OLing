@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.oijon</groupId>
 	<artifactId>oling</artifactId>
-	<version>3.0.0</version>
+	<version>3.1.0</version>
 	<name>OLing</name>
 	<description>A library to help model languages.</description>
 	<url>https://oijon.net/oling</url>
@@ -15,6 +15,8 @@
 	<properties>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -143,6 +145,7 @@
 							<goal>sign</goal>
 						</goals>
 						<configuration>
+							<keyname>F55C138ABA14AF7585D47F7862AABFE6ED886F7D</keyname>
 							<gpgArguments>
 								<arg>--pinentry-mode</arg>
 								<arg>loopback</arg>

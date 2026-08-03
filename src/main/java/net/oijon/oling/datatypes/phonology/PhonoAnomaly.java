@@ -125,4 +125,9 @@ public class PhonoAnomaly implements XMLDatatype {
 			throw new InvalidXMLException("Node name not expected name! Expected: anomaly; Actual: " + e.getTagName());
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return "[" + fromStr + "→" + toStr + "]";
+	}
 }

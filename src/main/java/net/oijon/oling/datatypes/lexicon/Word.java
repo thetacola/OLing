@@ -77,6 +77,7 @@ public class Word implements XMLDatatype {
 	 * @throws Exception Thrown when unable to get expected children
      * @deprecated since 3.0.0, as OLing now uses XML
 	 */
+	@Deprecated
 	public static Word parse(Multitag wordTag) throws Exception {
 		Tag valueTag = wordTag.getDirectChild("wordname");
 		Tag meaningTag = wordTag.getDirectChild("meaning");

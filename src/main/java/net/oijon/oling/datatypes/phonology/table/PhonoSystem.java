@@ -509,7 +509,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 					    NodeList diacritics = n.getChildNodes();
 					    for (int j = 0; j < diacritics.getLength(); j++) {
 					    	Node dn = diacritics.item(j);
-					    	if (n.getNodeType() == Node.ELEMENT_NODE) {
+					    	if (dn.getNodeType() == Node.ELEMENT_NODE) {
 								Diacritic d = new Diacritic((Element) dn);
 								this.diacritics.put(d.getCharacter(), d);
 							}

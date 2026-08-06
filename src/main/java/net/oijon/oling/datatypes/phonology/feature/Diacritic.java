@@ -1,6 +1,7 @@
 package net.oijon.oling.datatypes.phonology.feature;
 
 import java.util.HashMap;
+import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,7 +15,7 @@ import net.oijon.oling.datatypes.InvalidXMLException;
 
 public class Diacritic extends FeaturalXMLDatatype {
 
-	private String character;
+	private String character = "";
 	
 	public Diacritic(String character) {
 		initFeatures();
@@ -35,6 +36,11 @@ public class Diacritic extends FeaturalXMLDatatype {
 	}
 
 	@Override
+	public HashMap<String, Feature> getFeatures() {
+    	return features;
+    }
+	
+	@Override
 	public Element toXML() throws ParserConfigurationException {
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		Document doc = builder.newDocument();
@@ -50,7 +56,31 @@ public class Diacritic extends FeaturalXMLDatatype {
 		
 		return root;
 	}
+	
+	public void fromXML(Element e) throws InvalidXMLException {
+		initFeatures();
+		if (e.getTagName().equals("diacritic")) {
+			for (int i = 0; i < e.getChildNodes().getLength(); i++) {
+				Node child = e.getChildNodes().item(i);
+				if (child.getNodeType() == Node.ELEMENT_NODE) {
+					Element childE = (Element) child;
+					switch (childE.getTagName()) {
+						case "char":
+							character = childE.getTextContent();
+							break;
+						case "feature":
+							Feature f = new Feature(childE, level);
+	            			this.addFeature(f);
+	            			break;
+					}
+				}
+			}
+		} else {
+			throw new InvalidXMLException("Node name not expected name! Expected: diacritic; Actual: " + e.getTagName()); 
+		}
+	}
 
+	/*
 	@Override
 	public void fromXML(Element e) throws InvalidXMLException {
 		initFeatures();
@@ -78,6 +108,7 @@ public class Diacritic extends FeaturalXMLDatatype {
 			throw new InvalidXMLException("Node name not expected name! Expected: diacritic; Actual: " + e.getTagName());
 		}
 	}
+	*/
 
 	@Override
 	protected void initFeatures() {
@@ -102,6 +133,10 @@ public class Diacritic extends FeaturalXMLDatatype {
 			}
 		}
 		return false;
+	}
+	
+	public Set<String> getFeatureKeys() {
+		return features.keySet();
 	}
 	
 	@Override

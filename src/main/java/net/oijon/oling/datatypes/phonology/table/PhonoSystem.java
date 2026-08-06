@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.function.BiConsumer;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.language.Language;
@@ -54,7 +55,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	private ArrayList<PhonoAnomaly> anomalies = new ArrayList<PhonoAnomaly>();
 	// FIXME: make a constructor without a feature, so that it can be filled by the parser
 	private SonorancyTree sonorancyTree = new SonorancyTree();
-
+	private int numDiacritics = -1;
 	static Log log = Info.log;
 	
 	/**
@@ -133,6 +134,11 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 		initFeatures();
 		this.name = name;
 		this.diacritics = new HashMap<String, Diacritic>(diacritics);
+		for (Diacritic d : this.diacritics.values()) {
+			for (String s : d.getFeatureKeys()) {
+				this.features.putIfAbsent(s, new Feature(s, false, FeatureLevel.SYSTEM));
+			}
+		}
 	}
 	
 	/**
@@ -175,6 +181,7 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 		this.name = ps.name;
 		this.lowerObj = new ArrayList<FeaturalXMLDatatype>(ps.lowerObj);
 		this.diacritics = new HashMap<String, Diacritic>(ps.diacritics);
+		
 	}
 	
 	/**
@@ -272,7 +279,16 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	 * @param d The diacritic to set
 	 */
 	public void setDiacritic(Diacritic d) {
+		Diacritic oldDiacritic = diacritics.get(d.getCharacter());
+		if (oldDiacritic != null) {
+			for (String s : oldDiacritic.getFeatureKeys()) {
+				this.features.remove(s);
+			}
+		}
 		diacritics.put(d.getCharacter(), d);
+		for (String s : d.getFeatureKeys()) {
+			this.features.putIfAbsent(s, new Feature(s, false, FeatureLevel.SYSTEM));
+		}
 	}
 	
 	/**
@@ -281,6 +297,9 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	 */
 	public void addDiacritic(Diacritic d) {
 		diacritics.putIfAbsent(d.getCharacter(), d);
+		for (String s : d.getFeatureKeys()) {
+			this.features.putIfAbsent(s, new Feature(s, false, FeatureLevel.SYSTEM));
+		}
 	}
 	
 	/**
@@ -512,6 +531,9 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 					    	if (dn.getNodeType() == Node.ELEMENT_NODE) {
 								Diacritic d = new Diacritic((Element) dn);
 								this.diacritics.put(d.getCharacter(), d);
+								for (String s : d.getFeatureKeys()) {
+									this.features.putIfAbsent(s, new Feature(s, false, FeatureLevel.SYSTEM));
+								}
 							}
 					    	
 					    }
@@ -568,10 +590,18 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 		return phonemes;
 	}
 	
+	@Override
+	protected void applyFeatures() {
+		super.applyFeatures();
+	}
+	
 	public void addDiacriticsFromList(ArrayList<String> diacriticList) {
 		for (String s : diacriticList) {
 			Diacritic d = new Diacritic(s);
 			diacritics.putIfAbsent(s, d);
+			for (Feature f : d.getFeatures().values()) {
+				this.features.putIfAbsent(f.getName(), new Feature(f.getName(), false, FeatureLevel.SYSTEM));
+			}
 		}
 	}
 	

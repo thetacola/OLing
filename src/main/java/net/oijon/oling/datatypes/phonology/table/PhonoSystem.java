@@ -280,8 +280,10 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	 */
 	public void setDiacritic(Diacritic d) {
 		Diacritic oldDiacritic = diacritics.get(d.getCharacter());
-		for (String s : oldDiacritic.getFeatureKeys()) {
-			this.features.remove(s);
+		if (oldDiacritic != null) {
+			for (String s : oldDiacritic.getFeatureKeys()) {
+				this.features.remove(s);
+			}
 		}
 		diacritics.put(d.getCharacter(), d);
 		for (String s : d.getFeatureKeys()) {

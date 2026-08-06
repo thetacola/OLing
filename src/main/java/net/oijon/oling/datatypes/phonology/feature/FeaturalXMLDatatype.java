@@ -16,20 +16,21 @@ public abstract class FeaturalXMLDatatype implements XMLDatatype {
 	
 	public void addFeature(Feature f) {
     	features.putIfAbsent(f.getName(), f);
-    	applyFeatures();
+    	putFeatures();
     }
     
     public void removeFeature(String name) {
     	features.remove(name);
-    	applyFeatures();
+    	putFeatures();
     }
     
     public void setFeature(String name, boolean value, FeatureLevel level) {
     	features.put(name, new Feature(name, value, level));
-    	applyFeatures();
+    	putFeatures();
     }
     
     public HashMap<String, Feature> getFeatures() {
+    	putFeatures();
     	applyFeatures();
     	return features;
     }
@@ -59,8 +60,7 @@ public abstract class FeaturalXMLDatatype implements XMLDatatype {
     	return list;
     }
     
-    protected void applyFeatures() {    	
-    	// get features from all other lower datatypes, only apply those that are true to all
+    protected void putFeatures() {
     	for (FeaturalXMLDatatype fxd : lowerObj) {
     		// set true features to lower datatype
     		features.forEach(new BiConsumer<String, Feature>() {
@@ -73,6 +73,12 @@ public abstract class FeaturalXMLDatatype implements XMLDatatype {
    					}
     			}
     		});
+    	}
+    }
+    
+    protected void applyFeatures() {
+    	// propagates true features down, then get features from all other lower datatypes as false back up
+    	for (FeaturalXMLDatatype fxd : lowerObj) {
     		// get missing features from lower datatype
 			fxd.getFeatures().forEach(new BiConsumer<String, Feature>() {
 				@Override

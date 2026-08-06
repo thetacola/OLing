@@ -92,11 +92,11 @@
 		<diacritic>̞</diacritic>
 		<diacritic>
 			<char>̘</char>
-			<feature>ATR</feature>
+			<feature>atr</feature>
 		</diacritic>
 		<diacritic>
 			<char>̙</char>
-			<feature>RTR</feature>
+			<feature>rtr</feature>
 		</diacritic>
 		<diacritic>
 			<char>̪</char>

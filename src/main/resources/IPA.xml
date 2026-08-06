@@ -7,13 +7,34 @@
 			<char>̬</char>
 			<feature>voice</feature>
 		</diacritic>
-		<diacritic>ʰ</diacritic>
-		<diacritic>̹</diacritic>
-		<diacritic>̜</diacritic>
-		<diacritic>̟</diacritic>
-		<diacritic>̠</diacritic>
-		<diacritic>̈</diacritic>
-		<diacritic>̽</diacritic>
+		<diacritic>
+			<char>ʰ</char>
+			<feature>aspiration</feature>
+		</diacritic>
+		<diacritic>
+			<char>̹</char>
+			<feature>morerounded</feature>
+		</diacritic>
+		<diacritic>
+			<char>̜</char>
+			<feature>lessrounded</feature>
+		</diacritic>
+		<diacritic>
+			<char>̟</char>
+			<feature>advanced</feature>
+		</diacritic>
+		<diacritic>
+			<char>̠</char>
+			<feature>retracted</feature>
+		</diacritic>
+		<diacritic>
+			<char>̈</char>
+			<feature>centralized</feature>
+		</diacritic>
+		<diacritic>
+			<char>̽</char>
+			<feature>midcentralized</feature>
+		</diacritic>
 		<diacritic>
 			<char>̩</char>
 			<feature>syllabic</feature>
@@ -21,46 +42,147 @@
 		<diacritic>
 			<char>̯</char>
 		</diacritic>
-		<diacritic>˞</diacritic>
-		<diacritic>̤</diacritic>
-		<diacritic>̰</diacritic>
-		<diacritic>̼</diacritic>
-		<diacritic>ʷ</diacritic>
-		<diacritic>ʲ</diacritic>
-		<diacritic>ˠ</diacritic>
-		<diacritic>ˤ</diacritic>
-		<diacritic>̴</diacritic>
+		<diacritic>
+			<char>˞</char>
+			<feature>rhoticity</feature>
+		</diacritic>
+		<diacritic>
+			<char>̤</char>
+			<feature>breathy</feature>
+		</diacritic>
+		<diacritic>
+			<char>̰</char>
+			<feature>creaky</feature>
+		</diacritic>
+		<diacritic>
+			<char>̼</char>
+			<feature>linguolabial</feature>
+		</diacritic>
+		<diacritic>
+			<char>ʷ</char>
+			<feature type="place">LABIAL</feature>
+			<feature>round</feature>
+		</diacritic>
+		<diacritic>
+			<char>ʲ</char>
+			<feature type="place">DORSAL</feature>
+			<feature>high</feature>
+		</diacritic>
+		<diacritic>
+			<char>ˠ</char>
+			<feature type="place">DORSAL</feature>
+			<feature>high</feature>
+			<feature>back</feature>
+		</diacritic>
+		<diacritic>
+			<char>ˤ</char>
+			<feature type="place">RADICAL</feature>
+			<feature>rtr</feature>
+		</diacritic>
+		<diacritic>
+			<!-- This is labeled as "Velarized or Pharyngealized",
+			though those are two very different things...
+			Marking this as just "back", as this is most often used with /l/ and should
+			be close enough to cover both
+			-->
+			<char>̴</char>
+			<feature>back</feature>
+		</diacritic>
 		<diacritic>̝</diacritic>
 		<diacritic>̞</diacritic>
-		<diacritic>̘</diacritic>
-		<diacritic>̙</diacritic>
-		<diacritic>̪</diacritic>
-		<diacritic>̺</diacritic>
-		<diacritic>̻</diacritic>
-		<diacritic>̃</diacritic>
-		<diacritic>ⁿ</diacritic>
-		<diacritic>ˡ</diacritic>
-		<diacritic>̚</diacritic>
-		<diacritic>̋</diacritic>
-		<diacritic>́</diacritic>
-		<diacritic>̄</diacritic>
-		<diacritic>̀</diacritic>
-		<diacritic>̏</diacritic>
-		<diacritic>̌</diacritic>
-		<diacritic>̂</diacritic>
-		<diacritic>᷄</diacritic>
-		<diacritic>᷅</diacritic>
-		<diacritic>᷈</diacritic>
-		<diacritic>ˈ</diacritic>
-		<diacritic>ˌ</diacritic>
-		<diacritic>ː</diacritic>
-		<diacritic>ˑ</diacritic>
-		<diacritic>̆</diacritic>
-		<diacritic>|</diacritic>
-		<diacritic>‖</diacritic>
-		<diacritic>.</diacritic>
-		<diacritic>‿</diacritic>
-		<diacritic>͡</diacritic>
+		<diacritic>
+			<char>̘</char>
+			<feature>ATR</feature>
+		</diacritic>
+		<diacritic>
+			<char>̙</char>
+			<feature>RTR</feature>
+		</diacritic>
+		<diacritic>
+			<char>̪</char>
+			<feature type="place">CORONAL</feature>
+			<feature>anterior</feature>
+			<feature>distributed</feature>
+		</diacritic>
+		<diacritic>
+			<char>̺</char>
+			<feature>apical</feature>
+		</diacritic>
+		<diacritic>
+			<char>̻</char>
+			<feature>laminal</feature>
+		</diacritic>
+		<diacritic>
+			<char>̃</char>
+			<feature>nasal</feature>
+			<feature>sonorant</feature>
+		</diacritic>
+		<diacritic>
+			<char>ⁿ</char>
+			<feature>nasalrelease</feature>
+			<feature>nasal</feature>
+		</diacritic>
+		<diacritic>
+			<feature>lateralrelease</feature>
+			<feature>lateral</feature>
+			<char>ˡ</char>
+		</diacritic>
+		<diacritic>
+			<char>̚</char>
+			<feature>norelease</feature>
+		</diacritic>
+		<diacritic>
+			<char>̋</char>
+			<feature>tone_extrahigh</feature>
+		</diacritic>
+		<diacritic>
+			<char>́</char>
+			<feature>tone_high</feature>
+		</diacritic>
+		<diacritic>
+			<char>̄</char>
+			<feature>tone_mid</feature>
+		</diacritic>
+		<diacritic>
+			<char>̀</char>
+			<feature>tone_low</feature>
+		</diacritic>
+		<diacritic>
+			<char>̏</char>
+			<feature>tone_extralow</feature>
+		</diacritic>
+		<diacritic>
+			<char>̌</char>
+			<feature>tone_rising</feature>
+		</diacritic>
+		<diacritic>
+			<char>̂</char>
+			<feature>tone_falling</feature>
+		</diacritic>
+		<diacritic>
+			<char>᷄</char>
+			<feature>tone_highrising</feature>
+		</diacritic>
+		<diacritic>
+			<char>᷅</char>
+			<feature>tone_lowrising</feature>
+		</diacritic>
+		<diacritic>
+			<diacritic>᷈</diacritic>
+			<feature>tone_risingfalling</feature>
+		</diacritic>
+		<diacritic>
+			<char>ː</char>
+			<feature>long</feature>
+		</diacritic>
+		<diacritic>
+			<char>ˑ</char>
+			<feature>halflong</feature>
+		</diacritic>
+		<diacritic>
+			<char>̆</char>
+			<feature>extrashort</feature>
+		</diacritic>
 	</diacritics>
 	<sonorancy>
 		<!-- left == more sonorous, right == less -->
@@ -191,6 +313,7 @@
 			<column index="5">
 				<name>Retroflex</name>
 				<feature type="place">CORONAL</feature>
+				<feature>apical</feature>
 			</column>
 			<column index="6">
 				<name>Palatal</name>

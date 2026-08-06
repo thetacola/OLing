@@ -63,7 +63,7 @@ public class LanguageProperties implements XMLDatatype {
 		
 		Multitag meta = docTag.getMultitag("Meta");
 		lp.setProperty(LanguageProperty.NAME, meta.getDirectChild("name").value());
-		lp.checkID(meta);
+		lp.checkLegacyID(meta);
 		lp.setProperty(LanguageProperty.AUTONYM, meta.getDirectChild("autonym").value());
 		lp.setReadOnly(Boolean.parseBoolean(meta.getDirectChild("readonly").value()));
 		lp.setCreated(new Date(Long.parseLong(meta.getDirectChild("timeCreated").value())));
@@ -76,7 +76,7 @@ public class LanguageProperties implements XMLDatatype {
 	/**
 	 * Generates an ID for the language
 	 */
-	private void generateID() {
+	public void generateID() {
 		int rand = (int) (Math.random() * 100000);
 		// "its deprecated" i dont care
 		// why does DateTimeFormatter not accept date objects :(
@@ -91,13 +91,21 @@ public class LanguageProperties implements XMLDatatype {
 				+ rand);
 	}
 	
+	public boolean checkID() {
+		String id = this.getProperty(LanguageProperty.ID);
+		if (id != null && !id.isBlank() && !id.equals("null")) {
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * Checks if the ID tag is using an old, unsupported version. Useful for backwards-compatibility.
 	 * @deprecated as of OLing v3.0.0, as this uses the old file format.
 	 * @param meta
 	 */
 	@Deprecated
-	private void checkID(Multitag meta) {
+	private void checkLegacyID(Multitag meta) {
 		Tag id = new Tag("id");
 		try {
 			id = meta.getDirectChild("id");

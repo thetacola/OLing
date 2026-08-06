@@ -1,6 +1,7 @@
 package oling;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import net.oijon.oling.datatypes.language.LanguageProperties;
+import net.oijon.oling.datatypes.language.LanguageProperty;
 import net.oijon.oling.datatypes.phonology.*;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.feature.sonorancy.SonorancyTree;
@@ -353,4 +355,27 @@ public class UnitTests {
 		log.info("Diacritic equivalency successfully verified!");
 	}
 	
+	@Test
+	void testBrokenID() {
+		log.info("Testing broken ID repair");
+		try {
+			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
+			Language l = Language.parse(f);
+			
+			l.getProperties().setProperty(LanguageProperty.ID, "null");
+			
+			File temp = File.createTempFile("testlang", "xml");
+            l.toFile(temp);
+			
+            Language newLang = Language.parse(temp);
+            
+            assertNotEquals(newLang.getProperties().getProperty(LanguageProperty.ID), "null");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			log.err("Could not load needed resources!");
+			fail();
+		}
+		log.info("Broken ID repair successfully verified!");
+	}
 }

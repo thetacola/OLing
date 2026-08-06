@@ -295,6 +295,11 @@ public class Language implements XMLDatatype {
                     switch (nl.item(i).getNodeName()) {
                         case "meta":
                             properties = new LanguageProperties(element);
+                            if (!properties.checkID()) {
+                            	log.warn("This language appears to have a blank or null ID!");
+                            	log.warn("Generating new ID, this may break relations with other languages!");
+                            	properties.generateID();
+                            }
                             break;
                         case "phonology":
                             phono = new Phonology(element);

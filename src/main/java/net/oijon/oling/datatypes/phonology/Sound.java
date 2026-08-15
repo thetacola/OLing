@@ -8,6 +8,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Element;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.oling.datatypes.language.Language;
 import net.oijon.oling.datatypes.phonology.feature.Diacritic;
 import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
@@ -18,12 +19,13 @@ import net.oijon.oling.datatypes.phonology.table.PhonoSystem;
 import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
 
-public class Sound extends FeaturalXMLDatatype {
+public class Sound implements XMLDatatype {
 
 	static Log log = Info.log;
 	private String character; // what a non-intuitive name we have here
 	private Phoneme phoneme;
 	private HashMap<String, Diacritic> diacritics = new HashMap<>();
+	private HashMap<String, Feature> features = new HashMap<>();
 	private Phonology linkedPhono;
 	
 	/**
@@ -98,7 +100,6 @@ public class Sound extends FeaturalXMLDatatype {
 		
 	}
 
-	@Override
 	protected void initFeatures() {
 		PhonoSystem ps = linkedPhono.getPhonoSystem();
 		ArrayList<String> diacritics = ps.getDiacriticKeys();

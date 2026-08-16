@@ -17,7 +17,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-//last edit: 6/20/24 -N3
+//last edit: 8/15/26 -N3
 
 /**
  * Stores a word, including various properties about the word.

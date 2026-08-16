@@ -3,8 +3,11 @@ package net.oijon.oling.datatypes.phonology;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
@@ -90,8 +93,15 @@ public class Sound implements XMLDatatype {
 
 	@Override
 	public Element toXML() throws ParserConfigurationException {
-		// TODO Auto-generated method stub
-		return null;
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document doc = builder.newDocument();
+        Element root = doc.createElement("sound");
+        
+        // despite this class having several different variables, these are all controlled by the
+        // string representation of the sound.
+        root.setTextContent(character);
+        
+		return root;
 	}
 
 	@Override

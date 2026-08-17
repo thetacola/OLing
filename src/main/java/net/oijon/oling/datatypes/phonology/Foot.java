@@ -1,8 +1,13 @@
 package net.oijon.oling.datatypes.phonology;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
@@ -11,14 +16,22 @@ public class Foot implements XMLDatatype {
 	
 	private Syllable syll1;
 	private Syllable syll2;
+	private Phonology linkedPhono;
 	
-	public Foot(Syllable syll1) {
+	public Foot(Syllable syll1, Phonology p) {
+		linkedPhono = p;
 		this.syll1 = syll1;
 	}
 	
-	public Foot(Syllable syll1, Syllable syll2) {
+	public Foot(Syllable syll1, Syllable syll2, Phonology p) {
+		linkedPhono = p;
 		this.syll1 = syll1;
 		this.syll2 = syll2;
+	}
+	
+	public Foot(Element e, Phonology p) throws InvalidXMLException {
+		linkedPhono = p;
+		fromXML(e);
 	}
 	
 	public void trochee() {
@@ -52,13 +65,56 @@ public class Foot implements XMLDatatype {
 	
 	@Override
 	public Element toXML() throws ParserConfigurationException {
-		// TODO Auto-generated method stub
-		return null;
+		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document doc = builder.newDocument();
+		Element root = doc.createElement("foot");
+		
+		Element left = doc.createElement("left");
+		left.appendChild(doc.importNode(syll1.toXML(), true));
+		root.appendChild(left);
+		
+		Element right = doc.createElement("right");
+		if (syll2 != null) {
+			right.appendChild(doc.importNode(syll2.toXML(), true));
+		}
+		root.appendChild(right);
+		
+		return root;
 	}
 
 	@Override
 	public void fromXML(Element e) throws InvalidXMLException {
-		// TODO Auto-generated method stub
+		if (e.getTagName().equals("syllable")) {
+			NodeList nl = e.getChildNodes();
+			for (int i = 0; i < nl.getLength(); i++) {
+				Node n = nl.item(i);
+				if (n.getNodeType() == Node.ELEMENT_NODE) {
+					Element childE = (Element) n;
+					switch (childE.getTagName()) {
+						case "left":
+							NodeList leftNL = childE.getChildNodes();
+							for (int j = 0; j < leftNL.getLength(); j++) {
+								if (leftNL.item(j).getNodeType() == Node.ELEMENT_NODE) {
+									Element syllE = (Element) leftNL.item(j);
+									syll1 = new Syllable(syllE, linkedPhono);
+								}
+							}
+							break;
+						case "right":
+							NodeList rightNL = childE.getChildNodes();
+							for (int j = 0; j < rightNL.getLength(); j++) {
+								if (rightNL.item(j).getNodeType() == Node.ELEMENT_NODE) {
+									Element syllE = (Element) rightNL.item(j);
+									syll2 = new Syllable(syllE, linkedPhono);
+								}
+							}
+							break;
+					}
+				}
+			}
+		} else {
+			throw new InvalidXMLException("Node name not expected name! Expected: foot; Actual: " + e.getTagName());
+		}
 	}
 	
 	@Override

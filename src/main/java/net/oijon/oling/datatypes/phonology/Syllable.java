@@ -16,9 +16,9 @@ import net.oijon.oling.datatypes.XMLDatatype;
 
 public class Syllable implements XMLDatatype {
 
-	private ArrayList<Sound> onset;
-	private ArrayList<Sound> nucleus;
-	private ArrayList<Sound> coda;
+	private ArrayList<Sound> onset = new ArrayList<>();
+	private ArrayList<Sound> nucleus = new ArrayList<>();
+	private ArrayList<Sound> coda = new ArrayList<>();
 	private Phonology linkedPhono;
 
 	// TODO: add various levels of stress
@@ -26,6 +26,18 @@ public class Syllable implements XMLDatatype {
 	private int nucleusWeight = 0;
 	private int codaWeight = 0;
 
+	public Syllable(ArrayList<Sound> onset, ArrayList<Sound> nucleus, ArrayList<Sound> coda, Phonology p) {
+		this.onset.addAll(onset);
+		this.nucleus.addAll(nucleus);
+		this.coda.addAll(coda);
+		linkedPhono = p;
+	}
+	
+	public Syllable(Element e, Phonology p) throws InvalidXMLException {
+		linkedPhono = p;
+		fromXML(e);
+	}
+	
 	public int getMoraicWeight() {
 		return nucleusWeight + codaWeight;
 	}
@@ -141,7 +153,7 @@ public class Syllable implements XMLDatatype {
 				}
 			}
 		} else {
-			throw new InvalidXMLException("Node name not expected name! Expected: sound; Actual: " + e.getTagName());
+			throw new InvalidXMLException("Node name not expected name! Expected: syllable; Actual: " + e.getTagName());
 		}
 	}
 }

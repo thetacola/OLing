@@ -135,6 +135,19 @@ public class Diacritic extends FeaturalXMLDatatype {
 		return false;
 	}
 	
+	@Override
+	public int hashCode() {
+		int hash = character.hashCode();
+		for (String key : features.keySet()) {
+			if (features.get(key).getValue()) {
+				hash += features.get(key).hashCode();
+			} else {
+				hash -= features.get(key).hashCode();
+			}
+		}
+		return hash;
+	}
+	
 	public Set<String> getFeatureKeys() {
 		return features.keySet();
 	}

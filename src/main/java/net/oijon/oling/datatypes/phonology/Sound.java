@@ -9,12 +9,10 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.oling.datatypes.language.Language;
 import net.oijon.oling.datatypes.phonology.feature.Diacritic;
-import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
 import net.oijon.oling.datatypes.phonology.table.Phoneme;
@@ -52,6 +50,18 @@ public class Sound implements XMLDatatype {
 		}		
 	}
 	
+	/**
+	 * Creates a sound from an XML element.
+	 * @param e The element to parse
+	 * @param p The parsed phonology this sound is linked to
+	 * @throws InvalidXMLException Thrown when the element does not match the expected one
+	 */
+	public Sound(Element e, Phonology p) throws InvalidXMLException {
+		fromXML(e);
+		this.linkedPhono = p;
+		generateFeatures();
+	}
+	
 	public HashMap<String, Diacritic> getDiacritics() {
 		return diacritics;
 	}
@@ -71,24 +81,27 @@ public class Sound implements XMLDatatype {
 			String diaS = diacritics.get(i);
 			if (this.character.contains(diaS)) {
 				this.diacritics.put(diaS, ps.getDiacritic(diaS));
-				baseForm.replace(diaS, "");
+				baseForm = baseForm.replace(diaS, "");
 			}
 		}
 		
 		Phoneme baseP = ps.find(baseForm);
 		if (baseP != null) {
+			this.phoneme = baseP;
 			HashMap<String, Feature> baseFeatures = baseP.getFeatures();
 			this.features.putAll(baseFeatures);
+		} else {
+			log.err("Unable to find phoneme when linking to sound! Searched for /" + baseForm +
+					"/ for sound [" + this.character + "]!");
 		}
 		
 		for (String key : this.diacritics.keySet()) {
 			Diacritic d = this.diacritics.get(key);
 			for (String featKey : d.getFeatures().keySet()) {
 				Feature f = d.getFeatures().get(featKey);
-				this.features.put(key, new Feature(featKey, f.getValue(), FeatureLevel.DIACRITIC));
+				this.features.put(f.getName(), new Feature(f.getName(), f.getValue(), FeatureLevel.DIACRITIC));
 			}
 		}
-		
 	}
 
 	@Override
@@ -106,42 +119,13 @@ public class Sound implements XMLDatatype {
 
 	@Override
 	public void fromXML(Element e) throws InvalidXMLException {
-		// TODO Auto-generated method stub
-		
+		if (e.getTagName().equals("sound")) {
+           this.character = e.getTextContent();
+        } else {
+            throw new InvalidXMLException("Node name not expected name! Expected: sound; Actual: " + e.getTagName());
+        }
 	}
-
-	protected void initFeatures() {
-		PhonoSystem ps = linkedPhono.getPhonoSystem();
-		ArrayList<String> diacritics = ps.getDiacriticKeys();
-		
-		String baseForm = this.character;
-		for (int i = 0; i < diacritics.size(); i++) {
-			// TODO: check the direction the diacritic is in relation to the character! Some IPA diacritics
-			// are dependent on direction!
-			String diaS = diacritics.get(i);
-			if (this.character.contains(diaS)) {
-				this.diacritics.put(diaS, ps.getDiacritic(diaS));
-				baseForm.replace(diaS, "");
-			}
-		}
-		
-		Phoneme baseP = ps.find(baseForm);
-		if (baseP != null) {
-			HashMap<String, Feature> baseFeatures = baseP.getFeatures();
-			this.features.putAll(baseFeatures);
-		} else {
-			log.err("Unable to find phoneme when linking to sound! Searched for /" + baseForm +
-					"/ for sound [" + this.character + "]!");
-		}
-		
-		for (String key : this.diacritics.keySet()) {
-			Diacritic d = this.diacritics.get(key);
-			for (String featKey : d.getFeatures().keySet()) {
-				Feature f = d.getFeatures().get(featKey);
-				this.features.put(key, new Feature(featKey, f.getValue(), FeatureLevel.DIACRITIC));
-			}
-		}
-	}
+	
 	
 	@Override
 	public String toString() {

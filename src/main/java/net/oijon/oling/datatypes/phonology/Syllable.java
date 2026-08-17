@@ -15,6 +15,8 @@ public class Syllable implements XMLDatatype {
 	private ArrayList<Sound> nucleus;
 	private ArrayList<Sound> coda;
 	
+	// TODO: add various levels of stress
+	
 	private int nucleusWeight = 0;
 	private int codaWeight = 0;
 	

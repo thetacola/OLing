@@ -84,7 +84,7 @@ public class Foot implements XMLDatatype {
 
 	@Override
 	public void fromXML(Element e) throws InvalidXMLException {
-		if (e.getTagName().equals("syllable")) {
+		if (e.getTagName().equals("foot")) {
 			NodeList nl = e.getChildNodes();
 			for (int i = 0; i < nl.getLength(); i++) {
 				Node n = nl.item(i);

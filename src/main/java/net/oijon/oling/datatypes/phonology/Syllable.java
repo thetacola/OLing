@@ -52,133 +52,144 @@ public class Syllable implements XMLDatatype {
 		ArrayList<Sound> currentGrouping = new ArrayList<>();
 		boolean lastWasNucleus = false;
 		
-		// the current logic ensures that an empty arraylist will be added at the beginning if
-		// it starts with a nucleus (very helpful)
-		for (int i = 0; i < sounds.size(); i++) {
-			Sound sound = sounds.get(i);
-			Phoneme phoneme = sound.getPhoneme();
-			Feature nucleusF = phoneme.getFeatures().get("SYLLPART_NUCLEUS");
-			boolean isNucleus = (nucleusF == null) ? false : nucleusF.getValue();
+		// this bit makes sure an extra arraylist is added at the beginning if it starts with a nucleus
+		// helpful for alignment
+		if (sounds.size() > 0) {
+			Sound startSound = sounds.get(0);
+			Phoneme startPhoneme = startSound.getPhoneme();
+			Feature startNucleusF = startPhoneme.getFeatures().get("SYLLPART_NUCLEUS");
+			boolean isStartNucleus = (startNucleusF == null) ? false : startNucleusF.getValue();
 			
-			if (!(isNucleus ^ lastWasNucleus) && i < sounds.size() - 1) {
-				currentGrouping.add(sound);
-			} else {
-				currentGrouping.add(sound);
-				groupedSounds.add(new ArrayList<Sound>(currentGrouping));
-				currentGrouping.clear();
+			if (isStartNucleus) {
+				groupedSounds.add(new ArrayList<Sound>());
 			}
-			lastWasNucleus = isNucleus;
-		}
-		
-		ArrayList<Sound> currentOnset = new ArrayList<>();
-		ArrayList<Sound> currentNucleus = new ArrayList<>();
-		ArrayList<Sound> currentCoda = new ArrayList<>();
-		for (int i = 0; i < groupedSounds.size(); i++) {
-			ArrayList<Sound> group = groupedSounds.get(i);
-			if (i == 0) {
-				// must be all onset
-				for (int j = 0; j < group.size(); j++) {
-					Sound sound = group.get(j);
-					Feature onsetF = sound.getFeatures().get("SYLLPART_ONSET");
-					boolean isOnset = (onsetF == null) ? false : onsetF.getValue();
-					if (!isOnset) {
-						log.err("Found sound [" + sound + "] that must logically be in onset position "
-								+ "of syllable, but is not allowed per phonological system! "
-								+ "Ignoring sound in syllable creation...");
-					} else {
-						currentOnset.add(sound);
-					}
-				}
-			} else if (i % 2 == 0) {
-				// must be all nucleus
-				// previously verified by grouping logic
-				currentNucleus.addAll(group);
-			} else if ((i < groupedSounds.size() - 1)) {
-				int breakpoint = -1;
-				// can either be onset or coda
-				boolean hasBreakpoint = false;
-				for (int j = 0; j < group.size(); j++) {
-					Sound sound = group.get(j);
-					Feature codaF = sound.getFeatures().get("SYLLPART_CODA");
-					boolean isCoda = (codaF == null) ? false : codaF.getValue();
-					if (!hasBreakpoint && !isCoda) {
-						hasBreakpoint = true;
-						breakpoint = j;
-					}
-				}
+			
+			for (int i = 0; i < sounds.size(); i++) {
+				Sound sound = sounds.get(i);
+				Phoneme phoneme = sound.getPhoneme();
+				Feature nucleusF = phoneme.getFeatures().get("SYLLPART_NUCLEUS");
+				boolean isNucleus = (nucleusF == null) ? false : nucleusF.getValue();
 				
-				if (hasBreakpoint) {
-					for (int j = 0; j < breakpoint + 1; j++) {
-						Sound sound = group.get(j);
-						Feature codaF = sound.getFeatures().get("SYLLPART_CODA");
-						boolean isCoda = (codaF == null) ? false : codaF.getValue();
-						if (isCoda) {
-							currentCoda.add(sound);
-						} else {
-							log.err("Found sound [" + sound + "] that must logically be in coda position "
-									+ "of syllable, but is not allowed per phonological system! "
-									+ "Ignoring sound in syllable creation...");
-						}
-					}
-					for (int j = breakpoint + 1; j < group.size(); j++) {
+				if (!(isNucleus ^ lastWasNucleus) && i < sounds.size() - 1) {
+					currentGrouping.add(sound);
+				} else {
+					currentGrouping.add(sound);
+					groupedSounds.add(new ArrayList<Sound>(currentGrouping));
+					currentGrouping.clear();
+				}
+				lastWasNucleus = isNucleus;
+			}
+			
+			ArrayList<Sound> currentOnset = new ArrayList<>();
+			ArrayList<Sound> currentNucleus = new ArrayList<>();
+			ArrayList<Sound> currentCoda = new ArrayList<>();
+			for (int i = 0; i < groupedSounds.size(); i++) {
+				ArrayList<Sound> group = groupedSounds.get(i);
+				if (i == 0) {
+					// must be all onset
+					for (int j = 0; j < group.size(); j++) {
 						Sound sound = group.get(j);
 						Feature onsetF = sound.getFeatures().get("SYLLPART_ONSET");
 						boolean isOnset = (onsetF == null) ? false : onsetF.getValue();
-						if (isOnset) {
-							currentOnset.add(sound);
-						} else {
+						if (!isOnset) {
 							log.err("Found sound [" + sound + "] that must logically be in onset position "
 									+ "of syllable, but is not allowed per phonological system! "
 									+ "Ignoring sound in syllable creation...");
+						} else {
+							currentOnset.add(sound);
 						}
+					}
+				} else if (i % 2 == 1) {
+					// must be all nucleus
+					// previously verified by grouping logic
+					currentNucleus.addAll(group);
+				} else if ((i < groupedSounds.size() - 1)) {
+					int breakpoint = -1;
+					// can either be onset or coda
+					boolean hasBreakpoint = false;
+					for (int j = 0; j < group.size(); j++) {
+						Sound sound = group.get(j);
+						Feature codaF = sound.getFeatures().get("SYLLPART_CODA");
+						boolean isCoda = (codaF == null) ? false : codaF.getValue();
+						if (!hasBreakpoint && !isCoda) {
+							hasBreakpoint = true;
+							breakpoint = j;
+						}
+					}
+					
+					if (hasBreakpoint) {
+						for (int j = 0; j < breakpoint + 1; j++) {
+							Sound sound = group.get(j);
+							Feature codaF = sound.getFeatures().get("SYLLPART_CODA");
+							boolean isCoda = (codaF == null) ? false : codaF.getValue();
+							if (isCoda) {
+								currentCoda.add(sound);
+							} else {
+								log.err("Found sound [" + sound + "] that must logically be in coda position "
+										+ "of syllable, but is not allowed per phonological system! "
+										+ "Ignoring sound in syllable creation...");
+							}
+						}
+						for (int j = breakpoint + 1; j < group.size(); j++) {
+							Sound sound = group.get(j);
+							Feature onsetF = sound.getFeatures().get("SYLLPART_ONSET");
+							boolean isOnset = (onsetF == null) ? false : onsetF.getValue();
+							if (isOnset) {
+								currentOnset.add(sound);
+							} else {
+								log.err("Found sound [" + sound + "] that must logically be in onset position "
+										+ "of syllable, but is not allowed per phonological system! "
+										+ "Ignoring sound in syllable creation...");
+							}
+						}
+					} else {
+						// what we're looking for here is where sonorancy drops the most
+						int lowestSonorancy = Integer.MAX_VALUE;
+						int lowestIndex = -1;
+						for (int j = 0; j < group.size(); j++) {
+							int sonorancy = group.get(j).getSonorancy();
+							if (sonorancy < lowestSonorancy) {
+								lowestSonorancy = sonorancy;
+								lowestIndex = j;
+							}
+						}
+						breakpoint = lowestIndex;
+					}
+					
+					for (int j = 0; j < breakpoint + 1; j++) {
+						currentCoda.add(group.get(j));
+					}
+					sylls.add(new Syllable(new ArrayList<Sound>(currentOnset),
+							new ArrayList<Sound>(currentNucleus),
+							new ArrayList<Sound>(currentCoda),
+							p));
+					currentOnset.clear();
+					currentNucleus.clear();
+					currentCoda.clear();
+					for (int j = breakpoint + 1; j < group.size(); j++) {
+						currentOnset.add(group.get(j));
 					}
 				} else {
-					// what we're looking for here is where sonorancy drops the most
-					int lowestSonorancy = Integer.MAX_VALUE;
-					int lowestIndex = -1;
+					// must be all coda
 					for (int j = 0; j < group.size(); j++) {
-						int sonorancy = group.get(j).getSonorancy();
-						if (sonorancy < lowestSonorancy) {
-							lowestSonorancy = sonorancy;
-							lowestIndex = j;
+						Sound sound = group.get(j);
+						Feature codaF = sound.getFeatures().get("SYLLPART_CODA");
+						boolean isCoda = (codaF == null) ? false : codaF.getValue();
+						if (!isCoda) {
+							log.err("Found sound [" + sound + "] that must logically be in coda position "
+									+ "of syllable, but is not allowed per phonological system! "
+									+ "Ignoring sound in syllable creation...");
+						} else {
+							currentCoda.add(sound);
 						}
-					}
-					breakpoint = lowestIndex;
-				}
-				
-				for (int j = 0; j < breakpoint + 1; j++) {
-					currentCoda.add(group.get(j));
-				}
-				sylls.add(new Syllable(new ArrayList<Sound>(currentOnset),
-						new ArrayList<Sound>(currentNucleus),
-						new ArrayList<Sound>(currentCoda),
-						p));
-				currentOnset.clear();
-				currentNucleus.clear();
-				currentCoda.clear();
-				for (int j = breakpoint + 1; j < group.size(); j++) {
-					currentOnset.add(group.get(j));
-				}
-			} else {
-				// must be all coda
-				for (int j = 0; j < group.size(); j++) {
-					Sound sound = group.get(j);
-					Feature codaF = sound.getFeatures().get("SYLLPART_CODA");
-					boolean isCoda = (codaF == null) ? false : codaF.getValue();
-					if (!isCoda) {
-						log.err("Found sound [" + sound + "] that must logically be in coda position "
-								+ "of syllable, but is not allowed per phonological system! "
-								+ "Ignoring sound in syllable creation...");
-					} else {
-						currentCoda.add(sound);
 					}
 				}
 			}
+			sylls.add(new Syllable(new ArrayList<Sound>(currentOnset),
+					new ArrayList<Sound>(currentNucleus),
+					new ArrayList<Sound>(currentCoda),
+					p));
 		}
-		sylls.add(new Syllable(new ArrayList<Sound>(currentOnset),
-				new ArrayList<Sound>(currentNucleus),
-				new ArrayList<Sound>(currentCoda),
-				p));
 		
 		return sylls;
 	}
@@ -297,6 +308,8 @@ public class Syllable implements XMLDatatype {
 					}
 				}
 			}
+			nucleusWeight = nucleus.size();
+			codaWeight = coda.size();
 		} else {
 			throw new InvalidXMLException("Node name not expected name! Expected: syllable; Actual: " + e.getTagName());
 		}

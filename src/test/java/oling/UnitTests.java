@@ -6,11 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
+
 import net.oijon.oling.datatypes.language.LanguageProperties;
 import net.oijon.oling.datatypes.language.LanguageProperty;
 import net.oijon.oling.datatypes.phonology.*;
@@ -24,10 +29,12 @@ import net.oijon.oling.datatypes.phonology.table.PhonoSystem;
 import net.oijon.oling.datatypes.phonology.table.PhonoTable;
 
 import org.junit.jupiter.api.Test;
+import org.xml.sax.SAXException;
 
 import net.oijon.olog.Log;
 
 import net.oijon.oling.LegacyParser;
+import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.language.Language;
 import net.oijon.oling.datatypes.lexicon.Lexicon;
 import net.oijon.oling.datatypes.lexicon.Word;
@@ -372,5 +379,33 @@ public class UnitTests {
 			fail();
 		}
 		log.info("Broken ID repair successfully verified!");
+	}
+	
+	@Test
+	void testSyllabification() {
+		log.info("Testing syllabification from phoneme string...");
+		try {
+			File f = Paths.get(UnitTests.class.getClassLoader().getResource("testish.xml").toURI()).toFile();
+			Language l = Language.parse(f);
+			
+			String word = "oɱ̚ɱælʃkʰo";
+			ArrayList<Syllable> sylls = Syllable.getSyllablesFromString(word, l.getPhono());
+			StringBuilder results = new StringBuilder();
+			for (int i = 0; i < sylls.size(); i++) {
+				results.append(sylls.get(i).toString());
+				if (i != sylls.size() - 1) {
+					results.append(".");
+				}
+			}
+			String resultsStr = results.toString();
+			log.info("[oɱ̚ɱælʃkʰo] → [oɱ̚.ɱælʃ.kʰo] expected, got [" + resultsStr + "]");
+			assertEquals("oɱ̚.ɱælʃ.kʰo", resultsStr);
+			
+		} catch (URISyntaxException | ParserConfigurationException | IOException | SAXException | InvalidXMLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			fail();
+		}
+		log.info("Syllabification successfully verified!");
 	}
 }

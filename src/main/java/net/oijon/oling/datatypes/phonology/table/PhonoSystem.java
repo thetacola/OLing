@@ -372,12 +372,8 @@ public class PhonoSystem extends FeaturalXMLDatatype {
 	public Phoneme find(String value) {
 		ArrayList<String> keys = new ArrayList<String>(diacritics.keySet());
 		for (int i = 0; i < keys.size(); i++) {
-			value = value.replace(Character.toString(keys.get(i).charAt(0)), "");
+			value = value.replace(keys.get(i), "");
 		}
-		if (value.length() > 1) {
-			value = Character.toString(value.charAt(0));
-		}
-		
 		// looks awful, pretty sure it's O(n) and not O(n⁴) though
 		for (int i = 0; i < super.lowerObj.size(); i++) {
 			PhonoTable pt = (PhonoTable) super.lowerObj.get(i);

@@ -119,7 +119,7 @@ public class Syllable implements XMLDatatype {
 						int lowestIndex = -1;
 						for (int j = 0; j < group.size(); j++) {
 							int sonorancy = group.get(j).getSonorancy();
-							if (sonorancy < lowestSonorancy) {
+							if (sonorancy <= lowestSonorancy) {
 								lowestSonorancy = sonorancy;
 								lowestIndex = j;
 							}

@@ -323,7 +323,7 @@ public class UnitTests {
 		
 		int[] rankings = new int[testSet.length];
 		for (int i = 0; i < testSet.length; i++) {
-			rankings[i] = st.getPhonemeValue(testSet[i]);
+			rankings[i] = st.getValue(testSet[i]);
 			log.debug("/" + testSet[i].getSound() + "/ == " + rankings[i] +
 					" (" + Integer.toBinaryString(rankings[i]) + ")");
 			if (i != 0) {

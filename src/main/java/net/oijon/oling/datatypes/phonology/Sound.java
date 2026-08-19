@@ -2,6 +2,8 @@ package net.oijon.oling.datatypes.phonology;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -40,7 +42,7 @@ public class Sound implements XMLDatatype {
 	public Sound(String character, Phonology phono) {
 		// Checking to make sure someone didn't pass null, without logging this, it'd likely fail non-intuitively
 		if (phono == null) {
-			log.err("Sound given null phonology on creation!!!");
+			log.err("Sound given null phonology on creation!!! Features will be unable to generate...");
 			this.character = "";
 			this.linkedPhono = Language.NULL.getPhono();
 		} else {
@@ -67,6 +69,67 @@ public class Sound implements XMLDatatype {
 	
 	public Phoneme getPhoneme() {
 		return phoneme;
+	}
+	
+	public static ArrayList<Sound> getSoundsFromString(String str, Phonology p) {
+		PhonoSystem ps = p.getPhonoSystem();
+		
+		// FIXME: cannot handle diacritics preceding a character!
+		/*
+		 * this could be fixed by marking in the phono system xml the position of a diacritic in
+		 * relation to the base phoneme character, then looking for the indecies of these
+		 * when a pre-diacritic is found, it should then skip to the next phoneme when searching
+		 */
+		
+		// sorts the two in cases where someone tries using a system with multiple chars for an atomic phoneme
+		// if one atomic phoneme is represented with 'a', and another as 'ab', without sorting this would be UB
+		// doesn't happen in IPA, though it is supported in the way it's being stored
+		// that said, perhaps it shouldn't be...
+		ArrayList<Sound> foundSounds = new ArrayList<>();
+		
+		ArrayList<Phoneme> allPhonemes = ps.getAllPhonemes();
+		allPhonemes.sort((a, b) -> {return -1 * Integer.compare(a.getSound().length(),
+				b.getSound().length());});
+		
+		
+		ArrayList<String> allDiacritics = ps.getDiacriticKeys();
+		allDiacritics.sort((a, b) -> {return -1 * Integer.compare(a.length(), b.length());});
+		
+		// TODO: go through the diacritic list, check if it should appear before or after,
+		// then put in separate lists
+		
+		StringBuilder phonemeSB = new StringBuilder();
+		phonemeSB.append('(');
+		for (int i = 0; i < allPhonemes.size(); i++) {
+			phonemeSB.append(Pattern.quote(allPhonemes.get(i).getSound()));
+			if (i < allPhonemes.size() - 1) {
+				phonemeSB.append('|');
+			}
+		}
+		phonemeSB.append(')');
+		
+		StringBuilder endDiacriticSB = new StringBuilder();
+		endDiacriticSB.append('(');
+		for (int i = 0; i < allDiacritics.size(); i++) {
+			endDiacriticSB.append(Pattern.quote(allDiacritics.get(i)));
+			if (i < allDiacritics.size() - 1) {
+				endDiacriticSB.append('|');
+			}
+		}
+		endDiacriticSB.append(")*");
+		
+		// should look something like (\Qg\E)*(\Qab\E|\Qa\E|\Qb\E|\Qc\E)(\Qd\E|\Qe\E|\Qf\E)*
+		// right now looks more like (\Qab\E|\Qa\E|\Qb\E|\Qc\E)(\Qd\E|\Qe\E|\Qf\E)*
+		Pattern phonemeRegex = Pattern.compile(phonemeSB.toString() + endDiacriticSB.toString());
+		
+		Matcher matcher = phonemeRegex.matcher(str);
+		
+		while (matcher.find()) {
+			Sound s = new Sound(matcher.group(), p);
+			foundSounds.add(s);
+		}
+		
+		return foundSounds;
 	}
 	
 	private void generateFeatures() {

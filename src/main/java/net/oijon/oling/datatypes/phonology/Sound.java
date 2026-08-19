@@ -2,6 +2,7 @@ package net.oijon.oling.datatypes.phonology;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -130,6 +131,14 @@ public class Sound implements XMLDatatype {
 		}
 		
 		return foundSounds;
+	}
+	
+	public int getSonorancy() {
+		return linkedPhono.getPhonoSystem().getSonorancyTree().getValue(this);
+	}
+	
+	public HashMap<String, Feature> getFeatures() {
+		return features;
 	}
 	
 	private void generateFeatures() {

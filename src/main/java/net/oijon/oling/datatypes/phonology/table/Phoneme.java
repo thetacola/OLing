@@ -1,7 +1,6 @@
 package net.oijon.oling.datatypes.phonology.table;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
-import net.oijon.oling.datatypes.phonology.feature.Diacritic;
 import net.oijon.oling.datatypes.phonology.feature.FeaturalXMLDatatype;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
@@ -11,7 +10,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,7 +21,6 @@ public class Phoneme extends FeaturalXMLDatatype {
 
     private int index;
     private String sound;
-    private HashMap<String, Diacritic> diacritics = new HashMap<String, Diacritic>();
     private int sonorancy = -1;
     
     /**

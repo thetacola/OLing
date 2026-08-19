@@ -1,6 +1,7 @@
 package net.oijon.oling.datatypes.phonology.feature.sonorancy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,6 +13,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
+import net.oijon.oling.datatypes.phonology.Sound;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.table.Phoneme;
 
@@ -49,8 +51,21 @@ public class SonorancyTree{
 		return root;
 	}
 	
+	@Deprecated
 	public int getPhonemeValue(Phoneme p) {
-		return root.getPhonemeValue(p);
+		return root.getValue(p);
+	}
+	
+	public int getValue(Sound s) {
+		return root.getValue(s);
+	}
+	
+	public int getValue(Phoneme p) {
+		return root.getValue(p);
+	}
+	
+	public int getValue(HashMap<String, Feature> hm) {
+		return root.getValue(hm);
 	}
 
 	public Element toXML() throws ParserConfigurationException {

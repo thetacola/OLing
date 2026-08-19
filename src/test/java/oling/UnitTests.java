@@ -9,6 +9,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import net.oijon.oling.datatypes.language.LanguageProperties;
 import net.oijon.oling.datatypes.language.LanguageProperty;
@@ -77,7 +78,7 @@ public class UnitTests {
 			// should be /m/
 			//Phoneme p = l.getPhono().getPhonoSystem().getTables().get(0).getRow(1).getCell(0).getPhonemes().get(0);
 			//log.info(p.getSound() + " - " + p.getFeatures().toString());
-			ArrayList<Feature> features = new ArrayList<Feature>();
+			HashMap<String, Feature> features = new HashMap<String, Feature>();
 			Phonology phono = l.getPhono();
 			PhonoSystem ps = phono.getPhonoSystem();
 			PhonoTable table = ps.getTables().get(0);
@@ -86,27 +87,22 @@ public class UnitTests {
 			PhonoColumn column = table.getColumn(cell.getIndex());
 			Phoneme p = cell.getPhonemes().get(0);
 			
-			features.addAll(p.getFeatures().values());
-			features.addAll(column.getFeatures().values());
-			features.addAll(cell.getFeatures().values());
-			features.addAll(row.getFeatures().values());
-			features.addAll(table.getFeatures().values());
-			features.addAll(ps.getFeatures().values());
+			features.putAll(ps.getFeatures());
+			features.putAll(table.getFeatures());
+			features.putAll(column.getFeatures());
+			features.putAll(row.getFeatures());
+			features.putAll(cell.getFeatures());
+			features.putAll(p.getFeatures());
 			
-			ArrayList<Feature> phonemeFeatures = new ArrayList<Feature>(p.getFeatures().values());
-			// remove duplicates, helpful for logging
+			//features.addAll(p.getFeatures().values());
+			//features.addAll(column.getFeatures().values());
+			//features.addAll(cell.getFeatures().values());
+			//features.addAll(row.getFeatures().values());
+			//features.addAll(table.getFeatures().values());
+			//features.addAll(ps.getFeatures().values());
 			
-			for (int i = 0; i < features.size(); i++) {
-				for (int j = 0; j < features.size(); j++) {
-					if (i != j) {
-						if (features.get(i).getName().equals(features.get(j).getName())) {
-							features.remove(j);
-							i = 0;
-							j = 0;
-						}
-					}
-				}
-			}
+			HashMap<String, Feature> phonemeFeatures = new HashMap<>(p.getFeatures());
+			//ArrayList<Feature> phonemeFeatures = new ArrayList<Feature>(p.getFeatures().values());
 			
 			log.debug("Phoneme is reporting " + phonemeFeatures.size() + " features.");
 			log.debug("Phoneme features: " + phonemeFeatures);
@@ -120,22 +116,21 @@ public class UnitTests {
 			int count = 0;
 			int total = features.size();
 			// the level and value is in some instances expected to be different, so only check the name
-			for (int i = 0; i < features.size(); i++) {
-				boolean found = false;
-				for (int j = 0; j < phonemeFeatures.size(); j++) {
-					if (features.get(i).getName().equals(phonemeFeatures.get(j).getName())) {
+			
+			if (features.size() == phonemeFeatures.size()) {
+				for (String s : features.keySet()) {
+					if (features.get(s).equals(phonemeFeatures.get(s))) {
 						count++;
 						log.debug("Found feature " + count + "/" + total +
-								" " + features.get(i).toString());
-						found = true;
+								" " + features.get(s).toString());
+					} else {
+						log.err("Could not find feature " + features.get(s) + " in phoneme!");
+						log.err("Test failed!");
+						fail();
 					}
 				}
-				if (!found) {
-					log.err("Could not find feature " + features.get(i) + " in phoneme!");
-					log.err("Test failed!");
-					fail();
-				}
 			}
+			
 			log.info("Found all expected features in phoneme!");
 			
 		} catch (Exception e) {

@@ -97,6 +97,7 @@ public class Foot implements XMLDatatype {
 								if (leftNL.item(j).getNodeType() == Node.ELEMENT_NODE) {
 									Element syllE = (Element) leftNL.item(j);
 									syll1 = new Syllable(syllE, linkedPhono);
+									break;
 								}
 							}
 							break;
@@ -106,6 +107,7 @@ public class Foot implements XMLDatatype {
 								if (rightNL.item(j).getNodeType() == Node.ELEMENT_NODE) {
 									Element syllE = (Element) rightNL.item(j);
 									syll2 = new Syllable(syllE, linkedPhono);
+									break;
 								}
 							}
 							break;

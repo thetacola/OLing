@@ -57,9 +57,8 @@ public class Sound implements XMLDatatype {
 	 * @throws InvalidXMLException Thrown when the element does not match the expected one
 	 */
 	public Sound(Element e, Phonology p) throws InvalidXMLException {
-		fromXML(e);
 		this.linkedPhono = p;
-		generateFeatures();
+		fromXML(e);
 	}
 	
 	public HashMap<String, Diacritic> getDiacritics() {
@@ -121,6 +120,7 @@ public class Sound implements XMLDatatype {
 	public void fromXML(Element e) throws InvalidXMLException {
 		if (e.getTagName().equals("sound")) {
            this.character = e.getTextContent();
+           generateFeatures();
         } else {
             throw new InvalidXMLException("Node name not expected name! Expected: sound; Actual: " + e.getTagName());
         }

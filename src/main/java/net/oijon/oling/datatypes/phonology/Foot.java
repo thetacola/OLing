@@ -1,5 +1,7 @@
 package net.oijon.oling.datatypes.phonology;
 
+import java.util.ArrayList;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -61,6 +63,33 @@ public class Foot implements XMLDatatype {
 			retArr[1] = syll2;
 		}
 		return retArr;
+	}
+	
+	public static ArrayList<Foot> getFeetFromString(String string, Phonology p) {
+		ArrayList<Foot> feet = new ArrayList<>();
+		
+		ArrayList<Syllable> sylls = Syllable.getSyllablesFromString(string, p);
+		ArrayList<Syllable> lefts = new ArrayList<>();
+		ArrayList<Syllable> rights = new ArrayList<>();
+		for (int i = 0; i < sylls.size(); i++) {
+			if (i % 2 == 0) {
+				lefts.add(sylls.get(i));
+			} else {
+				rights.add(sylls.get(i));
+			}
+		}
+		
+		// rights will always be smaller than lefts
+		for (int i = 0; i < rights.size(); i++) {
+			Foot foot = new Foot(lefts.get(i), rights.get(i), p);
+			feet.add(foot);
+		}
+		if (lefts.size() > rights.size()) {
+			Foot foot = new Foot(lefts.get(rights.size()), p);
+			feet.add(foot);
+		}
+		
+		return feet;
 	}
 	
 	@Override

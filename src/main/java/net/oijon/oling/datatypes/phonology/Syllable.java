@@ -52,18 +52,9 @@ public class Syllable implements XMLDatatype {
 		ArrayList<Sound> currentGrouping = new ArrayList<>();
 		boolean lastWasNucleus = false;
 		
-		// this bit makes sure an extra arraylist is added at the beginning if it starts with a nucleus
-		// helpful for alignment
 		if (sounds.size() > 0) {
-			Sound startSound = sounds.get(0);
-			Phoneme startPhoneme = startSound.getPhoneme();
-			Feature startNucleusF = startPhoneme.getFeatures().get("SYLLPART_NUCLEUS");
-			boolean isStartNucleus = (startNucleusF == null) ? false : startNucleusF.getValue();
-			
-			if (isStartNucleus) {
-				groupedSounds.add(new ArrayList<Sound>());
-			}
-			
+			// creates a blank group if starting with a nucleus
+			// very helpful for alignment
 			for (int i = 0; i < sounds.size(); i++) {
 				Sound sound = sounds.get(i);
 				Phoneme phoneme = sound.getPhoneme();

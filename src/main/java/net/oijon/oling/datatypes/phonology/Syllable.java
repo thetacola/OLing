@@ -70,12 +70,16 @@ public class Syllable implements XMLDatatype {
 				Feature nucleusF = phoneme.getFeatures().get("SYLLPART_NUCLEUS");
 				boolean isNucleus = (nucleusF == null) ? false : nucleusF.getValue();
 				
-				if (!(isNucleus ^ lastWasNucleus) && i < sounds.size() - 1) {
+				if (isNucleus == lastWasNucleus) {
 					currentGrouping.add(sound);
 				} else {
-					currentGrouping.add(sound);
 					groupedSounds.add(new ArrayList<Sound>(currentGrouping));
 					currentGrouping.clear();
+					currentGrouping.add(sound);
+				}
+				
+				if (i == sounds.size() - 1) {
+					groupedSounds.add(new ArrayList<Sound>(currentGrouping));
 				}
 				lastWasNucleus = isNucleus;
 			}
@@ -117,32 +121,8 @@ public class Syllable implements XMLDatatype {
 						}
 					}
 					
-					if (hasBreakpoint) {
-						for (int j = 0; j < breakpoint + 1; j++) {
-							Sound sound = group.get(j);
-							Feature codaF = sound.getFeatures().get("SYLLPART_CODA");
-							boolean isCoda = (codaF == null) ? false : codaF.getValue();
-							if (isCoda) {
-								currentCoda.add(sound);
-							} else {
-								log.err("Found sound [" + sound + "] that must logically be in coda position "
-										+ "of syllable, but is not allowed per phonological system! "
-										+ "Ignoring sound in syllable creation...");
-							}
-						}
-						for (int j = breakpoint + 1; j < group.size(); j++) {
-							Sound sound = group.get(j);
-							Feature onsetF = sound.getFeatures().get("SYLLPART_ONSET");
-							boolean isOnset = (onsetF == null) ? false : onsetF.getValue();
-							if (isOnset) {
-								currentOnset.add(sound);
-							} else {
-								log.err("Found sound [" + sound + "] that must logically be in onset position "
-										+ "of syllable, but is not allowed per phonological system! "
-										+ "Ignoring sound in syllable creation...");
-							}
-						}
-					} else {
+					
+					if (!hasBreakpoint) {
 						// what we're looking for here is where sonorancy drops the most
 						int lowestSonorancy = Integer.MAX_VALUE;
 						int lowestIndex = -1;
@@ -156,7 +136,7 @@ public class Syllable implements XMLDatatype {
 						breakpoint = lowestIndex;
 					}
 					
-					for (int j = 0; j < breakpoint + 1; j++) {
+					for (int j = 0; j < breakpoint; j++) {
 						currentCoda.add(group.get(j));
 					}
 					sylls.add(new Syllable(new ArrayList<Sound>(currentOnset),
@@ -166,7 +146,7 @@ public class Syllable implements XMLDatatype {
 					currentOnset.clear();
 					currentNucleus.clear();
 					currentCoda.clear();
-					for (int j = breakpoint + 1; j < group.size(); j++) {
+					for (int j = breakpoint; j < group.size(); j++) {
 						currentOnset.add(group.get(j));
 					}
 				} else {

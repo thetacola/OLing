@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes.lexicon;
+package net.oijon.oling.datatypes.lexicon.morpheme;
 
 import java.util.ArrayList;
 

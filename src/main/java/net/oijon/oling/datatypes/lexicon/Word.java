@@ -5,6 +5,7 @@ import java.util.Date;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
+import net.oijon.oling.datatypes.phonology.Syllable;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;
@@ -31,6 +32,8 @@ public class Word implements XMLDatatype {
 	public static Log log = Info.log;
 	
 	private WordProperties wp = new WordProperties();
+	private ArrayList<Morpheme> morphemes = new ArrayList<Morpheme>();
+	private ArrayList<Syllable> syllables = new ArrayList<Syllable>();
 	private ArrayList<String> classes = new ArrayList<String>();
 	
 	/**
@@ -127,6 +130,17 @@ public class Word implements XMLDatatype {
 			}
 		}
 		return false;
+	}
+	
+	private void syllsToPronunciation() {
+		StringBuilder syllString = new StringBuilder();
+		for (int i = 0; i < syllables.size(); i++) {
+			syllString.append(syllables.get(i).toString());
+			if (i < syllables.size() - 1) {
+				syllString.append(".");
+			}
+		}
+		this.wp.setProperty(WordProperty.PRONUNCIATION, syllString.toString());
 	}
 	
 	@Override

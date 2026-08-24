@@ -9,7 +9,9 @@ import net.oijon.olog.Log;
 /**
  * Metadata for word objects
  * @author alex
+ * @deprecated as of 3.2.0, as it is part of the deprecated Word class
  */
+@Deprecated
 public class WordProperties {
 
 	public Log log = Info.log;

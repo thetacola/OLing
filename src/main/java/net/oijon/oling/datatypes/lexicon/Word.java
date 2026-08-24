@@ -23,17 +23,15 @@ import javax.xml.parsers.ParserConfigurationException;
 /**
  * Stores a word, including various properties about the word.
  * @author alex
- *
+ * @deprecated as of 3.2.0, as it has been superceded by MorphemeWord.
  */
 
-//TODO: re-add source language
+@Deprecated
 public class Word implements XMLDatatype {
 
 	public static Log log = Info.log;
 	
 	private WordProperties wp = new WordProperties();
-	private ArrayList<Morpheme> morphemes = new ArrayList<Morpheme>();
-	private ArrayList<Syllable> syllables = new ArrayList<Syllable>();
 	private ArrayList<String> classes = new ArrayList<String>();
 	
 	/**
@@ -132,23 +130,12 @@ public class Word implements XMLDatatype {
 		return false;
 	}
 	
-	private void syllsToPronunciation() {
-		StringBuilder syllString = new StringBuilder();
-		for (int i = 0; i < syllables.size(); i++) {
-			syllString.append(syllables.get(i).toString());
-			if (i < syllables.size() - 1) {
-				syllString.append(".");
-			}
-		}
-		this.wp.setProperty(WordProperty.PRONUNCIATION, syllString.toString());
-	}
-	
 	@Override
 	public String toString() {
 		String returnString = "===Word Start===\n";
 		returnString += "wordname:" + wp.getProperty(WordProperty.NAME) + "\n" +
 				"meaning:" + wp.getProperty(WordProperty.MEANING) + "\n" +
-				"pronounciation:" + wp.getProperty(WordProperty.PRONOUNCIATION) + "\n" +
+				"pronounciation:" + wp.getProperty(WordProperty.PRONUNCIATION) + "\n" +
 				"etymology:" + wp.getProperty(WordProperty.ETYMOLOGY) + "\n" +
 				"creationDate:" + wp.getCreationDate().getTime() + "\n" +
 				"editDate:" + wp.getEditDate().getTime() + "\n";
@@ -175,7 +162,7 @@ public class Word implements XMLDatatype {
         meaning.appendChild(doc.createTextNode(wp.getProperty(WordProperty.MEANING)));
 
         Element pronunciation = doc.createElement("pronunciation");
-        pronunciation.appendChild(doc.createTextNode(wp.getProperty(WordProperty.PRONOUNCIATION)));
+        pronunciation.appendChild(doc.createTextNode(wp.getProperty(WordProperty.PRONUNCIATION)));
 
         Element etymology = doc.createElement("etymology");
         etymology.appendChild(doc.createTextNode(wp.getProperty(WordProperty.ETYMOLOGY)));
@@ -219,7 +206,7 @@ public class Word implements XMLDatatype {
                         this.wp.setProperty(WordProperty.MEANING, nl.item(i).getTextContent());
                         break;
                     case "pronunciation":
-                        this.wp.setProperty(WordProperty.PRONOUNCIATION, nl.item(i).getTextContent());
+                        this.wp.setProperty(WordProperty.PRONUNCIATION, nl.item(i).getTextContent());
                         break;
                     case "etymology":
                         this.wp.setProperty(WordProperty.ETYMOLOGY, nl.item(i).getTextContent());

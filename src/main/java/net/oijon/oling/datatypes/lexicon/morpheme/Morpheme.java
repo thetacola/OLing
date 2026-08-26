@@ -13,29 +13,63 @@ import net.oijon.oling.datatypes.phonology.Sound;
 
 /**
  * The atomic base of words. These base units cannot be broken into children. For those that can,
- * take a look at MorphemeWord
+ * take a look at Lexeme
  * @see Lexeme
  * @author alex
  */
 public class Morpheme implements XMLDatatype {
 
 	private ArrayList<Sound> sounds = new ArrayList<>();
+	private MorphemeType type;
 	private String meaning = "";
 	
-	public Morpheme(ArrayList<Sound> sounds, String meaning) {
+	public Morpheme(ArrayList<Sound> sounds, String meaning, MorphemeType type) {
 		this.sounds.addAll(sounds);
 		this.meaning = meaning;
+		this.type = type;
 	}
 	
-	public Morpheme(Phonology p, String sounds, String meaning) {
+	public Morpheme(Phonology p, String sounds, String meaning, MorphemeType type) {
 		this.sounds = Sound.getSoundsFromString(sounds, p);
+		this.meaning = meaning;
+		this.type = type;
 	}
 
 	public Morpheme(Element e) throws InvalidXMLException {
 		fromXML(e);
 	}
 	
+	public MorphemeType getType() {
+		return type;
+	}
 	
+	public String getSoundsAsString() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < sounds.size(); i++) {
+			sb.append(sounds.get(i));
+		}
+		return sb.toString();
+	}
+	
+	public ArrayList<Sound> getSounds() {
+		ArrayList<Sound> retList = new ArrayList<Sound>();
+		for (int i = 0; i < sounds.size(); i++) {
+			retList.add(sounds.get(i));
+		}
+		return retList;
+	}
+	
+	public void setSounds(ArrayList<Sound> sounds) {
+		
+	}
+	
+	public void setType(MorphemeType type) {
+		this.type = type;
+	}
+	
+	public boolean isBound() {
+		return type.isBound();
+	}
 	
 	@Override
 	public Element toXML() throws ParserConfigurationException {

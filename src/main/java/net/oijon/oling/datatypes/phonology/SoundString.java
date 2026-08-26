@@ -1,0 +1,113 @@
+package net.oijon.oling.datatypes.phonology;
+
+import java.util.ArrayList;
+
+/**
+ * Creates a string out of sounds.
+ * Like Java strings, they are immutable. Treat them as such.
+ */
+public class SoundString {
+
+	private final Sound[] sounds;
+	
+	public SoundString() {
+		this.sounds = new Sound[0];
+	}
+	
+	public SoundString(Phonology p, String s) {
+		ArrayList<Sound> sounds = Sound.getSoundsFromString(s, p);
+		// it's ok to copy this, as it's generated in here
+		this.sounds = (Sound[]) sounds.toArray();
+	}
+	
+	public SoundString(SoundString s) {
+		this.sounds = new Sound[s.sounds.length];
+		for (int i = 0; i < this.sounds.length; i++) {
+			this.sounds[i] = new Sound(s.sounds[i]);
+		};
+	}
+	
+	public SoundString(Sound[] sounds) {
+		this.sounds = new Sound[sounds.length];
+		for (int i = 0; i < sounds.length; i++) {
+			this.sounds[i] = new Sound(sounds[i]);
+		}
+	}
+	
+	public SoundString(Sound[] sounds, int offset, int count) {
+		this.sounds = new Sound[count];
+		for (int i = 0; i < count; i++) {
+			this.sounds[i] = new Sound(sounds[i + offset]);
+		}
+	}
+	
+	public Sound soundAt(int index) {
+		return sounds[index];
+	}
+	
+	public SoundString concat(SoundString s) {
+		int len = s.sounds.length + this.sounds.length;
+		Sound[] newSounds = new Sound[len];
+		for (int i = 0; i < this.sounds.length; i++) {
+			newSounds[i] = this.sounds[i];
+		}
+		for (int i = 0; i < s.sounds.length; i++) {
+			newSounds[i + this.sounds.length] = s.sounds[i];
+		}
+		SoundString ret = new SoundString(newSounds);
+		return ret;
+	}
+	
+	public boolean endsWith(SoundString suffix) {
+		int startIndex = this.sounds.length - suffix.sounds.length;
+		if (startIndex > 0) {
+			return false;
+		} else {
+			for (int i = startIndex; i < this.sounds.length; i++) {
+				if (!this.sounds[i].equals(suffix.sounds[i - startIndex])) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+	
+	public void getSounds(int srcBegin, int srcEnd, Sound[] dst, int dstBegin) {
+		for (int i = srcBegin; i < srcEnd; i++) {
+			dst[i + dstBegin] = new Sound(this.sounds[i]);
+		}
+	}
+	
+	public int lastIndexOf(Sound s, int fromIndex) {
+		int lastIndex = -1;
+		for (int i = fromIndex; i < this.sounds.length; i++) {
+			if (s.equals(this.sounds[i])) {
+				lastIndex = i;
+			}
+		}
+		return lastIndex;
+	}
+	
+	public int lastIndexOf(Sound s) {
+		return lastIndexOf(s, 0);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof SoundString) {
+			SoundString s = (SoundString) obj;
+			if (s.sounds.length == this.sounds.length) {
+				for (int i = 0; i < this.sounds.length; i++) {
+					if (!s.sounds[i].equals(this.sounds[i])) {
+						return false;
+					}
+				}
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+}

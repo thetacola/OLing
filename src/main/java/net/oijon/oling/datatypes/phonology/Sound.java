@@ -63,6 +63,20 @@ public class Sound implements XMLDatatype {
 		fromXML(e);
 	}
 	
+	public Sound(Sound s) {
+		this.character = s.character;
+		this.phoneme = s.phoneme;
+		this.features.putAll(s.features);
+		this.linkedPhono = s.linkedPhono;
+		
+		for (String key : s.diacritics.keySet()) {
+			Diacritic oldD = s.diacritics.get(key);
+			Diacritic newD = new Diacritic(oldD.getCharacter(), oldD.getFeatures());
+			this.diacritics.put(newD.getCharacter(), newD);
+		}
+		
+	}
+	
 	public HashMap<String, Diacritic> getDiacritics() {
 		return diacritics;
 	}

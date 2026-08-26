@@ -1,6 +1,7 @@
 package net.oijon.oling.datatypes.phonology;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Creates a string out of sounds.
@@ -17,7 +18,7 @@ public class SoundString {
 	public SoundString(Phonology p, String s) {
 		ArrayList<Sound> sounds = Sound.getSoundsFromString(s, p);
 		// it's ok to copy this, as it's generated in here
-		this.sounds = (Sound[]) sounds.toArray();
+		this.sounds = sounds.toArray(new Sound[0]);
 	}
 	
 	public SoundString(SoundString s) {
@@ -60,7 +61,7 @@ public class SoundString {
 	
 	public boolean endsWith(SoundString suffix) {
 		int startIndex = this.sounds.length - suffix.sounds.length;
-		if (startIndex > 0) {
+		if (startIndex < 0) {
 			return false;
 		} else {
 			for (int i = startIndex; i < this.sounds.length; i++) {
@@ -78,6 +79,25 @@ public class SoundString {
 		}
 	}
 	
+	public int indexOf(Sound s, int fromIndex) {
+		int firstIndex = -1;
+		for (int i = fromIndex; i < this.sounds.length; i++) {
+			if (s.equals(this.sounds[i])) {
+				firstIndex = i;
+				break;
+			}
+		}
+		return firstIndex;
+	}
+	
+	public int indexOf(Sound s) {
+		return indexOf(s, 0);
+	}
+	
+	public boolean isEmpty() {
+		return this.sounds.length == 0 ? true : false;
+	}
+	
 	public int lastIndexOf(Sound s, int fromIndex) {
 		int lastIndex = -1;
 		for (int i = fromIndex; i < this.sounds.length; i++) {
@@ -90,6 +110,111 @@ public class SoundString {
 	
 	public int lastIndexOf(Sound s) {
 		return lastIndexOf(s, 0);
+	}
+	
+	public int length() {
+		return this.sounds.length;
+	}
+	
+	// TODO: implement regionMatches
+	
+	public SoundString replace(Sound oldSound, Sound newSound) {
+		Sound[] newArr = new Sound[this.sounds.length];
+		for (int i = 0; i < newArr.length; i++) {
+			if (this.sounds[i].equals(oldSound)) {
+				newArr[i] = newSound;
+			} else {
+				newArr[i] = this.sounds[i];
+			}
+		}
+		return new SoundString(newArr);
+	}
+	
+	public SoundString replace(SoundString oldS, SoundString newS) {
+		int count = 0;
+		for (int i = 0; i < this.sounds.length - oldS.length() + 1; i++) {
+			boolean found = true;
+			for (int j = 0; j < oldS.length(); j++) {
+				if (!sounds[i + j].equals(oldS.soundAt(i + j))) {
+					found = false;
+					break;
+				}
+			}
+			if (found) {
+				count++;
+			}
+		}
+		
+		int newLen = this.sounds.length + ((newS.length() - oldS.length()) * count);
+		Sound[] sounds = new Sound[newLen];
+		
+		int newIndex = 0;
+		for (int i = 0; i < this.sounds.length; i++) {
+			boolean found = false;
+			if (oldS.length() < this.sounds.length - i) {
+				found = true;
+				for (int j = 0; j < oldS.length(); j++) {
+					if (!sounds[i + j].equals(oldS.soundAt(i + j))) {
+						found = false;
+						break;
+					}
+				}
+			}
+			if (found) {
+				for (int j = 0; j < newS.length(); j++) {
+					sounds[newIndex] = newS.soundAt(j);
+					newIndex++;
+				}
+			} else {
+				sounds[newIndex] = this.sounds[i];
+				newIndex++;
+			}
+		}
+		
+		return new SoundString(sounds);
+	}
+	
+	public boolean startsWith(SoundString s, int toffset) {
+		if (toffset <= this.sounds.length && s.length() <= this.sounds.length) {
+			for (int i = toffset; i < this.sounds.length; i++) {
+				if (!this.sounds[i].equals(s.soundAt(i - toffset))) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean startsWith(SoundString s) {
+		return startsWith(s, 0);
+	}
+	
+	public SoundString substring(int beginIndex, int endIndex) {
+		Sound[] newArr = new Sound[endIndex - beginIndex];
+		for (int i = beginIndex; i < endIndex; i++) {
+			newArr[i - beginIndex] = this.sounds[i];
+		}
+		return new SoundString(newArr);
+	}
+	
+	public SoundString substring(int beginIndex) {
+		return substring(beginIndex, this.sounds.length);
+	}
+	
+	public Sound[] toSoundArray() {
+		Sound[] retArr = Arrays.copyOf(this.sounds, this.sounds.length);
+		return retArr;
+	}
+	
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		for (int i = 0; i < this.sounds.length; i++) {
+			hash += sounds[i].hashCode() * 31 ^ (this.sounds.length - i - 1);
+		}
+		return hash;
 	}
 	
 	@Override

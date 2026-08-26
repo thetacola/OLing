@@ -99,13 +99,12 @@ public class SoundString {
 	}
 	
 	public int lastIndexOf(Sound s, int fromIndex) {
-		int lastIndex = -1;
-		for (int i = fromIndex; i < this.sounds.length; i++) {
-			if (s.equals(this.sounds[i])) {
-				lastIndex = i;
+		for (int i = this.sounds.length - 1; i >= fromIndex; i--) {
+			if (this.sounds[i].equals(s)) {
+				return i;
 			}
 		}
-		return lastIndex;
+		return -1;
 	}
 	
 	public int lastIndexOf(Sound s) {

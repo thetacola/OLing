@@ -9,7 +9,7 @@ import org.w3c.dom.Element;
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.oling.datatypes.phonology.Phonology;
-import net.oijon.oling.datatypes.phonology.Sound;
+import net.oijon.oling.datatypes.phonology.surface.Sound;
 
 /**
  * The atomic base of words. These base units cannot be broken into children. For those that can,

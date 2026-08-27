@@ -1,7 +1,9 @@
-package net.oijon.oling.datatypes.phonology;
+package net.oijon.oling.datatypes.phonology.surface;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import net.oijon.oling.datatypes.phonology.Phonology;
 
 /**
  * Creates a string out of sounds.

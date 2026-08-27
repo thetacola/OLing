@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes.phonology;
+package net.oijon.oling.datatypes.phonology.surface;
 
 import java.util.ArrayList;
 
@@ -13,6 +13,7 @@ import org.w3c.dom.NodeList;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
+import net.oijon.oling.datatypes.phonology.Phonology;
 
 public class Foot implements XMLDatatype {
 	

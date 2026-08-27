@@ -21,6 +21,7 @@ import net.oijon.oling.datatypes.language.LanguageProperty;
 import net.oijon.oling.datatypes.phonology.*;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.feature.sonorancy.SonorancyTree;
+import net.oijon.oling.datatypes.phonology.surface.Syllable;
 import net.oijon.oling.datatypes.phonology.table.Phoneme;
 import net.oijon.oling.datatypes.phonology.table.PhonoCategory;
 import net.oijon.oling.datatypes.phonology.table.PhonoCell;

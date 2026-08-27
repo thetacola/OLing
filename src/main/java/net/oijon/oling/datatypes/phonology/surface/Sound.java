@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes.phonology;
+package net.oijon.oling.datatypes.phonology.surface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +14,7 @@ import org.w3c.dom.Element;
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.oling.datatypes.language.Language;
+import net.oijon.oling.datatypes.phonology.Phonology;
 import net.oijon.oling.datatypes.phonology.feature.Diacritic;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;

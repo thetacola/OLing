@@ -5,7 +5,7 @@ import java.util.Date;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
-import net.oijon.oling.datatypes.phonology.Syllable;
+import net.oijon.oling.datatypes.phonology.surface.Syllable;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;

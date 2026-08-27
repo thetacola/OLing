@@ -1,4 +1,4 @@
-package net.oijon.oling.datatypes.phonology;
+package net.oijon.oling.datatypes.phonology.surface;
 
 import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
@@ -12,6 +12,7 @@ import org.w3c.dom.NodeList;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
+import net.oijon.oling.datatypes.phonology.Phonology;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.table.Phoneme;
 import net.oijon.oling.info.Info;

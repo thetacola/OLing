@@ -13,8 +13,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
-import net.oijon.oling.datatypes.phonology.Sound;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
+import net.oijon.oling.datatypes.phonology.surface.Sound;
 import net.oijon.oling.datatypes.phonology.table.Phoneme;
 
 public class SonorancyTree{

@@ -1,5 +1,6 @@
 package net.oijon.oling.datatypes.phonology.surface;
 
-public enum FootBound {
-
+public enum FootAlignment {
+	LEFT,
+	RIGHT;
 }

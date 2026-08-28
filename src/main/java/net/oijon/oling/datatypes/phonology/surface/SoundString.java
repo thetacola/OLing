@@ -2,8 +2,12 @@ package net.oijon.oling.datatypes.phonology.surface;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.oijon.oling.datatypes.phonology.Phonology;
+import net.oijon.oling.datatypes.phonology.table.Phoneme;
+import net.oijon.oling.datatypes.phonology.table.PhonoSystem;
 
 /**
  * Creates a string out of sounds.
@@ -17,10 +21,65 @@ public class SoundString {
 		this.sounds = new Sound[0];
 	}
 	
-	public SoundString(Phonology p, String s) {
-		ArrayList<Sound> sounds = Sound.getSoundsFromString(s, p);
-		// it's ok to copy this, as it's generated in here
-		this.sounds = sounds.toArray(new Sound[0]);
+	public SoundString(Phonology p, String str) {
+		PhonoSystem ps = p.getPhonoSystem();
+		
+		// FIXME: cannot handle diacritics preceding a character!
+		/*
+		 * this could be fixed by marking in the phono system xml the position of a diacritic in
+		 * relation to the base phoneme character, then looking for the indecies of these
+		 * when a pre-diacritic is found, it should then skip to the next phoneme when searching
+		 */
+		
+		// sorts the two in cases where someone tries using a system with multiple chars for an atomic phoneme
+		// if one atomic phoneme is represented with 'a', and another as 'ab', without sorting this would be UB
+		// doesn't happen in IPA, though it is supported in the way it's being stored
+		// that said, perhaps it shouldn't be...
+		ArrayList<Sound> foundSounds = new ArrayList<>();
+		
+		ArrayList<Phoneme> allPhonemes = ps.getAllPhonemes();
+		allPhonemes.sort((a, b) -> {return -1 * Integer.compare(a.getSound().length(),
+				b.getSound().length());});
+		
+		
+		ArrayList<String> allDiacritics = ps.getDiacriticKeys();
+		allDiacritics.sort((a, b) -> {return -1 * Integer.compare(a.length(), b.length());});
+		
+		// TODO: go through the diacritic list, check if it should appear before or after,
+		// then put in separate lists
+		
+		StringBuilder phonemeSB = new StringBuilder();
+		phonemeSB.append('(');
+		for (int i = 0; i < allPhonemes.size(); i++) {
+			phonemeSB.append(Pattern.quote(allPhonemes.get(i).getSound()));
+			if (i < allPhonemes.size() - 1) {
+				phonemeSB.append('|');
+			}
+		}
+		phonemeSB.append(')');
+		
+		StringBuilder endDiacriticSB = new StringBuilder();
+		endDiacriticSB.append('(');
+		for (int i = 0; i < allDiacritics.size(); i++) {
+			endDiacriticSB.append(Pattern.quote(allDiacritics.get(i)));
+			if (i < allDiacritics.size() - 1) {
+				endDiacriticSB.append('|');
+			}
+		}
+		endDiacriticSB.append(")*");
+		
+		// should look something like (\Qg\E)*(\Qab\E|\Qa\E|\Qb\E|\Qc\E)(\Qd\E|\Qe\E|\Qf\E)*
+		// right now looks more like (\Qab\E|\Qa\E|\Qb\E|\Qc\E)(\Qd\E|\Qe\E|\Qf\E)*
+		Pattern phonemeRegex = Pattern.compile(phonemeSB.toString() + endDiacriticSB.toString());
+		
+		Matcher matcher = phonemeRegex.matcher(str);
+		
+		while (matcher.find()) {
+			Sound s = new Sound(matcher.group(), p);
+			foundSounds.add(s);
+		}
+		
+		this.sounds = foundSounds.toArray(new Sound[0]);
 	}
 	
 	public SoundString(SoundString s) {
@@ -61,6 +120,15 @@ public class SoundString {
 		return ret;
 	}
 	
+	public SoundString concat(Sound s) {
+		Sound[] newSounds = new Sound[this.sounds.length + 1];
+		for (int i = 0; i < this.sounds.length; i++) {
+			newSounds[i] = this.sounds[i];
+		}
+		newSounds[this.sounds.length] = s;
+		return new SoundString(newSounds);
+	}
+	
 	public boolean endsWith(SoundString suffix) {
 		int startIndex = this.sounds.length - suffix.sounds.length;
 		if (startIndex < 0) {
@@ -79,6 +147,14 @@ public class SoundString {
 		for (int i = srcBegin; i < srcEnd; i++) {
 			dst[i + dstBegin] = new Sound(this.sounds[i]);
 		}
+	}
+	
+	public int getWeight() {
+		int weight = 0;
+		for (int i = 0; i < this.sounds.length; i++) {
+			weight += this.sounds[i].getWeight();
+		}
+		return weight;
 	}
 	
 	public int indexOf(Sound s, int fromIndex) {
@@ -235,5 +311,14 @@ public class SoundString {
 		} else {
 			return false;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < this.sounds.length; i++) {
+			sb.append(this.sounds[i].toString());
+		}
+		return sb.toString();
 	}
 }

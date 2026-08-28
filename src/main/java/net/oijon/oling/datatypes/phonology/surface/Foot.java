@@ -15,15 +15,16 @@ import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.oling.datatypes.phonology.Phonology;
 
-public class Foot implements XMLDatatype {
+public class Foot {
 	
-	private Syllable syll1;
-	private Syllable syll2;
-	private Phonology linkedPhono;
+	private final Syllable syll1;
+	private final Syllable syll2;
+	private final Phonology linkedPhono;
 	
 	public Foot(Syllable syll1, Phonology p) {
 		linkedPhono = p;
 		this.syll1 = syll1;
+		this.syll2 = null;
 	}
 	
 	public Foot(Syllable syll1, Syllable syll2, Phonology p) {
@@ -32,16 +33,11 @@ public class Foot implements XMLDatatype {
 		this.syll2 = syll2;
 	}
 	
-	public Foot(Element e, Phonology p) throws InvalidXMLException {
-		linkedPhono = p;
-		fromXML(e);
-	}
-	
 	public void trochee() {
 		// TODO stress first syll, unstress second
 	}
 	
-	public void iambic () {
+	public void iambic() {
 		// TODO stress second syll, unstress first
 	}
 	
@@ -69,14 +65,14 @@ public class Foot implements XMLDatatype {
 	public static ArrayList<Foot> getFeetFromString(String string, Phonology p) {
 		ArrayList<Foot> feet = new ArrayList<>();
 		
-		ArrayList<Syllable> sylls = Syllable.getSyllablesFromString(string, p);
+		SyllableString sylls = new SyllableString(p, string);
 		ArrayList<Syllable> lefts = new ArrayList<>();
 		ArrayList<Syllable> rights = new ArrayList<>();
-		for (int i = 0; i < sylls.size(); i++) {
+		for (int i = 0; i < sylls.length(); i++) {
 			if (i % 2 == 0) {
-				lefts.add(sylls.get(i));
+				lefts.add(sylls.syllAt(i));
 			} else {
-				rights.add(sylls.get(i));
+				rights.add(sylls.syllAt(i));
 			}
 		}
 		
@@ -91,62 +87,6 @@ public class Foot implements XMLDatatype {
 		}
 		
 		return feet;
-	}
-	
-	@Override
-	public Element toXML() throws ParserConfigurationException {
-		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		Document doc = builder.newDocument();
-		Element root = doc.createElement("foot");
-		
-		Element left = doc.createElement("left");
-		left.appendChild(doc.importNode(syll1.toXML(), true));
-		root.appendChild(left);
-		
-		Element right = doc.createElement("right");
-		if (syll2 != null) {
-			right.appendChild(doc.importNode(syll2.toXML(), true));
-		}
-		root.appendChild(right);
-		
-		return root;
-	}
-
-	@Override
-	public void fromXML(Element e) throws InvalidXMLException {
-		if (e.getTagName().equals("foot")) {
-			NodeList nl = e.getChildNodes();
-			for (int i = 0; i < nl.getLength(); i++) {
-				Node n = nl.item(i);
-				if (n.getNodeType() == Node.ELEMENT_NODE) {
-					Element childE = (Element) n;
-					switch (childE.getTagName()) {
-						case "left":
-							NodeList leftNL = childE.getChildNodes();
-							for (int j = 0; j < leftNL.getLength(); j++) {
-								if (leftNL.item(j).getNodeType() == Node.ELEMENT_NODE) {
-									Element syllE = (Element) leftNL.item(j);
-									syll1 = new Syllable(syllE, linkedPhono);
-									break;
-								}
-							}
-							break;
-						case "right":
-							NodeList rightNL = childE.getChildNodes();
-							for (int j = 0; j < rightNL.getLength(); j++) {
-								if (rightNL.item(j).getNodeType() == Node.ELEMENT_NODE) {
-									Element syllE = (Element) rightNL.item(j);
-									syll2 = new Syllable(syllE, linkedPhono);
-									break;
-								}
-							}
-							break;
-					}
-				}
-			}
-		} else {
-			throw new InvalidXMLException("Node name not expected name! Expected: foot; Actual: " + e.getTagName());
-		}
 	}
 	
 	@Override

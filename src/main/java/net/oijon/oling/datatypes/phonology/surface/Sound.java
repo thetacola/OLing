@@ -114,6 +114,16 @@ public class Sound {
 	}
 	
 	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Sound) {
+			Sound s = (Sound) o;
+			return (s.character.equals(this.character) && s.phoneme.equals(this.phoneme));
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
 	public int hashCode() {
 		return this.toString().hashCode() + phoneme.hashCode();
 	}

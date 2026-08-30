@@ -10,6 +10,7 @@ import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
 import net.oijon.oling.datatypes.phonology.Phonology;
 import net.oijon.oling.datatypes.phonology.surface.Sound;
+import net.oijon.oling.datatypes.phonology.surface.SyllableString;
 
 /**
  * The atomic base of words. These base units cannot be broken into children. For those that can,
@@ -19,16 +20,16 @@ import net.oijon.oling.datatypes.phonology.surface.Sound;
  */
 public class Morpheme implements XMLDatatype {
 
-	private ArrayList<Sound> sounds = new ArrayList<>();
+	private SyllableString sounds;
 	private String meaning = "";
 	
-	public Morpheme(ArrayList<Sound> sounds, String meaning) {
-		this.sounds.addAll(sounds);
+	public Morpheme(SyllableString sounds, String meaning) {
+		this.sounds = sounds;
 		this.meaning = meaning;
 	}
 	
 	public Morpheme(Phonology p, String sounds, String meaning) {
-		this.sounds = Sound.getSoundsFromString(sounds, p);
+		this.sounds = new SyllableString(p, sounds);
 	}
 
 	public Morpheme(Element e) throws InvalidXMLException {

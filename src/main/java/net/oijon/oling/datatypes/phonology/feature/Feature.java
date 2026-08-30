@@ -100,4 +100,10 @@ public class Feature implements XMLDatatype {
         }
 	}
 	
+	@Override
+	public int hashCode() {
+		int multiplier = value ? 1 : -1;
+		return multiplier * name.hashCode() + level.toString().hashCode();
+	}
+	
 }

@@ -1,6 +1,7 @@
 package net.oijon.oling.datatypes.phonology.feature.sonorancy;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -14,6 +15,7 @@ import org.w3c.dom.NodeList;
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.feature.FeatureLevel;
+import net.oijon.oling.datatypes.phonology.surface.Sound;
 import net.oijon.oling.datatypes.phonology.table.Phoneme;
 import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
@@ -40,22 +42,42 @@ public class SonorancyNode {
 		fromXML(e);
 	}
 
+	@Deprecated
+	public int getPhonemeValue(Phoneme p) {
+		return getValue(p);
+	}
+	
 	public int getValue(Phoneme p) {
+		return getValue(p.getFeatures());
+	}
+	
+	public int getValue(Sound s) {
+		return getValue(s.getFeatures());
+	}
+	
+	public int getValue(HashMap<String, Feature> features) {
 		if (left == null && right == null) {
 			return value;
-		} else if (left != null && right != null) {
-			Feature pFeature = p.getFeatures().get(feature.getName());
-			if (pFeature.getValue() == feature.getValue()) {
-				return left.getValue(p);
-			}
-		// these two normally shouldn't happen, but could due to malformed files
 		} else if (left != null && right == null) {
-			return left.getValue(p);
+			return left.getValue(features);
+		} else if (left == null && right != null) {
+			return right.getValue(features);
 		}
-		// should only ever get here if left is null and right isn't
-		// would've made it more explicit w/ another else-if, but the compiler
-		// wasn't all too happy with that
-		return right.getValue(p);
+		
+		Feature phonemeFeature = features.get(feature.getName());
+		boolean matches;
+		if (phonemeFeature != null) {
+			matches = (phonemeFeature.getValue() == feature.getValue());
+		} else {
+			// The feature cannot be the same if the phoneme doesn't have it
+			matches = false;
+		}
+		
+		if (matches) {
+			return left.getValue(features);
+		} else {
+			return right.getValue(features);
+		}
 	}
 	
 	public void setLeft(SonorancyNode left) {
@@ -133,32 +155,6 @@ public class SonorancyNode {
 			}
 		}
 		return false;
-	}
-	
-	public int getPhonemeValue(Phoneme p) {
-		if (left == null && right == null) {
-			return value;
-		} else if (left != null && right == null) {
-			return left.getPhonemeValue(p);
-		} else if (left == null && right != null) {
-			return right.getPhonemeValue(p);
-		}
-		
-		Feature phonemeFeature = p.getFeatures().get(feature.getName());
-		boolean matches;
-		if (phonemeFeature != null) {
-			matches = !(phonemeFeature.getValue() ^ feature.getValue());
-		} else {
-			// The feature cannot be the same if the phoneme doesn't have it
-			matches = false;
-		}
-		
-		if (matches) {
-			return left.getPhonemeValue(p);
-		} else {
-			return right.getPhonemeValue(p);
-		}
-		
 	}
 	
 	public Element toXML() throws ParserConfigurationException {

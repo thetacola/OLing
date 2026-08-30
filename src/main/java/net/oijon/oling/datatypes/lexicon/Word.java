@@ -5,6 +5,7 @@ import java.util.Date;
 
 import net.oijon.oling.datatypes.InvalidXMLException;
 import net.oijon.oling.datatypes.XMLDatatype;
+import net.oijon.oling.datatypes.phonology.surface.Syllable;
 import net.oijon.oling.datatypes.tags.Multitag;
 import net.oijon.oling.datatypes.tags.Tag;
 import net.oijon.oling.info.Info;
@@ -17,15 +18,15 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-//last edit: 6/20/24 -N3
+//last edit: 8/15/26 -N3
 
 /**
  * Stores a word, including various properties about the word.
  * @author alex
- *
+ * @deprecated as of 3.2.0, as it has been superceded by MorphemeWord.
  */
 
-//TODO: re-add source language
+@Deprecated
 public class Word implements XMLDatatype {
 
 	public static Log log = Info.log;
@@ -134,7 +135,7 @@ public class Word implements XMLDatatype {
 		String returnString = "===Word Start===\n";
 		returnString += "wordname:" + wp.getProperty(WordProperty.NAME) + "\n" +
 				"meaning:" + wp.getProperty(WordProperty.MEANING) + "\n" +
-				"pronounciation:" + wp.getProperty(WordProperty.PRONOUNCIATION) + "\n" +
+				"pronounciation:" + wp.getProperty(WordProperty.PRONUNCIATION) + "\n" +
 				"etymology:" + wp.getProperty(WordProperty.ETYMOLOGY) + "\n" +
 				"creationDate:" + wp.getCreationDate().getTime() + "\n" +
 				"editDate:" + wp.getEditDate().getTime() + "\n";
@@ -161,7 +162,7 @@ public class Word implements XMLDatatype {
         meaning.appendChild(doc.createTextNode(wp.getProperty(WordProperty.MEANING)));
 
         Element pronunciation = doc.createElement("pronunciation");
-        pronunciation.appendChild(doc.createTextNode(wp.getProperty(WordProperty.PRONOUNCIATION)));
+        pronunciation.appendChild(doc.createTextNode(wp.getProperty(WordProperty.PRONUNCIATION)));
 
         Element etymology = doc.createElement("etymology");
         etymology.appendChild(doc.createTextNode(wp.getProperty(WordProperty.ETYMOLOGY)));
@@ -205,7 +206,7 @@ public class Word implements XMLDatatype {
                         this.wp.setProperty(WordProperty.MEANING, nl.item(i).getTextContent());
                         break;
                     case "pronunciation":
-                        this.wp.setProperty(WordProperty.PRONOUNCIATION, nl.item(i).getTextContent());
+                        this.wp.setProperty(WordProperty.PRONUNCIATION, nl.item(i).getTextContent());
                         break;
                     case "etymology":
                         this.wp.setProperty(WordProperty.ETYMOLOGY, nl.item(i).getTextContent());

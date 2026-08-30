@@ -90,7 +90,7 @@ public class PhonoColumn extends FeaturalXMLDatatype {
                 }
             }
         } else {
-            throw new InvalidXMLException("Node name not expected name! Expected: row; Actual: " + e.getTagName());
+            throw new InvalidXMLException("Node name not expected name! Expected: column; Actual: " + e.getTagName());
         }
         
         applyFeatures();

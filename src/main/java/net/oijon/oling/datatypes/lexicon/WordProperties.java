@@ -9,7 +9,9 @@ import net.oijon.olog.Log;
 /**
  * Metadata for word objects
  * @author alex
+ * @deprecated as of 3.2.0, as it is part of the deprecated Word class
  */
+@Deprecated
 public class WordProperties {
 
 	public Log log = Info.log;
@@ -48,6 +50,7 @@ public class WordProperties {
 			case NAME: return strings[0];
 			case MEANING: return strings[1];
 			case PRONOUNCIATION: return strings[2];
+			case PRONUNCIATION: return strings[2];
 			case ETYMOLOGY: return strings[3];
 		}
 		return " ";
@@ -86,6 +89,9 @@ public class WordProperties {
 			case PRONOUNCIATION:
                 strings[2] = value;
 			    break;
+			case PRONUNCIATION:
+				strings[2] = value;
+				break;
 			case ETYMOLOGY:
                 strings[3] = value;
 			    break;

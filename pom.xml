@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.oijon</groupId>
 	<artifactId>oling</artifactId>
-	<version>3.1.2</version>
+	<version>3.2.0</version>
 	<name>OLing</name>
 	<description>A library to help model languages.</description>
 	<url>https://oijon.net/oling</url>
@@ -23,11 +23,6 @@
 			<groupId>net.oijon</groupId>
 			<artifactId>olog</artifactId>
 			<version>1.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>net.oijon</groupId>
-			<artifactId>OSCA</artifactId>
-			<version>0.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

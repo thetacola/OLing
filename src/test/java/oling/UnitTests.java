@@ -22,6 +22,7 @@ import net.oijon.oling.datatypes.phonology.*;
 import net.oijon.oling.datatypes.phonology.feature.Feature;
 import net.oijon.oling.datatypes.phonology.feature.sonorancy.SonorancyTree;
 import net.oijon.oling.datatypes.phonology.surface.Syllable;
+import net.oijon.oling.datatypes.phonology.surface.SyllableString;
 import net.oijon.oling.datatypes.phonology.table.Phoneme;
 import net.oijon.oling.datatypes.phonology.table.PhonoCategory;
 import net.oijon.oling.datatypes.phonology.table.PhonoCell;
@@ -390,15 +391,8 @@ public class UnitTests {
 			Language l = Language.parse(f);
 			
 			String word = "oɱ̚ɱælʃkʰo";
-			ArrayList<Syllable> sylls = Syllable.getSyllablesFromString(word, l.getPhono());
-			StringBuilder results = new StringBuilder();
-			for (int i = 0; i < sylls.size(); i++) {
-				results.append(sylls.get(i).toString());
-				if (i != sylls.size() - 1) {
-					results.append(".");
-				}
-			}
-			String resultsStr = results.toString();
+			SyllableString sylls = new SyllableString(l.getPhono(), word);
+			String resultsStr = sylls.toString();
 			log.info("[oɱ̚ɱælʃkʰo] → [oɱ̚.ɱælʃ.kʰo] expected, got [" + resultsStr + "]");
 			assertEquals("oɱ̚.ɱælʃ.kʰo", resultsStr);
 			

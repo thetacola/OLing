@@ -112,4 +112,9 @@ public class Sound {
 	public String toString() {
 		return character;
 	}
+	
+	@Override
+	public int hashCode() {
+		return this.toString().hashCode() + phoneme.hashCode();
+	}
 }

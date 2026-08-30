@@ -19,16 +19,13 @@ public class Foot {
 	
 	private final Syllable syll1;
 	private final Syllable syll2;
-	private final Phonology linkedPhono;
 	
 	public Foot(Syllable syll1, Phonology p) {
-		linkedPhono = p;
 		this.syll1 = syll1;
 		this.syll2 = null;
 	}
 	
 	public Foot(Syllable syll1, Syllable syll2, Phonology p) {
-		linkedPhono = p;
 		this.syll1 = syll1;
 		this.syll2 = syll2;
 	}

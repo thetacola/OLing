@@ -22,6 +22,13 @@ public class SyllableString {
 		this.sylls = Arrays.copyOf(s, s.length);
 	}
 	
+	public SyllableString(Syllable[] s, int offset, int count) {
+		this.sylls = new Syllable[count];
+		for (int i = 0; i < count; i++) {
+			this.sylls[i] = s[i + offset];
+		}
+	}
+	
 	public SyllableString(Phonology p, String str) {
 		ArrayList<Syllable> sylls = new ArrayList<>();
 		SoundString sounds = new SoundString(p, str);

@@ -1,6 +1,7 @@
 package net.oijon.oling.datatypes.phonology.feature;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.BiConsumer;
 import net.oijon.oling.datatypes.XMLDatatype;
@@ -88,6 +89,13 @@ public abstract class FeaturalXMLDatatype implements XMLDatatype {
 				}
 			});
     	}
+    }
+    
+    @Override
+    public int hashCode() {
+    	return Arrays.deepHashCode(lowerObj.toArray()) +
+    			Arrays.hashCode(features.keySet().toArray()) +
+    			Arrays.deepHashCode(features.values().toArray());
     }
 	
 }

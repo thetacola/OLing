@@ -70,9 +70,9 @@ public class Foot {
 		ArrayList<Syllable> rights = new ArrayList<>();
 		for (int i = 0; i < sylls.length(); i++) {
 			if (i % 2 == 0) {
-				lefts.add(sylls.syllAt(i));
+				lefts.add(sylls.syllableAt(i));
 			} else {
-				rights.add(sylls.syllAt(i));
+				rights.add(sylls.syllableAt(i));
 			}
 		}
 		

@@ -1,5 +1,6 @@
 package net.oijon.oling.datatypes.phonology.surface;
 
+import net.oijon.oling.datatypes.language.Language;
 import net.oijon.oling.datatypes.phonology.Phonology;
 import net.oijon.oling.info.Info;
 import net.oijon.olog.Log;
@@ -18,6 +19,13 @@ public class Syllable {
 	private int nucleusWeight = 0;
 	private int codaWeight = 0;
 
+	public Syllable() {
+		this.onset = new SoundString();
+		this.nucleus = new SoundString();
+		this.coda = new SoundString();
+		this.linkedPhono = Language.NULL.getPhono();
+	}
+	
 	public Syllable(SoundString onset, SoundString nucleus, SoundString coda, Phonology p) {
 		this.onset = onset;
 		this.nucleus = nucleus;

@@ -20,12 +20,12 @@ public class Foot {
 	private final Syllable syll1;
 	private final Syllable syll2;
 	
-	public Foot(Syllable syll1, Phonology p) {
+	public Foot(Syllable syll1) {
 		this.syll1 = syll1;
 		this.syll2 = null;
 	}
 	
-	public Foot(Syllable syll1, Syllable syll2, Phonology p) {
+	public Foot(Syllable syll1, Syllable syll2) {
 		this.syll1 = syll1;
 		this.syll2 = syll2;
 	}
@@ -46,17 +46,13 @@ public class Foot {
 		return syll2;
 	}
 	
-	public Syllable[] getSyllables() {
-		Syllable[] retArr;
-		if (syll2 == null) {
-			retArr = new Syllable[1];
-			retArr[0] = syll1;
-		} else {
-			retArr = new Syllable[2];
-			retArr[0] = syll1;
-			retArr[1] = syll2;
+	public SyllableString getSyllables() {
+		SyllableString s = new SyllableString();
+		s = s.concat(syll1);
+		if (syll2 != null) {
+			s = s.concat(syll2);
 		}
-		return retArr;
+		return s;
 	}
 	
 	public static ArrayList<Foot> getFeetFromString(String string, Phonology p) {
@@ -75,11 +71,11 @@ public class Foot {
 		
 		// rights will always be smaller than lefts
 		for (int i = 0; i < rights.size(); i++) {
-			Foot foot = new Foot(lefts.get(i), rights.get(i), p);
+			Foot foot = new Foot(lefts.get(i), rights.get(i));
 			feet.add(foot);
 		}
 		if (lefts.size() > rights.size()) {
-			Foot foot = new Foot(lefts.get(rights.size()), p);
+			Foot foot = new Foot(lefts.get(rights.size()));
 			feet.add(foot);
 		}
 		

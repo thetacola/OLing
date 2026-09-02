@@ -3,7 +3,6 @@ package net.oijon.oling.datatypes.phonology.surface;
 import java.util.Arrays;
 
 public class FootString {
-
 	private final Foot[] feet;
 	private final Syllable leftOver;
 	private final boolean isLeftOverLeft;
